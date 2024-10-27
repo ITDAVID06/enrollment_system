@@ -1,0 +1,64 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    background-image: url('hero-bg.svg');
+    background-repeat: no-repeat;
+}
+
+.header, .footer {
+    background-color: #f8f9fa;
+}
+
+.header h5 {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.main-content {
+    padding: 2rem 0;
+}
+
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.section {
+    padding: 60px 0; /* Space for sections */
+    background-color: #fff;
+  }
+  
+  .card {
+    border: none; /* Remove card border */
+    transition: transform 0.2s; /* Smooth transition for hover effect */
+  }
+  
+  .card:hover {
+    transform: scale(1.05); /* Scale up on hover */
+  }
+  
+  .card-title {
+    color: #333; /* Card title color */
+  }
+  
+  .abs-badge {
+    position: absolute; /* Position for timing badge */
+    top: 20px;
+    left: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Background for visibility */
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+
+  main {
+    min-height: 90vh;
+  }
