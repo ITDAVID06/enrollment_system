@@ -8,7 +8,7 @@ class HomeController extends BaseController
 {
     public function index()
     {
-        $template = 'home';
+        $template = 'root';
         $data = [
             'title' => 'Enrollment System',
         ];
