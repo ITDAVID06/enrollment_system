@@ -4,18 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navigation</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="views/assets/css/navbar.css">
 </head>
 <body>
-    <nav class="navbar">
-    <div class="navbar-container">
-        <div class="navbar-title">Dashboard</div>
-        <div class="navbar-user">
-            <span class="material-symbols-rounded">account_circle</span>
-            <span>Welcome, User</span>
+      <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-date">
+                <span class="material-symbols-rounded calendar_month"> calendar_month </span>
+                <label for="school-year-selector">  School Year: </label>
+                <select id="school-year-selector">
+                    <option value="2024-2025">2024-2025</option>
+                    <option value="2026-2027">2026-2027</option>
+                    <option value="2028-2029">2028-2029</option>
+                    <option value="2030-2031">2030-2031</option>
+                </select>
+            </div>
+
+            <div class="navbar-user">
+                <img src="views\assets\images\ccs-logo.jpg" alt="User Image">
+                <span>Welcome, User</span>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
 <style>
     

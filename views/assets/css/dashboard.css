@@ -7,14 +7,81 @@
 
 /* CSS */
 .main-content {
-    transition: margin-left 0.3s ease;  /* Smooth transition */
+    margin-left: 16.875em;
+    transition: margin-left 0.4s ease;  /* Smooth transition */
 }
 
 .main-content.collapsed-sidebar {
     margin-left: 5em;  /* Margin when sidebar is collapsed */
 }
 
-.main-content.expanded-sidebar {
-    margin-left: 16.875em;  /* Margin when sidebar is expanded */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    grid-template-rows: auto auto; 
+    gap: 20px; 
+    grid-template-areas:
+        "box1 box2 box3 box4"
+        "landscape landscape landscape portrait"; 
+    padding: 20px;
 }
+
+/* Top Rectangles */
+.box {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    height: 20vh;
+}
+
+.box1 {
+    grid-area: box1;
+}
+
+.box2 {
+    grid-area: box2;
+}
+
+.box3 {
+    grid-area: box3;
+}
+
+.box4 {
+    grid-area: box4;
+}
+
+/* Bottom Rectangles */
+.landscape {
+    grid-area: landscape;
+    background-color: #dcdcdc;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    height: 65vh;
+}
+
+.portrait {
+    grid-area: portrait;
+    background-color: #dcdcdc;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    height: 65vh;
+}
+
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1rem;
+    color: #333;
+}
+
 

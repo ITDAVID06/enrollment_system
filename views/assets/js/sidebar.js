@@ -1,3 +1,5 @@
+
+
 const sidebar = document.querySelector(".sidebar");
 const sidebarToggler = document.querySelector(".sidebar-toggler");
 const menuToggler = document.querySelector(".menu-toggler");
@@ -5,12 +7,17 @@ const mainContent = document.querySelector(".main-content");
 const collapsedSidebarWidth = "5.3125em";
 const fullSidebarWidth = "16.875em";
 
+console.log(document.querySelector(".sidebar")); 
 // Toggle sidebar collapse
 sidebarToggler.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
 
+    // if (sidebar.classList.contains("collapsed")) {
+    //     mainContent.style.marginLeft = collapsedSidebarWidth;
+    // } else {
+    //     mainContent.style.marginLeft = fullSidebarWidth;
+    // }
     mainContent.classList.toggle("collapsed-sidebar", sidebar.classList.contains("collapsed"));
-    mainContent.classList.toggle("expanded-sidebar", !sidebar.classList.contains("collapsed"));
 });
 // Handle menu toggle for mobile responsiveness
 menuToggler.addEventListener("click", () => {
