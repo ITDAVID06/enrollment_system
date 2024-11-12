@@ -39,3 +39,6 @@ window.addEventListener("resize", () => {
         toggleMenu(sidebar.classList.contains("menu-active"));
     }
 });
+
+
+  

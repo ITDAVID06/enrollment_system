@@ -7,4 +7,6 @@ use App\Traits\Renderable;
 class BaseController
 {
     use Renderable;
+
 }
+

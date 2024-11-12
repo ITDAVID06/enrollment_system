@@ -12,12 +12,14 @@
     <div id="app-container" class="app-container">
         {{> sidebar}}
        
-         <div id="main-content" class="main-content">
-            <div id="navbar"class="navbar">{{> navigation}}</div>
-            <div id="panel" class="panel">{{> dashboard}}</div>
+        <div id="main-content" class="main-content">
+            <div id="navbar" class="navbar">{{> navigation}}</div>
+            <div id="panel" class="panel">{{#isDashboard}}{{> dashboard }}{{/isDashboard}}
+                {{#isProgram}}{{> program }}{{/isProgram}}
+            </div>
+            
         </div> 
     </div>
-
     <script src="views\assets\js\sidebar.js"></script>
 </body>
 </html>
