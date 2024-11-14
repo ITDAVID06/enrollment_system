@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="views\assets\css\shared.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="auth-form">
+                <img src="views/assets/images/ccs-logo.jpg" alt="Logo" class="logo">
+                <h2>Sign In</h2>
+                <form action="/login" method="POST">
+                    <input type="text" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p class="no-account">Don't have an account yet?</p> <a href="/register" class="sign-up">Sign Up</a>
+            </div>
+        </div>
+        <div class="auth-right" style="background: url('views/assets/images/ccs.jpg') center/cover no-repeat;">
+            <div class="overlay-text">
+                <h2>Join the College of Computer Studies</h2>
+                <p>The College of Computer Studies is dedicated to advancing knowledge in computing and technology, equipping students with the skills needed for innovative problem-solving in a digital world.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

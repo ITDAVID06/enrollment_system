@@ -1,0 +1,167 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.auth-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.auth-left, .auth-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-left {
+    background: #ffffff;
+    max-width: 40%;
+}
+
+.auth-right {
+    position: relative;
+    width: 60%;
+    color: #ffffff;
+}
+
+.auth-right .overlay-text {
+    position: absolute;
+    background: rgba(255, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.auth-form .logo {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.auth-form h2 {
+    margin-bottom: 20px;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    width: 100%;
+    padding: 8px 0; 
+    margin-bottom: 20px; 
+    transition: border-bottom-color 0.3s; 
+}
+
+.auth-form input[type="text"]:focus,
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus {
+    border-bottom: 1px solid #ff5733; 
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px; 
+}
+
+.button-group .btn {
+    padding: 5px 15px; 
+    font-size: 0.9rem; 
+    cursor: pointer;
+    border: none;
+}
+
+
+.auth-form .btn {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #B30600;
+    color: white;
+    border-radius: 2em;
+    height: 4em;
+}
+
+.btn-secondary {
+    background-color: grey;
+    color: white;
+    border-radius: 2em;
+    height: 4em;
+}
+
+.forgot-password, .auth-form p {
+    margin: 10px 0;
+}
+
+.auth-form a {
+    color: red;
+}
+
+.logo {
+    border-radius: 50%;
+}
+
+.auth-form .forgot-password {
+    display: block;
+    text-align: right;
+    margin-top: -10px; 
+    margin-bottom: 20px;
+    font-size: 0.875rem; 
+    color: red; 
+    text-decoration: none;
+    opacity: 50%;
+}
+
+.auth-form .forgot-password:hover {
+    opacity: 1;
+}
+
+.no-account {
+    font-size: 0.8rem;
+    opacity: 50%;
+}
+
+.sign-up:hover {
+    opacity: 1;
+}
+
+
+a {
+    opacity: 50%;
+    text-decoration: none;
+}
+
+.student-info {
+    font-size: 0.8em;
+    opacity: 50%;
+}

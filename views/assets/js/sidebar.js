@@ -32,7 +32,7 @@ const toggleMenu = (isMenuActive) => {
 // Handle window resize for responsiveness
 window.addEventListener("resize", () => {
     if (window.innerWidth >= 1024) {
-        sidebar.style.height = "calc(100vh - 2em)";
+        sidebar.style.height = "100vh";
     } else {
         sidebar.classList.remove("collapsed");
         sidebar.style.height = "auto";

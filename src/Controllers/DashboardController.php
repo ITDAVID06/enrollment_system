@@ -6,10 +6,10 @@ use App\Controllers\BaseController;
 
 class DashboardController extends BaseController
 {
+    // Default method for showing the dashboard
     public function showDashboard(){
-        $template = 'root';
         $data = [
-            'isDashboard' => true,
+            'isDashboard' => true,   // Default to dashboard
             'isStudent' => false,
             'isFaculty' => false,
             'isSection' => false,
@@ -17,6 +17,49 @@ class DashboardController extends BaseController
             'isCourse' => false,
             'isProgram' => false,
         ];
-        return $this->render($template, $data);
+        return $this->render('root', $data);
+    }
+
+    // Method for handling navigation when a user clicks on the sidebar
+    public function showSection($section = 'dashboard'){
+        $data = [
+            'isDashboard' => false,
+            'isStudent' => false,
+            'isFaculty' => false,
+            'isSection' => false,
+            'isProfile' => false,
+            'isCourse' => false,
+            'isProgram' => false,
+        ];
+
+        // Set the active view based on the section clicked
+        switch ($section) {
+            case 'dashboard':
+                $data['isDashboard'] = true;
+                break;
+            case 'student':
+                $data['isStudent'] = true;
+                break;
+            case 'faculty':
+                $data['isFaculty'] = true;
+                break;
+            case 'section':
+                $data['isSection'] = true;
+                break;
+            case 'profile':
+                $data['isProfile'] = true;
+                break;
+            case 'course':
+                $data['isCourse'] = true;
+                break;
+            case 'program':
+                $data['isProgram'] = true;
+                break;
+            default:
+                $data['isDashboard'] = true; 
+                break;
+        }
+
+        return $this->render('root', $data);
     }
 }

@@ -13,6 +13,12 @@ try {
 
     // Define routes
     $router->get('/', '\App\Controllers\HomeController@index');
+    $router->get('/login', '\App\Controllers\AuthController@loginForm');
+    $router->post('/login', '\App\Controllers\AuthController@login');
+
+    $router->get('/register', '\App\Controllers\AuthController@registrationForm');
+    $router->post('/register', '\App\Controllers\AuthController@register');
+    
     $router->get('/dashboard', '\App\Controllers\DashboardController@showDashboard');
     // $router->get('/student', '\App\Controllers\StudentController@showStudent');
     $router->get('/program', '\App\Controllers\ProgramController@showProgram');
