@@ -13,6 +13,9 @@ try {
 
     // Define routes
     $router->get('/', '\App\Controllers\HomeController@index');
+    
+    $router->get('/form', '\App\Controllers\FormController@showForm');
+    $router->post('/enrollment', '\App\Controllers\FormController@submitEnrollment');
 
     // Run it!
     $router->run();
