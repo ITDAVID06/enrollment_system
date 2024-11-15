@@ -1,0 +1,39 @@
+<!-- Success Message -->
+{{#session.success}}
+    <p style="color: green;">{{session.success}}</p>
+{{/session.success}}
+
+<!-- Error Message -->
+{{#session.error}}
+    <p style="color: red;">{{session.error}}</p>
+{{/session.error}}
+
+<form action="/faculty" method="POST">
+    <div>
+        <label for="lastname">Last Name:</label>
+        <input type="text" id="lastname" name="lastname" required>
+    </div>
+    <div>
+        <label for="firstname">First Name:</label>
+        <input type="text" id="firstname" name="firstname" required>
+    </div>
+    <div>
+        <label for="contact">Contact Number:</label>
+        <input type="text" id="contact" name="contact" required>
+    </div>
+    <div>
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <button type="submit">Register Faculty</button>
+    </div>
+</form>

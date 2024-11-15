@@ -15,6 +15,7 @@ try {
     $router->get('/', '\App\Controllers\HomeController@index');
     $router->get('/login', '\App\Controllers\AuthController@loginForm');
     $router->post('/login', '\App\Controllers\AuthController@login');
+    $router->get('/login', '\App\Controllers\AuthController@logout');
 
     $router->get('/register', '\App\Controllers\AuthController@registrationForm');
     $router->post('/register', '\App\Controllers\AuthController@register');
@@ -24,8 +25,13 @@ try {
     $router->get('/program', '\App\Controllers\ProgramController@showProgram');
     // $router->get('/course', '\App\Controllers\CourseController@showCourse');
     // $router->get('/section', '\App\Controllers\SectionController@showSection');
-    // $router->get('/faculty', '\App\Controllers\FacultyController@showFaculty');
+
+    $router->get('/faculty', '\App\Controllers\FacultyController@showFaculty');
+    $router->post('/faculty', '\App\Controllers\FacultyController@register');
+
     // $router->get('/profile', '\App\Controllers\ProfileController@showProfile');
+
+    $router->get('/studentprofile', '\App\Controllers\StudentController@showStudentProfile');
 
     // Run it!
     $router->run();
