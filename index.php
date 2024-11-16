@@ -33,6 +33,11 @@ try {
 
     $router->get('/studentprofile', '\App\Controllers\StudentController@showStudentProfile');
 
+    $router->get('/form', '\App\Controllers\FormController@showForm');
+    $router->post('/enrollment', '\App\Controllers\FormController@submitEnrollment');
+
+    $router->get('/student-info', '\App\Controllers\StudentInformationController@showStudentInfo');
+
     // Run it!
     $router->run();
 
