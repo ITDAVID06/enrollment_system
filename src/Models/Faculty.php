@@ -40,7 +40,7 @@ class Faculty extends BaseModel
         ];
     }
 
-    protected function hashPassword($password)
+    public function hashPassword($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);
     }
@@ -68,5 +68,58 @@ class Faculty extends BaseModel
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function getFacultyById($id)
+{
+    $sql = "SELECT * FROM faculty WHERE id = :id";
+    $statement = $this->db->prepare($sql);
+    $statement->execute(['id' => $id]);
+    return $statement->fetch(PDO::FETCH_ASSOC);
+}
+
+public function update($id, $data)
+{
+       // Base SQL query
+       $sql = "UPDATE faculty 
+       SET lastname = :lastname,
+           firstname = :firstname,
+           contact = :contact,
+           email = :email,
+           username = :username";
+
+// Include password only if provided
+if (isset($data['password_hash'])) {
+   $sql .= ", password_hash = :password_hash";
+}
+
+$sql .= " WHERE id = :id";
+
+// Prepare parameters
+$params = [
+   'id' => $id,
+   'lastname' => $data['lastname'] ?? null,
+   'firstname' => $data['firstname'] ?? null,
+   'contact' => $data['contact'] ?? null,
+   'email' => $data['email'] ?? null,
+   'username' => $data['username'] ?? null,
+];
+
+// Add password_hash if provided
+if (isset($data['password_hash'])) {
+   $params['password_hash'] = $data['password_hash'];
+}
+
+$statement = $this->db->prepare($sql);
+return $statement->execute($params);
+}
+
+
+public function delete($id)
+{
+    $sql = "DELETE FROM faculty WHERE id = :id";
+    $statement = $this->db->prepare($sql);
+    return $statement->execute(['id' => $id]);
+}
+
 }
 

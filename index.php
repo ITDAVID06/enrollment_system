@@ -22,12 +22,52 @@ try {
     
     $router->get('/dashboard', '\App\Controllers\DashboardController@showDashboard');
     // $router->get('/student', '\App\Controllers\StudentController@showStudent');
+
+
     $router->get('/program', '\App\Controllers\ProgramController@showProgram');
+    $router->post('/program', '\App\Controllers\ProgramController@register');
+    $router->get('/program/list', '\App\Controllers\ProgramController@list');
+    $router->get('/program/{id}', '\App\Controllers\ProgramController@get');
+    $router->post('/program/update/{id}', '\App\Controllers\ProgramController@update');
+    $router->delete('/program/{id}', '\App\Controllers\ProgramController@delete');
+
+    $router->get('/courses', '\App\Controllers\CourseController@showCourses');
+    $router->get('/courses/{programId}/{year}', '\App\Controllers\CourseController@listCoursesByProgramAndYear');
+    $router->post('/course', '\App\Controllers\CourseController@registerCourse');
+    $router->get('/course/{id}', '\App\Controllers\CourseController@getCourse');
+    $router->post('/course/update/{id}', '\App\Controllers\CourseController@updateCourse');
+    $router->delete('/course/delete/{id}', '\App\Controllers\CourseController@deleteCourse');
+
+    $router->get('/sections', '\App\Controllers\SectionController@showSections');
+    $router->get('/api/sections', '\App\Controllers\SectionController@getAllSections');
+
+
+    $router->post('/section', '\App\Controllers\SectionController@registerSection');
+    $router->get('/section/{id}', '\App\Controllers\SectionController@getSection');
+    $router->get('/section/course/{id}', '\App\Controllers\SectionController@getCourse');
+    $router->post('/section/update/{id}', '\App\Controllers\SectionController@updateSection');
+    $router->delete('/section/{id}', '\App\Controllers\SectionController@deleteSection');
+    $router->get('/section/courses/{sectionId}', '\App\Controllers\SectionController@getCoursesBySection');
+    $router->post('/schedule/update/{courseId}', '\App\Controllers\SectionController@updateSchedule');
+
+    $router->get('/get-courses', '\App\Controllers\SectionController@getCourses');
+    // In your routing configuration
+
+
+
+
+
+
     // $router->get('/course', '\App\Controllers\CourseController@showCourse');
     // $router->get('/section', '\App\Controllers\SectionController@showSection');
 
-    $router->get('/faculty', '\App\Controllers\FacultyController@showFaculty');
-    $router->post('/faculty', '\App\Controllers\FacultyController@register');
+    $router->get('/faculty', '\App\Controllers\FacultyController@showFaculty'); // Show faculty page
+    $router->post('/faculty', '\App\Controllers\FacultyController@register'); // Add new faculty
+    $router->get('/faculty/list', '\App\Controllers\FacultyController@list'); // Fetch all faculty for the table
+    $router->get('/faculty/{id}', '\App\Controllers\FacultyController@get'); // Fetch a single faculty member
+    $router->post('/faculty/update/{id}', '\App\Controllers\FacultyController@update'); // Update a faculty member
+    $router->delete('/faculty/{id}', '\App\Controllers\FacultyController@delete'); // Delete a faculty member
+
 
     // $router->get('/profile', '\App\Controllers\ProfileController@showProfile');
 

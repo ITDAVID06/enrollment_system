@@ -19,6 +19,7 @@ class FacultyController extends BaseController
             'isCourse' => false,
             'isProgram' => false,
         ];
+
         return $this->render('root', $data);
     }
 
@@ -53,4 +54,49 @@ class FacultyController extends BaseController
             }
         }
     }
+
+    public function list()
+{
+    $facultyModel = new Faculty();
+    echo json_encode($facultyModel->getAllFaculty());
+}
+
+public function get($id)
+{
+    $facultyModel = new Faculty();
+    echo json_encode($facultyModel->getFacultyById($id));
+}
+
+public function update($id)
+{
+    try {
+        $data = $_POST;
+
+        // Hash password if provided
+        if (!empty($data['password'])) {
+            $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+
+        $facultyModel = new Faculty();
+        $result = $facultyModel->update($id, $data);
+
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Faculty updated successfully!']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Failed to update faculty.']);
+        }
+    } catch (Exception $e) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
+
+
+public function delete($id)
+{
+    $facultyModel = new Faculty();
+    $facultyModel->delete($id);
+}
+
 }
