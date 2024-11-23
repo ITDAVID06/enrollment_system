@@ -232,6 +232,88 @@ const loadSections = async () => {
     }
 };
 
+// Function for "Load Courses" button
+const loadCourses = async (sectionId) => {
+    const coursesTable = document.getElementById('coursesTable');
+    const tableBody = coursesTable.querySelector('tbody');
+
+    try {
+        const response = await fetch(`/sections/courses/${sectionId}`);
+        if (!response.ok) throw new Error('Failed to fetch courses');
+
+        const courses = await response.json();
+        console.log('Courses data:', courses);
+        
+
+        if (Array.isArray(courses) && courses.length > 0) {
+
+            const groupedCourses = groupCoursesByCode(courses);
+            // Populate courses table
+            tableBody.innerHTML = groupedCourses.map(course => `
+                <tr>
+                    <td>${course.course_code}</td>
+                    <td>${course.Monday || ''}</td>
+                    <td>${course.Tuesday || ''}</td>
+                    <td>${course.Wednesday || ''}</td>
+                    <td>${course.Thursday || ''}</td>
+                    <td>${course.Friday || ''}</td>
+                    <td><button onclick="editSchedule('${course.course_id}, ${course.program_id}')">Edit</button></td>
+                </tr>
+            `).join('');
+        
+            coursesTable.style.display = 'table';
+        } else {
+             // Fetch courses by program_id and year_level if no schedules
+             const responseAllCourses = await fetch(`/get-courses/${sectionId}`);
+             if (!responseAllCourses.ok) throw new Error('Failed to fetch courses by program and year');
+ 
+             const allCourses = await responseAllCourses.json();
+             tableBody.innerHTML = allCourses.map(course => `
+                 <tr>
+                     <td>${course.course_code}</td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td><button onclick="editSchedule('${course.id}, ${course.program_id}')">Edit</button></td>
+                 </tr>
+             `).join('') || `<tr><td colspan="7">No courses available.</td></tr>`;
+             coursesTable.style.display = 'table';
+         }
+        
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    }
+};
+
+const groupCoursesByCode = (courses) => {
+    const grouped = {};
+
+    courses.forEach(course => {
+        if (!grouped[course.course_code]) {
+            grouped[course.course_code] = {
+                course_code: course.course_code,
+                course_id: course.id, // Ensure you have course_id
+                program_id: course.program_id, // Ensure you have program_id
+                Monday: '',
+                Tuesday: '',
+                Wednesday: '',
+                Thursday: '',
+                Friday: ''
+            };
+        }
+
+        // Add schedule for the respective day
+        if (course.sched_day && course.TIME_FROM && course.TIME_TO) {
+            grouped[course.course_code][course.sched_day] = `${course.TIME_FROM} - ${course.TIME_TO}`;
+        }
+    });
+
+    return Object.values(grouped); // Convert the object back to an array
+};
+
+
 
 loadSections();
 
@@ -241,7 +323,7 @@ loadSections();
 // Open the Add Section modal
 const addSectionModal = document.getElementById('addSectionModal');
 document.getElementById('addSectionButton').onclick = () => {
-    loadPrograms(); // Populate program dropdown
+    loadPrograms('program'); // Populate program dropdown
     addSectionModal.style.display = 'block';
 };
 
@@ -250,14 +332,22 @@ const closeAddSectionModal = () => {
 };
 
 // Load program options
-const loadPrograms = async () => {
-    const response = await fetch('/programs');
-    const programs = await response.json();
+const loadPrograms = async (dropdownId) => {
+    try {
+        const response = await fetch('/program/list'); // Fetch all programs
+        if (!response.ok) throw new Error('Failed to fetch programs.');
 
-    const programDropdown = document.getElementById('program');
-    programDropdown.innerHTML = programs.map(program => `
-        <option value="${program.id}">${program.program_code}</option>
-    `).join('');
+        const programs = await response.json();
+
+        // Populate the provided dropdown
+        const programDropdown = document.getElementById(dropdownId);
+        programDropdown.innerHTML = programs
+            .map(program => `<option value="${program.id}">${program.program_code}</option>`)
+            .join('');
+    } catch (error) {
+        console.error('Error loading programs:', error);
+        alert('Failed to load programs. Please try again.');
+    }
 };
 
 // Handle Add Section form submission
@@ -275,18 +365,79 @@ document.getElementById('addSectionForm').onsubmit = async (event) => {
 };
 
 // Edit a section
-const editSection = async (sectionId) => {
-    const response = await fetch(`/section/${sectionId}`);
-    const section = await response.json();
 
-    // Populate the Add Section form for editing
-    document.getElementById('program').value = section.program_id;
-    document.getElementById('semester').value = section.semester;
-    document.getElementById('yearLevel').value = section.year_level;
-    document.getElementById('sectionName').value = section.name;
+const openEditSectionModal = async (sectionId) => {
+    try {
+        // Fetch the section details
+        const sectionResponse = await fetch(`/section/${sectionId}`);
+        if (!sectionResponse.ok) throw new Error('Failed to fetch section details.');
+        const section = await sectionResponse.json();
 
-    addSectionModal.style.display = 'block';
+        // Set the section ID in the hidden input
+        document.getElementById('editSectionId').value = sectionId;
+
+        // Load all programs into the dropdown
+        await loadPrograms('editProgram'); // Pass the dropdown ID
+
+        // Set the selected program for the section
+        document.getElementById('editProgram').value = section.program_id;
+
+        // Populate other modal fields
+        document.getElementById('editSemester').value = section.semester;
+        document.getElementById('editYearLevel').value = section.year_level;
+        document.getElementById('editSectionName').value = section.name;
+
+        // Show the modal
+        document.getElementById('editSectionModal').style.display = 'block';
+    } catch (error) {
+        console.error('Error opening edit modal:', error);
+        alert('Failed to load section details. Please try again.');
+    }
 };
+
+const closeEditSectionModal = () => {
+    document.getElementById('editSectionModal').style.display = 'none';
+};
+
+document.getElementById('editSectionModal').onsubmit = async (event) => {
+
+    event.preventDefault();
+
+    try {
+        const formData = new FormData(event.target);
+        const sectionId = formData.get('id'); // Retrieve the ID from the hidden input field
+
+        if (!sectionId) {
+            throw new Error('Section ID is missing.');
+        }
+
+        // Convert FormData to JSON-compatible object but remove the ID
+        const { id, ...updatedSection } = Object.fromEntries(formData); // Destructure to exclude ID
+
+        // Make the POST request with the ID in the route
+        const response = await fetch(`/section/update/${sectionId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedSection), // Send the rest of the form data without the ID
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save changes.');
+        }
+
+        // Close the modal
+        closeEditSectionModal();
+
+        // Reload the sections to reflect the changes
+        loadSections();
+    } catch (error) {
+        console.error('Error saving section changes:', error);
+        alert('Failed to save changes. Please try again.');
+    }
+};
+
+
+
 
 // Delete a section
 const deleteSection = async (sectionId) => {
@@ -315,9 +466,26 @@ const editSchedule = async (courseId) => {
 
         document.getElementById('editScheduleModal').style.display = 'block';
     } catch (error) {
-        console.error('Error fetching course details:', error);
+        console.error('Error loading schedule:', error);
+        alert('Failed to load schedule. Please try again.');
     }
 };
+
+
+// Add event listeners to enable/disable time inputs based on checkbox
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+days.forEach(day => {
+    const checkbox = document.getElementById(`${day.toLowerCase()}_enabled`);
+    const startTimeInput = document.getElementById(`${day.toLowerCase()}_start`);
+    const endTimeInput = document.getElementById(`${day.toLowerCase()}_end`);
+
+    checkbox.addEventListener('change', function() {
+        const isEnabled = this.checked;
+        startTimeInput.disabled = !isEnabled;
+        endTimeInput.disabled = !isEnabled;
+    });
+});
+
 
 
 const closeEditScheduleModal = () => {
