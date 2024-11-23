@@ -19,42 +19,19 @@
     </table>
 </div>
 
-<!-- Update the courses table header -->
-<table class="courses-table" id="coursesTable" border="1">
-    <thead>
-        <tr>
-            <th>Course Code</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Courses will be dynamically populated here -->
-    </tbody>
-</table>
-
 <div style="display: flex; flex-direction: column;">
-    <!-- Button to load courses -->
-    <button id="loadCoursesButton">View All Courses</button>
 
     <!-- Table for displaying courses -->
     <table id="coursesTable" border="1" style="width: 100%; margin-top: 20px; display: none;">
         <thead>
             <tr>
-                <th>Course ID</th>
                 <th>Course Code</th>
-                <th>Time From</th>
-                <th>Time To</th>
-                <th>Day</th>
-                <th>Semester</th>
-                <th>School Year</th>
-                <th>Room</th>
-                <th>Section ID</th>
-                <th>Program ID</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -105,7 +82,7 @@
     </div>
 </div>
 
-
+<!-- Edit Schedule Modal -->
 <!-- Edit Schedule Modal -->
 <div id="editScheduleModal" class="modal">
     <div class="modal-content">
@@ -113,24 +90,75 @@
         <h3>Edit Schedule</h3>
         <form id="editScheduleForm">
             <input type="hidden" id="courseId" name="course_id">
-            
-            <label for="instructorName">Instructor Name:</label>
-            <input type="text" id="instructorName" name="instructor_name" required>
+            <input type="hidden" id="programId" name="program_id">
 
-            <!-- Schedule inputs for each day -->
-            ${['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day => `
-                <div>
-                    <label>${day}:</label>
-                    <input type="checkbox" id="${day.toLowerCase()}" name="days[]" value="${day}">
-                    <input type="time" id="${day.toLowerCase()}_start" name="${day.toLowerCase()}_start"> to
-                    <input type="time" id="${day.toLowerCase()}_end" name="${day.toLowerCase()}_end">
+            <!-- Display non-editable foreign keys -->
+            <div>
+                <label>Program ID:</label>
+                <span id="displayProgramId"></span>
+            </div>
+            <div>
+                <label>Course ID:</label>
+                <span id="displayCourseId"></span>
+            </div>
+
+            <!-- Editable fields -->
+            <div>
+                <h4>Schedule</h4>
+                <!-- Monday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Monday:</label>
+                    <input type="checkbox" id="monday_enabled" name="days[]" value="Monday">
+                    <input type="time" id="monday_start" name="monday_start" disabled>
+                    <input type="time" id="monday_end" name="monday_end" disabled>
                 </div>
-            `).join('')}
-            
-            <button type="submit">Update Schedule</button>
+                <!-- Tuesday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Tuesday:</label>
+                    <input type="checkbox" id="tuesday_enabled" name="days[]" value="Tuesday">
+                    <input type="time" id="tuesday_start" name="tuesday_start" disabled>
+                    <input type="time" id="tuesday_end" name="tuesday_end" disabled>
+                </div>
+                <!-- Wednesday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Wednesday:</label>
+                    <input type="checkbox" id="wednesday_enabled" name="days[]" value="Wednesday">
+                    <input type="time" id="wednesday_start" name="wednesday_start" disabled>
+                    <input type="time" id="wednesday_end" name="wednesday_end" disabled>
+                </div>
+                <!-- Thursday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Thursday:</label>
+                    <input type="checkbox" id="thursday_enabled" name="days[]" value="Thursday">
+                    <input type="time" id="thursday_start" name="thursday_start" disabled>
+                    <input type="time" id="thursday_end" name="thursday_end" disabled>
+                </div>
+                <!-- Friday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Friday:</label>
+                    <input type="checkbox" id="friday_enabled" name="days[]" value="Friday">
+                    <input type="time" id="friday_start" name="friday_start" disabled>
+                    <input type="time" id="friday_end" name="friday_end" disabled>
+                </div>
+            </div>
+
+            <label for="semester">Semester:</label>
+            <select id="semester" name="sched_semester" required>
+                <option value="1st Sem">1st Sem</option>
+                <option value="2nd Sem">2nd Sem</option>
+            </select>
+
+            <label for="schoolYear">School Year:</label>
+            <input type="text" id="schoolYear" name="sched_sy" placeholder="2023-2024" required>
+
+            <label for="room">Room:</label>
+            <input type="text" id="room" name="sched_room" required>
+
+            <button type="submit">Save Schedule</button>
         </form>
     </div>
 </div>
+
 
 
 
@@ -179,58 +207,113 @@
 // Load all sections on page load
 const loadSections = async () => {
     try {
-        const response = await fetch('/api/sections');  // Use the new API route
-        
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        const response = await fetch('/api/sections'); // Use your API route
+        if (!response.ok) throw new Error('Failed to fetch sections');
 
-        const data = await response.json(); // Directly parse as JSON
-        console.log(data);
+        const data = await response.json();
 
         // Render sections
         const tableBody = document.querySelector('#sectionTable tbody');
-        if (data.sections && Array.isArray(data.sections)) {
-            tableBody.innerHTML = data.sections.map(section => `
-                <tr>
-                    <td>${section.name}</td>
-                    <td>${section.program_code}</td>
-                    <td>${section.semester}</td>
-                    <td>${section.year_level}</td>
-                    <td>${section.course_count || 0}</td>
-                    <td>
-                        <button onclick="editSection(${section.id})">Edit</button>
-                        <button onclick="deleteSection(${section.id})">Delete</button>
-                    </td>
-                    <td>
-                <button onclick="toggleCourses(${section.id})">View Courses</button>
-            </td>
-        </tr>
-        <tr class="courses-row" id="courses-row-${section.id}" style="display: none;">
-            <td colspan="6">
-                <table class="courses-table" id="courses-table-${section.id}" border="1">
-                    <thead>
-                        <tr>
-                            <th>Course Name</th>
-                            <th>Instructor</th>
-                            <th>Schedule</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Courses will be dynamically populated here -->
-                    </tbody>
-                </table>
-            </td>
-                </tr>
-            `).join('');
-        } else {
-            console.error('Unexpected data format:', data);
-        }
+        tableBody.innerHTML = data.sections.map(section => `
+            <tr>
+                <td>${section.name}</td>
+                <td>${section.program_code}</td>
+                <td>${section.semester}</td>
+                <td>${section.year_level}</td>
+                <td>${section.course_count || 0}</td>
+                <td>
+                    <button onclick="editSection(${section.id})">Edit</button>
+                    <button onclick="deleteSection(${section.id})">Delete</button>
+                    <button onclick="loadCourses(${section.id})">Load Courses</button>
+                </td>
+            </tr>
+        `).join('');
     } catch (error) {
         console.error('Error fetching sections:', error);
     }
 };
+
+// Function for "Load Courses" button
+const loadCourses = async (sectionId) => {
+    const coursesTable = document.getElementById('coursesTable');
+    const tableBody = coursesTable.querySelector('tbody');
+
+    try {
+        const response = await fetch(`/sections/courses/${sectionId}`);
+        if (!response.ok) throw new Error('Failed to fetch courses');
+
+        const courses = await response.json();
+        console.log('Courses data:', courses);
+        
+
+        if (Array.isArray(courses) && courses.length > 0) {
+
+            const groupedCourses = groupCoursesByCode(courses);
+            // Populate courses table
+            tableBody.innerHTML = groupedCourses.map(course => `
+                <tr>
+                    <td>${course.course_code}</td>
+                    <td>${course.Monday || ''}</td>
+                    <td>${course.Tuesday || ''}</td>
+                    <td>${course.Wednesday || ''}</td>
+                    <td>${course.Thursday || ''}</td>
+                    <td>${course.Friday || ''}</td>
+                    <td><button onclick="editSchedule('${course.course_id}, ${course.program_id}')">Edit</button></td>
+                </tr>
+            `).join('');
+        
+            coursesTable.style.display = 'table';
+        } else {
+             // Fetch courses by program_id and year_level if no schedules
+             const responseAllCourses = await fetch(`/get-courses/${sectionId}`);
+             if (!responseAllCourses.ok) throw new Error('Failed to fetch courses by program and year');
+ 
+             const allCourses = await responseAllCourses.json();
+             tableBody.innerHTML = allCourses.map(course => `
+                 <tr>
+                     <td>${course.course_code}</td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td><button onclick="editSchedule('${course.id}, ${course.program_id}')">Edit</button></td>
+                 </tr>
+             `).join('') || `<tr><td colspan="7">No courses available.</td></tr>`;
+             coursesTable.style.display = 'table';
+         }
+        
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    }
+};
+
+const groupCoursesByCode = (courses) => {
+    const grouped = {};
+
+    courses.forEach(course => {
+        if (!grouped[course.course_code]) {
+            grouped[course.course_code] = {
+                course_code: course.course_code,
+                course_id: course.id, // Ensure you have course_id
+                program_id: course.program_id, // Ensure you have program_id
+                Monday: '',
+                Tuesday: '',
+                Wednesday: '',
+                Thursday: '',
+                Friday: ''
+            };
+        }
+
+        // Add schedule for the respective day
+        if (course.sched_day && course.TIME_FROM && course.TIME_TO) {
+            grouped[course.course_code][course.sched_day] = `${course.TIME_FROM} - ${course.TIME_TO}`;
+        }
+    });
+
+    return Object.values(grouped); // Convert the object back to an array
+};
+
 
 
 loadSections();
@@ -260,7 +343,7 @@ const loadPrograms = async () => {
     `).join('');
 };
 
-// Handle Add Section form submission
+// Add a section
 document.getElementById('addSectionForm').onsubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -297,194 +380,143 @@ const deleteSection = async (sectionId) => {
 };
 
 
-const editSchedule = async (courseId) => {
+const editSchedule = async (courseId, programId) => {
     try {
-        const response = await fetch(`/section/course/${courseId}`);
-        const course = await response.json();
+        console.log('editSchedule called with courseId:', courseId, 'programId:', programId);
 
-        // Fill form with course data
+        // Fetch existing schedule details for the course
+        const response = await fetch(`/schedule/${courseId}`);
+        let schedules = [];
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Schedules data:', data); // For debugging
+
+            // Ensure schedules is always an array
+            schedules = Array.isArray(data) ? data : (data ? [data] : []);
+        } else {
+            schedules = [];
+        }
+
+        // Check if schedules is now an array
+        console.log('Normalized schedules:', schedules);
+
+        // Populate modal fields
         document.getElementById('courseId').value = courseId;
-        document.getElementById('instructorName').value = course.instructor_name || '';
-        
-        // Set checkboxes and times for each weekday
-        ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].forEach(day => {
-            document.getElementById(day).checked = course[`${day}_start`] != null;
-            document.getElementById(`${day}_start`).value = course[`${day}_start`] || '';
-            document.getElementById(`${day}_end`).value = course[`${day}_end`] || '';
+        document.getElementById('programId').value = programId;
+        document.getElementById('displayCourseId').innerText = courseId;
+        document.getElementById('displayProgramId').innerText = programId;
+
+        // For each day, populate the schedule if it exists
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        days.forEach(day => {
+            const scheduleForDay = schedules.find(s => s.sched_day === day);
+            const enabledCheckbox = document.getElementById(`${day.toLowerCase()}_enabled`);
+            const startTimeInput = document.getElementById(`${day.toLowerCase()}_start`);
+            const endTimeInput = document.getElementById(`${day.toLowerCase()}_end`);
+
+            if (scheduleForDay) {
+                enabledCheckbox.checked = true;
+                startTimeInput.disabled = false;
+                endTimeInput.disabled = false;
+                startTimeInput.value = scheduleForDay.TIME_FROM || '';
+                endTimeInput.value = scheduleForDay.TIME_TO || '';
+            } else {
+                enabledCheckbox.checked = false;
+                startTimeInput.disabled = true;
+                endTimeInput.disabled = true;
+                startTimeInput.value = '';
+                endTimeInput.value = '';
+            }
         });
 
+        // Other fields (assuming they are consistent across schedules)
+        const schedule = schedules[0] || {};
+        document.getElementById('semester').value = schedule.sched_semester || '';
+        document.getElementById('schoolYear').value = schedule.sched_sy || '';
+        document.getElementById('room').value = schedule.sched_room || '';
+
+        // Show the modal
         document.getElementById('editScheduleModal').style.display = 'block';
     } catch (error) {
-        console.error('Error fetching course details:', error);
+        console.error('Error loading schedule:', error);
+        alert('Failed to load schedule. Please try again.');
     }
 };
+
+
+// Add event listeners to enable/disable time inputs based on checkbox
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+days.forEach(day => {
+    const checkbox = document.getElementById(`${day.toLowerCase()}_enabled`);
+    const startTimeInput = document.getElementById(`${day.toLowerCase()}_start`);
+    const endTimeInput = document.getElementById(`${day.toLowerCase()}_end`);
+
+    checkbox.addEventListener('change', function() {
+        const isEnabled = this.checked;
+        startTimeInput.disabled = !isEnabled;
+        endTimeInput.disabled = !isEnabled;
+    });
+});
+
 
 
 const closeEditScheduleModal = () => {
     document.getElementById('editScheduleModal').style.display = 'none';
 };
 
-document.getElementById('editScheduleForm').onsubmit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const courseId = formData.get('course_id');
-
-    try {
-        await fetch(`/schedule/update/${courseId}`, {
-            method: 'POST',
-            body: formData
-        });
-
-        closeEditScheduleModal();
-        // Reload the updated schedule in the table without refreshing
-        toggleCourses(document.getElementById('courseId').value);
-    } catch (error) {
-        console.error('Error updating schedule:', error);
-    }
-};
 
 document.getElementById('editScheduleForm').onsubmit = async (event) => {
     event.preventDefault();
+
     const formData = new FormData(event.target);
     const courseId = formData.get('course_id');
+    const programId = formData.get('program_id');
 
-    try {
-        await fetch(`/schedule/update/${courseId}`, {
-            method: 'POST',
-            body: formData
-        });
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-        closeEditScheduleModal();
-        // Reload the updated schedule in the table without refreshing
-        const sectionId = document.querySelector(`#courses-row-${courseId}`).dataset.sectionId;
-        toggleCourses(sectionId);
-    } catch (error) {
-        console.error('Error updating schedule:', error);
-    }
-};
-
-
-document.getElementById('loadCoursesButton').addEventListener('click', async () => {
-    const coursesTable = document.getElementById('coursesTable');
-    const tableBody = coursesTable.querySelector('tbody');
-
-    try {
-        const response = await fetch('/get-courses'); // Replace with your actual route
-        if (!response.ok) {
-            throw new Error('Failed to fetch courses');
-        }
-
-        const courses = await response.json();
-
-        // Populate the table
-        tableBody.innerHTML = courses.map(course => `
-            <tr>
-                 <td>${course.course_id}</td>
-                        <td>${course.course_code}</td>
-                        <td>${course.TIME_FROM}</td>
-                        <td>${course.TIME_TO}</td>
-                        <td>${course.sched_day}</td>
-                        <td>${course.sched_semester}</td>
-                        <td>${course.sched_sy}</td>
-                        <td>${course.sched_room}</td>
-                        <td>${course.section_id}</td>
-                        <td>${course.PROGRAM_ID}</td>
-            </tr>
-        `).join('');
-
-        // Show the table
-        coursesTable.style.display = 'table';
-    } catch (error) {
-        console.error('Error fetching courses:', error);
-    }
-});
-
-
-const toggleCourses = async (sectionId) => {
-    console.log(`Fetching courses for sectionId: ${sectionId}`); // Log the sectionId
-    const courseRow = document.getElementById(`courses-row-${sectionId}`);
-
-    if (courseRow.style.display === 'none') {
-        try {
-            const response = await fetch(`/sections/courses/${sectionId}`);
-            if (!response.ok) {
-                console.error('Failed to fetch courses:', await response.text());
-                throw new Error('Failed to fetch courses');
-            }
-
-            const courses = await response.json();
-            console.log('Courses data:', courses); // Log the API response
-
-            if (Array.isArray(courses) && courses.length > 0) {
-                const courseTableBody = document.querySelector(`#courses-table-${sectionId} tbody`);
-                courseTableBody.innerHTML = courses.map(course => `
-                    <tr>
-                        <td>${course.course_code}</td>
-                        <td>${course.sched_day}</td>
-                        <td>${course.TIME_FROM} - ${course.TIME_TO}</td>
-                        <td>${course.sched_room}</td>
-                        <td>${course.sched_semester}</td>
-                        <td>${course.sched_sy}</td>
-                        <td>
-                            <button onclick="editSchedule(${course.course_id})">Edit Schedule</button>
-                        </td>
-                    </tr>
-                `).join('');
-                courseRow.style.display = 'table-row';
-            } else {
-                console.log('No courses available for this section.');
-                const courseTableBody = document.querySelector(`#courses-table-${sectionId} tbody`);
-                courseTableBody.innerHTML = `<tr><td colspan="7">No courses available</td></tr>`;
-                courseRow.style.display = 'table-row';
-            }
-        } catch (error) {
-            console.error('Error fetching courses:', error);
-        }
-    } else {
-        courseRow.style.display = 'none';
-    }
-};
-
-
-const loadCourses = async (sectionId) => {
-    const coursesTable = document.getElementById('coursesTable');
-    const tableBody = coursesTable.querySelector('tbody');
-
-    try {
-        const response = await fetch(`/get-courses?section_id=${sectionId}`);
-        if (!response.ok) throw new Error('Failed to fetch courses');
-
-        const courses = await response.json();
-
-        // Populate the courses table
-        if (Array.isArray(courses) && courses.length > 0) {
-            tableBody.innerHTML = courses.map(course => `
-                <tr>
-                    <td>${course.course_code}</td>
-                    <td>${course.sched_day === 'Monday' ? `${course.TIME_FROM || ''} - ${course.TIME_TO || ''}` : ''}</td>
-                    <td>${course.sched_day === 'Tuesday' ? `${course.TIME_FROM || ''} - ${course.TIME_TO || ''}` : ''}</td>
-                    <td>${course.sched_day === 'Wednesday' ? `${course.TIME_FROM || ''} - ${course.TIME_TO || ''}` : ''}</td>
-                    <td>${course.sched_day === 'Thursday' ? `${course.TIME_FROM || ''} - ${course.TIME_TO || ''}` : ''}</td>
-                    <td>${course.sched_day === 'Friday' ? `${course.TIME_FROM || ''} - ${course.TIME_TO || ''}` : ''}</td>
-                    <td>
-                        <button onclick="editSchedule(${course.course_id})">Edit Schedule</button>
-                    </td>
-                </tr>
-            `).join('');
-
-            coursesTable.style.display = 'table'; // Show the table
+    // Collect the schedule data
+    const scheduleEntries = days.map(day => {
+        const isEnabled = document.getElementById(`${day.toLowerCase()}_enabled`).checked;
+        if (isEnabled) {
+            const timeFrom = document.getElementById(`${day.toLowerCase()}_start`).value;
+            const timeTo = document.getElementById(`${day.toLowerCase()}_end`).value;
+            return {
+                course_id: courseId,
+                program_id: programId,
+                sched_day: day,
+                TIME_FROM: timeFrom,
+                TIME_TO: timeTo,
+                sched_semester: formData.get('sched_semester'),
+                sched_sy: formData.get('sched_sy'),
+                sched_room: formData.get('sched_room'),
+            };
         } else {
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="7">No courses available for this section.</td>
-                </tr>
-            `;
-            coursesTable.style.display = 'table'; // Show the table even if empty
+            return null;
         }
+    }).filter(entry => entry !== null); // Remove null entries
+
+    try {
+        const response = await fetch('/save-schedule', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(scheduleEntries),
+        });
+
+        if (!response.ok) throw new Error('Failed to save schedule.');
+
+        const result = await response.json();
+        console.log('Schedule saved:', result);
+        closeEditScheduleModal();
+
+        // Optionally, refresh the courses table to reflect the changes
+        // loadCourses(sectionId); // You might need to keep track of the current sectionId
     } catch (error) {
-        console.error('Error fetching courses:', error);
+        console.error('Error saving schedule:', error);
+        alert('Failed to save schedule. Please try again.');
     }
 };
+
 
 
 </script>

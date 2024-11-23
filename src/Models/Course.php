@@ -83,46 +83,18 @@ class Course extends BaseModel
         return $statement->execute(['id' => $id]);
     }
 
-    // public function getCourses()
-    // {
-    //     $sql = "
-    //         SELECT 
-    //             courses.id AS course_id, 
-    //             courses.course_code AS course_code, 
-    //             schedule.TIME_FROM, 
-    //             schedule.TIME_TO, 
-    //             schedule.sched_day, 
-    //             schedule.sched_semester, 
-    //             schedule.sched_sy, 
-    //             schedule.sched_room, 
-    //             schedule.section_id, 
-    //             schedule.PROGRAM_ID 
-    //         FROM courses 
-    //         LEFT JOIN schedule ON courses.id = schedule.COURSE_ID
-    //     ";
-    
-    //     $statement = $this->db->prepare($sql);
-    
-    //     // Execute the query
-    //     if ($statement->execute()) {
-    //         // Fetch and return results
-    //         return $statement->fetchAll(PDO::FETCH_ASSOC);
-    //     } else {
-    //         // Log and return false if execution fails
-    //         error_log("Query Execution Failed: " . print_r($statement->errorInfo(), true));
-    //         return false;
-    //     }
-    // }
-
     public function getCourses($section_id)
 {
     $sql = "
         SELECT 
-            courses.id AS course_id, 
+            courses.id AS course_id,
+            courses.program_id, 
             courses.course_code, 
             schedule.TIME_FROM, 
             schedule.TIME_TO, 
-            schedule.sched_day 
+            schedule.sched_day,
+            schedule.PROGRAM_ID AS schedule_program_id,
+            schedule.COURSE_ID AS schedule_course_id
         FROM courses 
         LEFT JOIN schedule ON courses.id = schedule.COURSE_ID 
         WHERE schedule.section_id = :section_id
@@ -137,6 +109,34 @@ class Course extends BaseModel
     }
 }
 
-    
+public function getCoursesWithSchedules($program_id, $year, $semester, $section)
+{
+    $sql = "
+        SELECT 
+            courses.id AS course_id,
+            courses.course_code,
+            schedule.TIME_FROM,
+            schedule.TIME_TO,
+            schedule.sched_day,
+            schedule.sched_room
+        FROM courses
+        LEFT JOIN schedule ON courses.id = schedule.COURSE_ID
+        WHERE courses.program_id = :program_id
+        AND courses.year = :year
+        AND courses.semester = :semester
+        AND (schedule.section_id = :section OR schedule.section_id IS NULL)
+    ";
+
+    $statement = $this->db->prepare($sql);
+    $statement->execute([
+        'program_id' => $program_id,
+        'year' => $year,
+        'semester' => $semester,
+        'section' => $section
+    ]);
+
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 }

@@ -24,7 +24,7 @@ class SectionController extends BaseController
         $data = [
             'isSection' => true,
             'sections' => $sections,
-            'programs' => $programs, // Pass program list to the view
+            'programs' => $programs, 
         ];
 
         return $this->render('root', $data);
@@ -101,50 +101,75 @@ class SectionController extends BaseController
     }
 
 
-   public function getCoursesBySection($sectionId)
-{
-    $sql = " SELECT courses.id AS course_id, courses.course_code AS course_code, schedule.TIME_FROM, schedule.TIME_TO, schedule.sched_day, schedule.sched_semester, schedule.sched_sy, schedule.sched_room, schedule.section_id, schedule.PROGRAM_ID FROM courses LEFT JOIN schedule ON courses.id = schedule.COURSE_ID WHERE schedule.section_id = :sectionId;";
-
-    $statement = $this->db->prepare($sql);
-    $courses = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    header('Content-Type: application/json');
-    echo json_encode($courses);
-}
-
-public function getCourses()
-{
-    try {
-        $courseModel = new Course(); // Assuming the model is named `Course`
-
-        // Call the model method
-        $courses = $courseModel->getCourses();
-
-        // Check if the query returned results
-        if ($courses === false) {
+    public function getCoursesBySection($section_id)
+    {
+        try {
+            // Load the model
+            $courseModel = new Course(); // Assuming the model is named `Course`
+    
+            // Call the model method to get courses for the section
+            $courses = $courseModel->getCourses($section_id);
+    
+            // Check if the query returned results
+            if ($courses === false) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to fetch courses']);
+                return;
+            }
+    
+            // Return the courses as JSON
+            header('Content-Type: application/json');
+            echo json_encode($courses);
+        } catch (Exception $e) {
+            // Handle unexpected errors
+            error_log("Exception: " . $e->getMessage());
             http_response_code(500);
-            echo json_encode(['error' => 'Failed to fetch courses']);
-            return;
+            echo json_encode(['error' => 'An unexpected error occurred']);
         }
-
-        // Return the courses as JSON
-        header('Content-Type: application/json');
-        echo json_encode($courses);
-    } catch (Exception $e) {
-        // Handle unexpected errors
-        error_log("Exception: " . $e->getMessage());
-        http_response_code(500);
-        echo json_encode(['error' => 'An unexpected error occurred']);
     }
-}
 
+    public function getCourses($section_id)
+    {
+        try {
+            $sectionModel = new Section();
+            $courseModel = new Course();
+    
+            // Fetch section details
+            $section = $sectionModel->getSectionById($section_id);
+    
+            if (!$section) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Section not found']);
+                return;
+            }
+    
+            // Fetch courses and schedules for the section
+            $courses = $courseModel->getCoursesWithSchedules(
+                $section['program_id'],
+                $section['year_level'],
+                $section['semester'],
+                $section['name'] // Use section name for matching in the schedule table
+            );
+    
+            if (!$courses) {
+                http_response_code(404);
+                echo json_encode(['message' => 'No courses found for this section.']);
+                return;
+            }
+    
+            // Return the courses and schedules as JSON
+            header('Content-Type: application/json');
+            echo json_encode($courses);
+        } catch (Exception $e) {
+            error_log("Exception: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['error' => 'An unexpected error occurred']);
+        }
+    }
+    
 
-
-
-
-
-
-
+    
+    
     // Update schedule for a course
     public function updateSchedule($courseId)
     {
@@ -194,5 +219,73 @@ public function getCourses()
         }
     }
 }
+
+private $scheduleModel;
+
+public function __construct()
+{
+    $this->scheduleModel = new Schedule();
+}
+
+public function saveSchedule()
+{
+    try {
+        $scheduleEntries = json_decode(file_get_contents('php://input'), true);
+
+        if (!$scheduleEntries || !is_array($scheduleEntries)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid input data']);
+            return;
+        }
+
+        foreach ($scheduleEntries as $data) {
+            // Validate required fields for each schedule entry
+            $requiredFields = ['course_id', 'program_id', 'TIME_FROM', 'TIME_TO', 'sched_day', 'sched_semester', 'sched_sy', 'sched_room'];
+            foreach ($requiredFields as $field) {
+                if (empty($data[$field])) {
+                    http_response_code(400);
+                    echo json_encode(['error' => "Missing required field: $field in one of the schedule entries"]);
+                    return;
+                }
+            }
+
+            // Save or update schedule in the database
+            $this->scheduleModel->saveOrUpdateSchedule($data);
+        }
+
+        http_response_code(200);
+        echo json_encode(['message' => 'Schedules saved successfully']);
+    } catch (\Exception $e) {
+        error_log("Error saving schedules: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to save schedules']);
+    }
+}
+
+
+
+
+
+public function getSchedule($courseId)
+{
+    try {
+        $scheduleModel = new Schedule();
+        $schedules = $scheduleModel->getScheduleByCourseId($courseId);
+
+        if (!$schedules || count($schedules) === 0) {
+            // No schedules found, return an empty array
+            $schedules = [];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($schedules);
+    } catch (Exception $e) {
+        error_log("Exception: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['error' => 'An unexpected error occurred']);
+    }
+}
+
+
 
 }

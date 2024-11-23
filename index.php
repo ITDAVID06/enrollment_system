@@ -37,9 +37,13 @@ try {
     $router->get('/course/{id}', '\App\Controllers\CourseController@getCourse');
     $router->post('/course/update/{id}', '\App\Controllers\CourseController@updateCourse');
     $router->delete('/course/delete/{id}', '\App\Controllers\CourseController@deleteCourse');
+    
 
     $router->get('/sections', '\App\Controllers\SectionController@showSections');
     $router->get('/api/sections', '\App\Controllers\SectionController@getAllSections');
+
+
+
 
 
     $router->post('/section', '\App\Controllers\SectionController@registerSection');
@@ -47,12 +51,22 @@ try {
     $router->get('/section/course/{id}', '\App\Controllers\SectionController@getCourse');
     $router->post('/section/update/{id}', '\App\Controllers\SectionController@updateSection');
     $router->delete('/section/{id}', '\App\Controllers\SectionController@deleteSection');
-    $router->get('/section/courses/{sectionId}', '\App\Controllers\SectionController@getCoursesBySection');
+    $router->get('/sections/courses/{sectionId}', '\App\Controllers\SectionController@getCoursesBySection');
+
+
+    
     $router->post('/schedule/update/{courseId}', '\App\Controllers\SectionController@updateSchedule');
 
-    $router->get('/get-courses', '\App\Controllers\SectionController@getCourses');
+    $router->get('/get-courses/{sectionId}', '\App\Controllers\SectionController@getCourses');
     // In your routing configuration
 
+
+
+
+    $router->get('/schedule/{course_id}', '\App\Controllers\SectionController@getSchedule');
+    $router->post('/schedule/save/{course_id}', '\App\Controllers\SectionController@saveSchedule');
+    $router->post('/save-schedule', '\App\Controllers\SectionController@saveSchedule');
+    $router->get('/save-schedule', '\App\Controllers\SectionController@saveSchedule');
 
 
 

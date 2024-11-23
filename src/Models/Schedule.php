@@ -28,19 +28,192 @@ class Schedule extends BaseModel
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateSchedule($courseId, $data)
+    public function getScheduleByCourseId($courseId)
     {
-        $sql = "UPDATE schedules SET 
-                    monday_start = :monday_start, monday_end = :monday_end,
-                    tuesday_start = :tuesday_start, tuesday_end = :tuesday_end,
-                    wednesday_start = :wednesday_start, wednesday_end = :wednesday_end,
-                    thursday_start = :thursday_start, thursday_end = :thursday_end,
-                    friday_start = :friday_start, friday_end = :friday_end
-                WHERE course_id = :course_id";
-
+        $sql = "
+            SELECT * 
+            FROM schedule 
+            WHERE COURSE_ID = :course_id
+        ";
         $statement = $this->db->prepare($sql);
-        $data['course_id'] = $courseId;
-
-        return $statement->execute($data);
+        $statement->execute(['course_id' => $courseId]);
+    
+        return $statement->fetchAll(PDO::FETCH_ASSOC); // Returns an array of schedules
     }
+    
+
+
+    public function addSchedule($data)
+{
+    $sql = "
+        INSERT INTO schedule (
+            TIME_FROM, TIME_TO, sched_day, sched_semester, sched_sy, sched_room, SECTION, PROGRAM_ID, COURSE_ID
+        ) VALUES (
+            :TIME_FROM, :TIME_TO, :sched_day, :sched_semester, :sched_sy, :sched_room, :SECTION, :PROGRAM_ID, :COURSE_ID
+        )
+    ";
+
+    $statement = $this->db->prepare($sql);
+    return $statement->execute([
+        'TIME_FROM' => $data['TIME_FROM'],
+        'TIME_TO' => $data['TIME_TO'],
+        'sched_day' => $data['sched_day'],
+        'sched_semester' => $data['sched_semester'],
+        'sched_sy' => $data['sched_sy'],
+        'sched_room' => $data['sched_room'],
+        'SECTION' => $data['SECTION'],
+        'PROGRAM_ID' => $data['PROGRAM_ID'],
+        'COURSE_ID' => $data['COURSE_ID']
+    ]);
+}
+
+public function updateSchedule($courseCode, $data)
+{
+    $sql = "
+        UPDATE schedule SET 
+            TIME_FROM = :TIME_FROM,
+            TIME_TO = :TIME_TO,
+            sched_day = :sched_day,
+            sched_semester = :sched_semester,
+            sched_sy = :sched_sy,
+            sched_room = :sched_room
+        WHERE COURSE_ID = (
+            SELECT id FROM courses WHERE course_code = :course_code
+        )
+    ";
+
+    $statement = $this->db->prepare($sql);
+    return $statement->execute([
+        'TIME_FROM' => $data['TIME_FROM'],
+        'TIME_TO' => $data['TIME_TO'],
+        'sched_day' => $data['sched_day'],
+        'sched_semester' => $data['sched_semester'],
+        'sched_sy' => $data['sched_sy'],
+        'sched_room' => $data['sched_room'],
+        'course_code' => $courseCode
+    ]);
+}
+
+public function getScheduleByCourseCode($courseCode)
+{
+    $sql = "
+        SELECT 
+            courses.course_code,
+            courses.id AS course_id,
+            schedule.TIME_FROM,
+            schedule.TIME_TO,
+            schedule.sched_day,
+            schedule.sched_semester,
+            schedule.sched_sy,
+            schedule.sched_room
+        FROM courses
+        LEFT JOIN schedule ON courses.id = schedule.COURSE_ID
+        WHERE courses.course_code = :course_code
+    ";
+
+    $statement = $this->db->prepare($sql);
+    $statement->execute(['course_code' => $courseCode]);
+
+    // Fetch the schedule or course details (even if no schedule exists)
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        // If no matching course is found, throw an error or return empty structure
+        return [
+            "course_code" => $courseCode,
+            "course_id" => null,
+            "TIME_FROM" => null,
+            "TIME_TO" => null,
+            "sched_day" => null,
+            "sched_semester" => null,
+            "sched_sy" => null,
+            "sched_room" => null,
+        ];
+    }
+
+    return $result;
+}
+
+public function saveSchedule($courseId, $programId, $timeFrom, $timeTo, $schedDay, $schedSemester, $schedSy, $schedRoom)
+{
+    $sql = "
+        INSERT INTO schedule (COURSE_ID, PROGRAM_ID, TIME_FROM, TIME_TO, sched_day, sched_semester, sched_sy, sched_room)
+        VALUES (:course_id, :program_id, :time_from, :time_to, :sched_day, :sched_semester, :sched_sy, :sched_room)
+    ";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+        'course_id' => $courseId,
+        'program_id' => $programId,
+        'time_from' => $timeFrom,
+        'time_to' => $timeTo,
+        'sched_day' => $schedDay,
+        'sched_semester' => $schedSemester,
+        'sched_sy' => $schedSy,
+        'sched_room' => $schedRoom,
+    ]);
+}
+
+public function saveOrUpdateSchedule($data)
+{
+    // Check if a schedule already exists for this course and day
+    $sqlCheck = "
+        SELECT schedID 
+        FROM schedule 
+        WHERE COURSE_ID = :course_id AND sched_day = :sched_day
+    ";
+    $stmtCheck = $this->db->prepare($sqlCheck);
+    $stmtCheck->execute([
+        'course_id' => $data['course_id'],
+        'sched_day' => $data['sched_day']
+    ]);
+    $existingSchedule = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if ($existingSchedule) {
+        // Update existing schedule
+        $sqlUpdate = "
+            UPDATE schedule SET 
+                TIME_FROM = :TIME_FROM,
+                TIME_TO = :TIME_TO,
+                sched_semester = :sched_semester,
+                sched_sy = :sched_sy,
+                sched_room = :sched_room
+            WHERE schedID = :schedID
+        ";
+        $stmtUpdate = $this->db->prepare($sqlUpdate);
+        $stmtUpdate->execute([
+            'TIME_FROM' => $data['TIME_FROM'],
+            'TIME_TO' => $data['TIME_TO'],
+            'sched_semester' => $data['sched_semester'],
+            'sched_sy' => $data['sched_sy'],
+            'sched_room' => $data['sched_room'],
+            'schedID' => $existingSchedule['schedID']
+        ]);
+    } else {
+        // Insert new schedule
+        $sqlInsert = "
+            INSERT INTO schedule (
+                COURSE_ID, PROGRAM_ID, TIME_FROM, TIME_TO, sched_day, sched_semester, sched_sy, sched_room
+            ) VALUES (
+                :course_id, :program_id, :TIME_FROM, :TIME_TO, :sched_day, :sched_semester, :sched_sy, :sched_room
+            )
+        ";
+        $stmtInsert = $this->db->prepare($sqlInsert);
+        $stmtInsert->execute([
+            'course_id' => $data['course_id'],
+            'program_id' => $data['program_id'],
+            'TIME_FROM' => $data['TIME_FROM'],
+            'TIME_TO' => $data['TIME_TO'],
+            'sched_day' => $data['sched_day'],
+            'sched_semester' => $data['sched_semester'],
+            'sched_sy' => $data['sched_sy'],
+            'sched_room' => $data['sched_room']
+        ]);
+    }
+}
+
+
+
+
+
+
 }
