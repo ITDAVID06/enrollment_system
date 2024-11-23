@@ -40,21 +40,18 @@ class Course extends BaseModel
     }
 
     public function getCourseById($id)
-{
-    $sql = "
-        SELECT 
-            courses.*, 
-            schedules.*
-        FROM courses
-        LEFT JOIN schedules ON courses.id = schedules.course_id
-        WHERE courses.id = :id
-    ";
-    $statement = $this->db->prepare($sql);
-    $statement->execute(['id' => $id]);
-
-    return $statement->fetch(PDO::FETCH_ASSOC);
-}
-
+    {
+        $sql = "
+            SELECT * 
+            FROM courses
+            WHERE id = :id
+        ";
+        $statement = $this->db->prepare($sql);
+        $statement->execute(['id' => $id]);
+    
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+    
     public function update($id, $data)
     {
         $sql = "UPDATE courses 

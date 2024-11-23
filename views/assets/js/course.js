@@ -93,19 +93,33 @@ const editCourseModal = document.getElementById("editCourseModal");
 
 // Open the Edit Course modal
 const editCourse = async (courseId) => {
-// Fetch course details from backend
-const response = await fetch(`/course/${courseId}`);
-const course = await response.json();
+    try {
+        // Fetch course data
+        const response = await fetch(`/course/${courseId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch course data');
+        }
 
-// Pre-fill the form with course data
-document.getElementById("editCourseId").value = course.id;
-document.getElementById("editCourseCode").value = course.course_code;
-document.getElementById("editCourseTitle").value = course.title;
-document.getElementById("editCourseUnit").value = course.unit;
-document.getElementById("editCourseSemester").value = course.semester;
-document.getElementById("editCourseYear").value = course.year;
+        const course = await response.json();
+        if (!course) {
+            alert('Course not found');
+            return;
+        }
 
-editCourseModal.style.display = "block";
+        // Populate the modal fields
+        document.getElementById('editCourseId').value = course.id;
+        document.getElementById('editCourseCode').value = course.course_code;
+        document.getElementById('editCourseTitle').value = course.title;
+        document.getElementById('editCourseUnit').value = course.unit;
+        document.getElementById('editCourseSemester').value = course.semester;
+        document.getElementById('editCourseYear').value = course.year;
+
+        // Show the modal
+        document.getElementById('editCourseModal').style.display = 'block';
+    } catch (error) {
+        console.error('Error fetching course data:', error);
+        alert('An error occurred while fetching course data.');
+    }
 };
 
 // Close Edit Course modal

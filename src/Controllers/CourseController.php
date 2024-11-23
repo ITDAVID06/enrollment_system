@@ -55,9 +55,16 @@ class CourseController extends BaseController
     public function getCourse($id)
     {
         $courseModel = new Course();
-        echo json_encode($courseModel->getCourseById($id));
+        $course = $courseModel->getCourseById($id);
+    
+        if ($course) {
+            echo json_encode($course);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Course not found']);
+        }
     }
-
+    
     public function updateCourse($id)
     {
         try {
