@@ -66,7 +66,6 @@ try {
     $router->get('/schedule/{course_id}', '\App\Controllers\SectionController@getSchedule');
     $router->post('/schedule/save/{course_id}', '\App\Controllers\SectionController@saveSchedule');
     $router->post('/save-schedule', '\App\Controllers\SectionController@saveSchedule');
-    $router->get('/save-schedule', '\App\Controllers\SectionController@saveSchedule');
 
 
 

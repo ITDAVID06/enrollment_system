@@ -19,8 +19,8 @@ class SectionController extends BaseController
 
         // Fetch all sections and programs
         $sections = $sectionModel->getAllSections();
-        $programs = $programModel->getAllPrograms();
-
+        $programs = $programModel->getAllPrograms();    
+      
         $data = [
             'isSection' => true,
             'sections' => $sections,
@@ -230,39 +230,44 @@ public function __construct()
 public function saveSchedule()
 {
     try {
-        $scheduleEntries = json_decode(file_get_contents('php://input'), true);
+        
+        $courseId = $_POST['course_id'];
+        $programId = $_POST['program_id'];
+        $sectionId = $_POST['section_id'];
+        $semester = $_POST['sched_semester'];
+        $schoolYear = $_POST['sched_sy'];
+        $room = $_POST['sched_room'];
+        
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-        if (!$scheduleEntries || !is_array($scheduleEntries)) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Invalid input data']);
-            return;
-        }
+        $scheduleModel = new Schedule();
 
-        foreach ($scheduleEntries as $data) {
-            // Validate required fields for each schedule entry
-            $requiredFields = ['course_id', 'program_id', 'TIME_FROM', 'TIME_TO', 'sched_day', 'sched_semester', 'sched_sy', 'sched_room'];
-            foreach ($requiredFields as $field) {
-                if (empty($data[$field])) {
-                    http_response_code(400);
-                    echo json_encode(['error' => "Missing required field: $field in one of the schedule entries"]);
-                    return;
-                }
+        foreach ($days as $day) {
+            $isEnabled = isset($_POST['days']) && in_array($day, $_POST['days']);
+
+            if ($isEnabled) {
+                $scheduleData = [
+                    'course_id' => $courseId,
+                    'program_id' => $programId,
+                    'section_id' => $sectionId,
+                    'sched_day' => $day,
+                    'TIME_FROM' => $_POST[strtolower($day) . '_start'] ?? null,
+                    'TIME_TO' => $_POST[strtolower($day) . '_end'] ?? null,
+                    'sched_semester' => $semester,
+                    'sched_sy' => $schoolYear,
+                    'sched_room' => $room
+                ];
+
+                $scheduleModel->saveSchedule($scheduleData);
             }
-
-            // Save or update schedule in the database
-            $this->scheduleModel->saveOrUpdateSchedule($data);
         }
 
-        http_response_code(200);
-        echo json_encode(['message' => 'Schedules saved successfully']);
-    } catch (\Exception $e) {
-        error_log("Error saving schedules: " . $e->getMessage());
+    } catch (Exception $e) {
+        error_log("Error saving schedule: " . $e->getMessage());
         http_response_code(500);
-        echo json_encode(['error' => 'Failed to save schedules']);
+        echo json_encode(['error' => 'Failed to save schedule.']);
     }
 }
-
-
 
 
 

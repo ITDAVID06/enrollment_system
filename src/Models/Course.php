@@ -85,7 +85,7 @@ class Course extends BaseModel
     $sql = "
         SELECT 
             courses.id AS course_id,
-            courses.program_id, 
+            courses.program_id AS program_id, 
             courses.course_code, 
             schedule.TIME_FROM, 
             schedule.TIME_TO, 
@@ -111,13 +111,16 @@ public function getCoursesWithSchedules($program_id, $year, $semester, $section)
     $sql = "
         SELECT 
             courses.id AS course_id,
+            courses.program_id,
             courses.course_code,
             schedule.TIME_FROM,
             schedule.TIME_TO,
             schedule.sched_day,
-            schedule.sched_room
+            schedule.sched_room,
+            sections.id AS section_id
         FROM courses
         LEFT JOIN schedule ON courses.id = schedule.COURSE_ID
+        LEFT JOIN sections ON courses.program_id = sections.program_id
         WHERE courses.program_id = :program_id
         AND courses.year = :year
         AND courses.semester = :semester

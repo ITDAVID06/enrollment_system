@@ -28,18 +28,24 @@ class Schedule extends BaseModel
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getScheduleByCourseId($courseId)
-    {
-        $sql = "
-            SELECT * 
-            FROM schedule 
-            WHERE COURSE_ID = :course_id
-        ";
-        $statement = $this->db->prepare($sql);
-        $statement->execute(['course_id' => $courseId]);
+   public function getScheduleByCourseId($courseId)
+{
+    $sql = "
+        SELECT 
+            c.id,
+            c.course_code,
+            c.title,
+            p.id,
+            p.title
+        FROM courses c
+        INNER JOIN programs p ON c.program_id = p.id
+        WHERE c.id = :course_id
+    ";
+    $statement = $this->db->prepare($sql);
+    $statement->execute(['course_id' => $courseId]);
     
-        return $statement->fetchAll(PDO::FETCH_ASSOC); // Returns an array of schedules
-    }
+    return $statement->fetchAll(PDO::FETCH_ASSOC); // Returns an array of course and program details
+}
     
 
 
@@ -134,24 +140,36 @@ public function getScheduleByCourseCode($courseCode)
     return $result;
 }
 
-public function saveSchedule($courseId, $programId, $timeFrom, $timeTo, $schedDay, $schedSemester, $schedSy, $schedRoom)
-{
-    $sql = "
-        INSERT INTO schedule (COURSE_ID, PROGRAM_ID, TIME_FROM, TIME_TO, sched_day, sched_semester, sched_sy, sched_room)
-        VALUES (:course_id, :program_id, :time_from, :time_to, :sched_day, :sched_semester, :sched_sy, :sched_room)
-    ";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
-        'course_id' => $courseId,
-        'program_id' => $programId,
-        'time_from' => $timeFrom,
-        'time_to' => $timeTo,
-        'sched_day' => $schedDay,
-        'sched_semester' => $schedSemester,
-        'sched_sy' => $schedSy,
-        'sched_room' => $schedRoom,
-    ]);
-}
+
+
+
+public function saveSchedule($scheduleData)
+    {
+        $sql = "
+            INSERT INTO schedule (course_id, program_id, section_id, sched_day, TIME_FROM, TIME_TO, sched_semester, sched_sy, sched_room)
+            VALUES (:course_id, :program_id, :section_id, :sched_day, :TIME_FROM, :TIME_TO, :sched_semester, :sched_sy, :sched_room)
+            ON DUPLICATE KEY UPDATE 
+                TIME_FROM = VALUES(TIME_FROM),
+                TIME_TO = VALUES(TIME_TO),
+                sched_semester = VALUES(sched_semester),
+                sched_sy = VALUES(sched_sy),
+                sched_room = VALUES(sched_room)
+        ";
+        
+        $statement = $this->db->prepare($sql);
+
+        return $statement->execute([
+            'course_id' => $scheduleData['course_id'],
+            'program_id' => $scheduleData['program_id'],
+            'section_id' => $scheduleData['section_id'],
+            'sched_day' => $scheduleData['sched_day'],
+            'TIME_FROM' => $scheduleData['TIME_FROM'],
+            'TIME_TO' => $scheduleData['TIME_TO'],
+            'sched_semester' => $scheduleData['sched_semester'],
+            'sched_sy' => $scheduleData['sched_sy'],
+            'sched_room' => $scheduleData['sched_room']
+        ]);
+    }
 
 public function saveOrUpdateSchedule($data)
 {
