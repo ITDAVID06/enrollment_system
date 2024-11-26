@@ -25,6 +25,8 @@ try {
 
 
     $router->get('/program', '\App\Controllers\ProgramController@showProgram');
+
+    $router->get('/programs', '\App\Controllers\ProgramController@list');
     $router->post('/program', '\App\Controllers\ProgramController@register');
     $router->get('/program/list', '\App\Controllers\ProgramController@list');
     $router->get('/program/{id}', '\App\Controllers\ProgramController@get');
@@ -64,9 +66,10 @@ try {
 
     // $router->get('/schedule/{schedID}', '\App\Controllers\SectionController@getupdateSchedule');
     $router->get('/schedule/{schedID}', '\App\Controllers\SectionController@getAllSchedules');
-    $router->get('/get-schedule', '\App\Controllers\SectionController@getAllSchedules');
-    
-    $router->get('/schedule/{course_id}', '\App\Controllers\SectionController@getSchedule');
+
+    $router->get('/get-schedule/{course_id}/{sectionId}', '\App\Controllers\SectionController@getAllSchedules');
+
+    $router->get('/schedule/{courseId}', '\App\Controllers\SectionController@getSchedule');
     $router->post('/schedule/save/{course_id}', '\App\Controllers\SectionController@saveSchedule');
     $router->post('/save-schedule', '\App\Controllers\SectionController@saveSchedule');
 

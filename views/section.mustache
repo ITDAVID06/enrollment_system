@@ -86,7 +86,7 @@
 <div id="editScheduleModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeEditScheduleModal()">&times;</span>
-        <h3>Edit Schedule</h3>
+        <h3>Add Schedule</h3>
         <form id="editScheduleForm" method="POST" action="/save-schedule">
             <input type="hidden" id="courseId" name="course_id">
             <input type="hidden" id="programId" name="program_id">
@@ -167,8 +167,8 @@
 <div id="updateScheduleModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeupdateScheduleModal()">&times;</span>
-        <h3>Edit Schedule</h3>
-        <form id="updateScheduleForm" method="POST" action="/save-schedule">
+        <h3>Update Schedule</h3>
+        <form id="updateScheduleForm" method="POST">
             <input type="hidden" id="updatecourseId" name="course_id">
             <input type="hidden" id="updateprogramId" name="program_id">
             <input type="hidden" id="updatesectionId" name="section_id">

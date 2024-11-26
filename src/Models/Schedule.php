@@ -56,63 +56,74 @@ public function getScheduleById($schedID) {
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
 
-public function getAllSchedules(){
-    $sql = "SELECT * FROM schedule";
+public function getAllSchedules($course_id, $sectionID) {
+    $sql = "SELECT * FROM schedule WHERE course_id = :course_id AND section_id = :section_id";
     $statement = $this->db->prepare($sql);
-    $statement->execute();
+    $statement->execute([
+        'course_id' => $course_id,
+        'section_id' => $sectionID
+    ]);
     return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
-    public function addSchedule($data)
-{
-    $sql = "
-        INSERT INTO schedule (
-            TIME_FROM, TIME_TO, sched_day, sched_semester, sched_sy, sched_room, SECTION, PROGRAM_ID, COURSE_ID
-        ) VALUES (
-            :TIME_FROM, :TIME_TO, :sched_day, :sched_semester, :sched_sy, :sched_room, :SECTION, :PROGRAM_ID, :COURSE_ID
-        )
-    ";
 
-    $statement = $this->db->prepare($sql);
-    return $statement->execute([
-        'TIME_FROM' => $data['TIME_FROM'],
-        'TIME_TO' => $data['TIME_TO'],
-        'sched_day' => $data['sched_day'],
-        'sched_semester' => $data['sched_semester'],
-        'sched_sy' => $data['sched_sy'],
-        'sched_room' => $data['sched_room'],
-        'SECTION' => $data['SECTION'],
-        'PROGRAM_ID' => $data['PROGRAM_ID'],
-        'COURSE_ID' => $data['COURSE_ID']
-    ]);
+public function updateScheduleModal($courseId, $data)
+{
+    $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    if (!isset($data['days']) || !is_array($data['days'])) {
+        error_log("Error: 'days' key is missing or not an array");
+        return false;
+    }
+
+    try {
+        foreach ($days as $day) {
+            if (in_array($day, $data['days'])) {
+                $timeFrom = $data[strtolower($day) . '_start'] . ':00';
+                $timeTo = $data[strtolower($day) . '_end'] . ':00';
+
+                $sql = "UPDATE schedule SET 
+                            TIME_FROM = :time_from, 
+                            TIME_TO = :time_to,
+                            sched_semester = :sched_semester,
+                            sched_sy = :sched_sy,
+                            sched_room = :sched_room
+                        WHERE 
+                            course_id = :course_id 
+                            AND sched_day = :sched_day
+                            AND section_id = :section_id
+                            AND program_id = :program_id";
+
+                $statement = $this->db->prepare($sql);
+                $statement->execute([
+                    'time_from' => $timeFrom,
+                    'time_to' => $timeTo,
+                    'course_id' => $courseId,
+                    'sched_day' => ucfirst(trim($day)),
+                    'sched_semester' => $data['sched_semester'],
+                    'sched_sy' => $data['sched_sy'],
+                    'sched_room' => $data['sched_room'],
+                    'section_id' => $data['section_id'],
+                    'program_id' => $data['program_id'],
+                ]);
+
+                error_log("SQL executed for $day with course_id: $courseId");
+
+                if ($statement->rowCount() === 0) {
+                    error_log("No rows updated for course_id: $courseId, sched_day: $day");
+                }
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Database Error: " . $e->getMessage());
+        return false;
+    }
+
+    return true;
 }
 
-public function updateSchedule($courseCode, $data)
-{
-    $sql = "
-        UPDATE schedule SET 
-            TIME_FROM = :TIME_FROM,
-            TIME_TO = :TIME_TO,
-            sched_day = :sched_day,
-            sched_semester = :sched_semester,
-            sched_sy = :sched_sy,
-            sched_room = :sched_room
-        WHERE COURSE_ID = (
-            SELECT id FROM courses WHERE course_code = :course_code
-        )
-    ";
 
-    $statement = $this->db->prepare($sql);
-    return $statement->execute([
-        'TIME_FROM' => $data['TIME_FROM'],
-        'TIME_TO' => $data['TIME_TO'],
-        'sched_day' => $data['sched_day'],
-        'sched_semester' => $data['sched_semester'],
-        'sched_sy' => $data['sched_sy'],
-        'sched_room' => $data['sched_room'],
-        'course_code' => $courseCode
-    ]);
-}
+
 
 public function getScheduleByCourseCode($courseCode)
 {

@@ -55,7 +55,7 @@ const loadCourses = async (sectionId) => {
                     <td>${course.Wednesday || ''}</td>
                     <td>${course.Thursday || ''}</td>
                     <td>${course.Friday || ''}</td>
-                    <td><button onclick="updateSchedule()">Edit</button></td> 
+                    <td><button onclick="updateSchedule(${course.course_id}, ${course.program_id}, ${sectionId})">Edit</button></td> 
                 </tr>
             `).join('');
         
@@ -95,9 +95,12 @@ const groupCoursesByCode = (courses) => {
         if (!grouped[course.course_code]) {
             grouped[course.course_code] = {
                 course_code: course.course_code,
-                course_id: course.id, // Ensure you have course_id
+                course_id: course.course_id, // Ensure you have course_id
                 program_id: course.program_id, // Ensure you have program_id
                 schedID: course.schedID,
+                sched_semester: course.sched_semester,
+                sched_sy: course.sched_sy,
+                sched_room: course.sched_room,
                 Monday: '',
                 Tuesday: '',
                 Wednesday: '',
@@ -114,8 +117,6 @@ const groupCoursesByCode = (courses) => {
 
     return Object.values(grouped); // Convert the object back to an array
 };
-
-
 
 loadSections();
 
@@ -185,23 +186,6 @@ const editSchedule = async (courseId, programId, sectionId) => {
     try {
         console.log('editSchedule called with courseId:', courseId, 'programId:', programId, 'sectionId', sectionId);
 
-        // Fetch existing schedule details for the course
-        const response = await fetch(`/schedule/${courseId}`);
-        let schedules = [];
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Schedules data:', data); // For debugging
-
-            // Ensure schedules is always an array
-            schedules = Array.isArray(data) ? data : (data ? [data] : []);
-        } else {
-            schedules = [];
-        }
-
-        // Check if schedules is now an array
-        console.log('Normalized schedules:', schedules);
-
         // Populate modal fields
         document.getElementById('courseId').value = courseId;
         document.getElementById('programId').value = programId;
@@ -209,43 +193,39 @@ const editSchedule = async (courseId, programId, sectionId) => {
         document.getElementById('displayCourseId').innerText = courseId;
         document.getElementById('displaySectionId').innerText = sectionId;
         document.getElementById('displayProgramId').innerText = programId;
-
-        // For each day, populate the schedule if it exists
-        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        days.forEach(day => {
-            const scheduleForDay = schedules.find(s => s.sched_day === day);
-            const enabledCheckbox = document.getElementById(`${day.toLowerCase()}_enabled`);
-            const startTimeInput = document.getElementById(`${day.toLowerCase()}_start`);
-            const endTimeInput = document.getElementById(`${day.toLowerCase()}_end`);
-
-            if (scheduleForDay) {
-                enabledCheckbox.checked = true;
-                startTimeInput.disabled = false;
-                endTimeInput.disabled = false;
-                startTimeInput.value = scheduleForDay.TIME_FROM || '';
-                endTimeInput.value = scheduleForDay.TIME_TO || '';
-            } else {
-                enabledCheckbox.checked = false;
-                startTimeInput.disabled = true;
-                endTimeInput.disabled = true;
-                startTimeInput.value = '';
-                endTimeInput.value = '';
-            }
-        });
-
-        // Other fields (assuming they are consistent across schedules)
-        const schedule = schedules[0] || {};
-        document.getElementById('semester').value = schedule.sched_semester || '';
-        document.getElementById('schoolYear').value = schedule.sched_sy || '';
-        document.getElementById('room').value = schedule.sched_room || '';
-
-        // Show the modal
         document.getElementById('editScheduleModal').style.display = 'block';
     } catch (error) {
         console.error('Error loading schedule:', error);
         alert('Failed to load schedule. Please try again.');
     }
 };
+
+
+document.getElementById("updateScheduleForm").onsubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const courseID = formData.get("updatecourseId");
+
+    console.log(formData);
+    console.log("Form data being submitted:", Object.fromEntries(formData.entries()));
+
+    const response = await fetch(`/schedule/update/${courseID}`, {
+        method: "POST",
+        body: formData.entries,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert("Schedule updated successfully!");
+        document.getElementById("updateScheduleModal").style.display = "none";
+        // loadSchedules(); // Refresh the schedule list
+    } else {
+        alert(result.message || "Failed to update schedule.");
+    }
+};
+
 
 
 // Add event listeners to enable/disable time inputs based on checkbox
@@ -272,43 +252,68 @@ const closeupdateScheduleModal = () => {
 
 
 // Open Update Schedule Modal
-const updateSchedule = async () => {
-    const response = await fetch(`/get-schedule`);
+const updateSchedule = async (courseId, programId, sectionId) => {
+    console.log('updateSchedule called with courseId:', courseId, 'programId:', programId, 'sectionId:', sectionId);
+    const response = await fetch(`/get-schedule/${courseId}/${sectionId}`);
     const schedule = await response.json();
 
-    console.log(schedule);
-
-    if (!schedule) {
-        console.error("Schedule data is undefined or null.");
+    if (!Array.isArray(schedule) || schedule.length === 0) {
+        console.error("Schedule data is undefined, null, or empty.");
         return;
     }
 
-    // Populate editable fields
-    document.getElementById("updatesemester").value = schedule.sched_semester || '';
-    document.getElementById("updateschoolYear").value = schedule.sched_sy || '';
-    document.getElementById("updateroom").value = schedule.sched_room || '';
+    // Populate general fields (use the first item as a reference for shared fields)
+    const firstSched = schedule[0];
+    document.getElementById('updatecourseId').value = courseId;
+    document.getElementById('updateprogramId').value = programId;
+    document.getElementById('updatesectionId').value = sectionId;
+    document.getElementById('updatedisplayProgramId').innerText = programId;
+    document.getElementById('updatedisplayCourseId').innerText = courseId;
+    document.getElementById('updatedisplaySectionId').innerText = sectionId;
 
-    // Handle schedule day (convert single day string to matching checkbox state)
-    const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+    // Semester mapping
+    const semesterMapping = {
+        "1st Sem": "1st Sem",
+        "2nd Sem": "2nd Sem"
+    };
+    document.getElementById("updatesemester").value = semesterMapping[firstSched.sched_semester] || '';
+
+    // Populate school year and room
+    document.getElementById("updateschoolYear").value = firstSched.sched_sy || '';
+    document.getElementById("updateroom").value = firstSched.sched_room || '';
+
+    // Time conversion for input type="time"
+    const convertTo24Hour = (time) => {
+        const [hours, minutes] = time.split(/[: ]/);
+        const isPM = time.includes('PM');
+        const convertedHours = isPM ? (parseInt(hours, 10) % 12) + 12 : parseInt(hours, 10) % 12;
+        return `${convertedHours.toString().padStart(2, '0')}:${minutes}`;
+    };
+
+    // Handle days and times
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     days.forEach(day => {
-        const dayEnabled = document.getElementById(`update${day}_enabled`);
-        const dayStart = document.getElementById(`update${day}_start`);
-        const dayEnd = document.getElementById(`update${day}_end`);
+        const dayLower = day.toLowerCase(); // Convert day to lowercase for IDs
+        const dayEnabled = document.getElementById(`update${dayLower}_enabled`);
+        const dayStart = document.getElementById(`update${dayLower}_start`);
+        const dayEnd = document.getElementById(`update${dayLower}_end`);
 
-        // Check if the current day matches `sched_day`
-        const isDayEnabled = schedule.sched_day === day.charAt(0).toUpperCase() + day.slice(1);
-        dayEnabled.checked = isDayEnabled;
+        // Find schedule for the current day
+        const daySchedule = schedule.find(sched => sched.sched_day === day);
 
-        // Populate time fields only if the day matches
-        if (isDayEnabled) {
-            dayStart.value = schedule.TIME_FROM || '';
-            dayEnd.value = schedule.TIME_TO || '';
+        if (daySchedule) {
+            // Populate the time fields if a schedule exists for this day
+            dayEnabled.checked = true;
+            dayStart.value = convertTo24Hour(daySchedule.TIME_FROM);
+            dayEnd.value = convertTo24Hour(daySchedule.TIME_TO);
         } else {
+            // Clear the fields if no schedule exists for this day
+            dayEnabled.checked = false;
             dayStart.value = '';
             dayEnd.value = '';
         }
 
-        // Enable or disable time inputs based on checkbox
+        // Enable or disable time inputs based on checkbox state
         const toggleTimeInputs = () => {
             const isEnabled = dayEnabled.checked;
             dayStart.disabled = !isEnabled;
@@ -319,9 +324,9 @@ const updateSchedule = async () => {
         dayEnabled.addEventListener("change", toggleTimeInputs);
     });
 
+    // Show modal
     document.getElementById("updateScheduleModal").style.display = "block";
 };
-
 
 
 // Handle Update Schedule Form Submission
@@ -329,19 +334,23 @@ document.getElementById("updateScheduleForm").onsubmit = async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    const schedID = formData.get("schedID");
+    const courseID = formData.get("updatecourseId");
 
-    const response = await fetch(`/schedule/update/${schedID}`, {
+    console.log(formData);
+    console.log("Form data being submitted:", Object.fromEntries(formData.entries()));
+
+    const response = await fetch(`/schedule/update/${courseID}`, {
         method: "POST",
         body: formData,
     });
 
     const result = await response.json();
+    console.log(result);
 
     if (response.ok) {
         alert("Schedule updated successfully!");
         document.getElementById("updateScheduleModal").style.display = "none";
-        loadSchedules(); // Refresh the schedule list
+        // loadSchedules(); // Refresh the schedule list
     } else {
         alert(result.message || "Failed to update schedule.");
     }

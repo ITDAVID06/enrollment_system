@@ -91,6 +91,9 @@ class Course extends BaseModel
             schedule.TIME_FROM, 
             schedule.TIME_TO, 
             schedule.sched_day,
+            schedule.sched_sy,
+            schedule.sched_room,
+            schedule.sched_semester,
             schedule.PROGRAM_ID AS schedule_program_id,
             schedule.COURSE_ID AS schedule_course_id
         FROM courses 

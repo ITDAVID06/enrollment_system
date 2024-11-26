@@ -173,17 +173,66 @@ class SectionController extends BaseController
     
     
     // Update schedule for a course
-    public function updateSchedule($courseId)
+    public function updateSchedule($course_id)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = $_POST;
-
-            $scheduleModel = new Schedule();
-            $scheduleModel->updateSchedule($courseId, $data);
-
-            echo json_encode(['success' => true, 'message' => 'Schedule updated successfully!']);
+        $scheduleModel = new Schedule();
+        $days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+        $updatedResults = [];
+        $success = true;
+    
+        // Validate that required POST data exists
+        if (empty($_POST['sched_semester']) || empty($_POST['sched_sy']) || empty($_POST['sched_room'])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Missing required fields: sched_semester, sched_sy, or sched_room',
+            ]);
+            return;
         }
+    
+        // Loop through each day
+        foreach ($days as $day) {
+            // Check if start and end times exist for this day
+            if (!empty($_POST[$day . '_start']) && !empty($_POST[$day . '_end'])) {
+                // Prepare data for the current day
+                $data = [
+                    'course_id' => $course_id,
+                    'TIME_FROM' => $_POST[$day . '_start'],
+                    'TIME_TO' => $_POST[$day . '_end'],
+                    'sched_day' => ucfirst($day), // Capitalize the day (e.g., "Monday")
+                    'sched_semester' => $_POST['sched_semester'],
+                    'sched_sy' => $_POST['sched_sy'],
+                    'sched_room' => $_POST['sched_room'],
+                    'section_id' => $_POST['section_id'] ?? null,
+                    'program_id' => $_POST['program_id'] ?? null,
+                ];
+    
+                // Log the prepared data for debugging
+                error_log("Updating schedule for $day: " . print_r($data, true));
+    
+                // Attempt to update the schedule
+                $updated = $scheduleModel->updateScheduleModal($course_id, $data);
+    
+                // Track the result
+                $updatedResults[$day] = $updated;
+    
+                if (!$updated) {
+                    $success = false; // Mark as failure if any update fails
+                    error_log("Failed to update schedule for $day with data: " . print_r($data, true));
+                }
+            } else {
+                error_log("Skipping update for $day: Missing start or end time");
+            }
+        }
+    
+        // Return the result of the updates
+        echo json_encode([
+            'success' => $success,
+            'results' => $updatedResults,
+        ]);
     }
+    
+    
+    
 
     public function addSchedule()
 {
@@ -298,10 +347,10 @@ public function getupdateSchedule($schedID) {
     echo json_encode($scheduleModel->getScheduleById($schedID));
 }
 
-public function getAllSchedules(){
+public function getAllSchedules($course_id, $sectionId){
 
         $scheduleModel = new Schedule();
-        $schedules = $scheduleModel->getAllSchedules();
+        $schedules = $scheduleModel->getAllSchedules($course_id, $sectionId);
 
         header('Content-Type: application/json');
         echo json_encode($schedules);
