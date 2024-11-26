@@ -38,13 +38,13 @@ const loadCourses = async (sectionId) => {
         if (!response.ok) throw new Error('Failed to fetch courses');
 
         const courses = await response.json();
-        // console.log('Courses data:', courses);
+        console.log('Courses data:', courses);
         
 
         if (Array.isArray(courses) && courses.length > 0) {
 
             const groupedCourses = groupCoursesByCode(courses);
-            // console.log(groupedCourses);
+            console.log(groupedCourses);
             
             // Populate courses table
             tableBody.innerHTML = groupedCourses.map(course => `
@@ -55,7 +55,7 @@ const loadCourses = async (sectionId) => {
                     <td>${course.Wednesday || ''}</td>
                     <td>${course.Thursday || ''}</td>
                     <td>${course.Friday || ''}</td>
-                    <td><button onclick="editSchedule('${course.course_id}, ${course.program_id}')">Edit</button></td>
+                    <td><button onclick="updateSchedule()">Edit</button></td> 
                 </tr>
             `).join('');
         
@@ -77,7 +77,7 @@ const loadCourses = async (sectionId) => {
                      <td></td>
                      <td></td>
                      <td></td>
-                     <td><button onclick="editSchedule(${course.course_id}, ${course.program_id}, ${sectionId})">Edit</button></td>
+                     <td><button onclick="editSchedule(${course.course_id}, ${course.program_id}, ${sectionId})">Add</button></td>
                  </tr>
              `).join('') || `<tr><td colspan="7">No courses available.</td></tr>`;
              coursesTable.style.display = 'table';
@@ -97,6 +97,7 @@ const groupCoursesByCode = (courses) => {
                 course_code: course.course_code,
                 course_id: course.id, // Ensure you have course_id
                 program_id: course.program_id, // Ensure you have program_id
+                schedID: course.schedID,
                 Monday: '',
                 Tuesday: '',
                 Wednesday: '',
@@ -179,7 +180,7 @@ const deleteSection = async (sectionId) => {
     }
 };
 
-
+// Add Schedule Function
 const editSchedule = async (courseId, programId, sectionId) => {
     try {
         console.log('editSchedule called with courseId:', courseId, 'programId:', programId, 'sectionId', sectionId);
@@ -261,62 +262,87 @@ days.forEach(day => {
     });
 });
 
-
-
 const closeEditScheduleModal = () => {
     document.getElementById('editScheduleModal').style.display = 'none';
 };
 
-
-// document.getElementById('editScheduleForm').onsubmit = async (event) => {
-//     event.preventDefault();
-
-//     const formData = new FormData(event.target);
-//     const courseId = formData.get('course_id');
-//     const programId = formData.get('program_id');
+const closeupdateScheduleModal = () => {
+    document.getElementById('updateScheduleModal').style.display = 'none';
+};
 
 
-//     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+// Open Update Schedule Modal
+const updateSchedule = async () => {
+    const response = await fetch(`/get-schedule`);
+    const schedule = await response.json();
 
-//     // Collect the schedule data
-//     const scheduleEntries = days.map(day => {
-//         const isEnabled = document.getElementById(`${day.toLowerCase()}_enabled`).checked;
-//         if (isEnabled) {
-//             const timeFrom = document.getElementById(`${day.toLowerCase()}_start`).value;
-//             const timeTo = document.getElementById(`${day.toLowerCase()}_end`).value;
-//             return {
-//                 course_id: courseId,
-//                 program_id: programId,
-//                 sched_day: day,
-//                 TIME_FROM: timeFrom,
-//                 TIME_TO: timeTo,
-//                 sched_semester: formData.get('sched_semester'),
-//                 sched_sy: formData.get('sched_sy'),
-//                 sched_room: formData.get('sched_room'),
-//             };
-//         } else {
-//             return null;
-//         }
-//     }).filter(entry => entry !== null); // Remove null entries
+    console.log(schedule);
 
-//     try {
-//         const response = await fetch('/save-schedule', {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(scheduleEntries),
-//         });
+    if (!schedule) {
+        console.error("Schedule data is undefined or null.");
+        return;
+    }
 
-//         if (!response.ok) throw new Error('Failed to save schedule.');
+    // Populate editable fields
+    document.getElementById("updatesemester").value = schedule.sched_semester || '';
+    document.getElementById("updateschoolYear").value = schedule.sched_sy || '';
+    document.getElementById("updateroom").value = schedule.sched_room || '';
 
-//         const result = await response.json();
-//         console.log('Schedule saved:', result);
-//         closeEditScheduleModal();
+    // Handle schedule day (convert single day string to matching checkbox state)
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+    days.forEach(day => {
+        const dayEnabled = document.getElementById(`update${day}_enabled`);
+        const dayStart = document.getElementById(`update${day}_start`);
+        const dayEnd = document.getElementById(`update${day}_end`);
 
-//         // Optionally, refresh the courses table to reflect the changes
-//         // loadCourses(sectionId); // You might need to keep track of the current sectionId
-//     } catch (error) {
-//         console.error('Error saving schedule:', error);
-//         alert('Failed to save schedule. Please try again.');
-//     }
-// };
+        // Check if the current day matches `sched_day`
+        const isDayEnabled = schedule.sched_day === day.charAt(0).toUpperCase() + day.slice(1);
+        dayEnabled.checked = isDayEnabled;
 
+        // Populate time fields only if the day matches
+        if (isDayEnabled) {
+            dayStart.value = schedule.TIME_FROM || '';
+            dayEnd.value = schedule.TIME_TO || '';
+        } else {
+            dayStart.value = '';
+            dayEnd.value = '';
+        }
+
+        // Enable or disable time inputs based on checkbox
+        const toggleTimeInputs = () => {
+            const isEnabled = dayEnabled.checked;
+            dayStart.disabled = !isEnabled;
+            dayEnd.disabled = !isEnabled;
+        };
+
+        toggleTimeInputs();
+        dayEnabled.addEventListener("change", toggleTimeInputs);
+    });
+
+    document.getElementById("updateScheduleModal").style.display = "block";
+};
+
+
+
+// Handle Update Schedule Form Submission
+document.getElementById("updateScheduleForm").onsubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const schedID = formData.get("schedID");
+
+    const response = await fetch(`/schedule/update/${schedID}`, {
+        method: "POST",
+        body: formData,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert("Schedule updated successfully!");
+        document.getElementById("updateScheduleModal").style.display = "none";
+        loadSchedules(); // Refresh the schedule list
+    } else {
+        alert(result.message || "Failed to update schedule.");
+    }
+};

@@ -26,7 +26,7 @@ class SectionController extends BaseController
             'sections' => $sections,
             'programs' => $programs, 
         ];
-
+        
         return $this->render('root', $data);
     }
 
@@ -109,7 +109,7 @@ class SectionController extends BaseController
     
             // Call the model method to get courses for the section
             $courses = $courseModel->getCourses($section_id);
-    
+            
             // Check if the query returned results
             if ($courses === false) {
                 http_response_code(500);
@@ -127,6 +127,8 @@ class SectionController extends BaseController
             echo json_encode(['error' => 'An unexpected error occurred']);
         }
     }
+
+    
 
     public function getCourses($section_id)
     {
@@ -290,6 +292,21 @@ public function getSchedule($courseId)
         echo json_encode(['error' => 'An unexpected error occurred']);
     }
 }
+
+public function getupdateSchedule($schedID) {
+    $scheduleModel = new Schedule();
+    echo json_encode($scheduleModel->getScheduleById($schedID));
+}
+
+public function getAllSchedules(){
+
+        $scheduleModel = new Schedule();
+        $schedules = $scheduleModel->getAllSchedules();
+
+        header('Content-Type: application/json');
+        echo json_encode($schedules);
+}
+
 
 
 

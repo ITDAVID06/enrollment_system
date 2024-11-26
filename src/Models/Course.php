@@ -86,7 +86,8 @@ class Course extends BaseModel
         SELECT 
             courses.id AS course_id,
             courses.program_id AS program_id, 
-            courses.course_code, 
+            courses.course_code,
+            schedule.schedID, 
             schedule.TIME_FROM, 
             schedule.TIME_TO, 
             schedule.sched_day,

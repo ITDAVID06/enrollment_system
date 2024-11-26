@@ -49,6 +49,20 @@ class Schedule extends BaseModel
     
 
 
+public function getScheduleById($schedID) {
+    $sql = "SELECT * FROM schedule WHERE schedID = :schedID";
+    $statement = $this->db->prepare($sql);
+    $statement->execute(['schedID' => $schedID]);
+    return $statement->fetch(PDO::FETCH_ASSOC);
+}
+
+public function getAllSchedules(){
+    $sql = "SELECT * FROM schedule";
+    $statement = $this->db->prepare($sql);
+    $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
     public function addSchedule($data)
 {
     $sql = "

@@ -62,7 +62,10 @@ try {
 
 
 
-
+    // $router->get('/schedule/{schedID}', '\App\Controllers\SectionController@getupdateSchedule');
+    $router->get('/schedule/{schedID}', '\App\Controllers\SectionController@getAllSchedules');
+    $router->get('/get-schedule', '\App\Controllers\SectionController@getAllSchedules');
+    
     $router->get('/schedule/{course_id}', '\App\Controllers\SectionController@getSchedule');
     $router->post('/schedule/save/{course_id}', '\App\Controllers\SectionController@saveSchedule');
     $router->post('/save-schedule', '\App\Controllers\SectionController@saveSchedule');
