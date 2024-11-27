@@ -37,6 +37,8 @@ try {
     $router->post('/enrollment', '\App\Controllers\FormController@submitEnrollment');
 
     $router->get('/student-info', '\App\Controllers\StudentInformationController@showStudentInfo');
+    $router->post('/submit-student-info', '\App\Controllers\StudentInformationController@submitStudentInformationForm');
+    $router->post('/student-info/review', '\App\Controllers\StudentInformationController@reviewStudentInfo');
 
     // Run it!
     $router->run();

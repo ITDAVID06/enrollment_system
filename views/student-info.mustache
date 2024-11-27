@@ -19,9 +19,7 @@
 </head>
 <body>
     <div class="container-fluid mt-4 d-flex justify-content-center">
-        <!-- Wrapper for controlling size -->
         <div class="col-md-10 col-lg-8" style="max-width: 900px; width: 100%;">
-
             <div class="row">
                 <!-- Sidebar for Student Profile -->
                 <div class="col-md-3 bg-light p-3 text-center">
@@ -36,50 +34,42 @@
                     <p><strong>Semester:</strong> n/a</p>
                 </div>
 
-                <!-- Multi-Step Form Navigation -->
+                <!-- Multi-Step Form -->
                 <div class="col-md-9 p-3">
-                    <!-- Tab Navigation -->
-                    <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="basicInfo-tab" data-bs-toggle="tab" data-bs-target="#basicInfo" type="button" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="residence-tab" data-bs-toggle="tab" data-bs-target="#residence" type="button" role="tab" aria-controls="residence" aria-selected="false">Residence</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="educInfo-tab" data-bs-toggle="tab" data-bs-target="#educInfo" type="button" role="tab" aria-controls="educInfo" aria-selected="false">Education</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="reviewStudentInfo-tab" data-bs-toggle="tab" data-bs-target="#reviewStudentInfo" type="button" role="tab" aria-controls="reviewStudentInfo" aria-selected="false">Review Info</button>
-                        </li>
-                    </ul>
+                    <form action="/submit-student-info" method="POST" enctype="multipart/form-data">
+                        <!-- Tab Navigation -->
+                        <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="basicInfo-tab" data-bs-toggle="tab" data-bs-target="#basicInfo" type="button" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="residence-tab" data-bs-toggle="tab" data-bs-target="#residence" type="button" role="tab" aria-controls="residence" aria-selected="false">Residence</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="educInfo-tab" data-bs-toggle="tab" data-bs-target="#educInfo" type="button" role="tab" aria-controls="educInfo" aria-selected="false">Education</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="reviewStudentInfo-tab" data-bs-toggle="tab" data-bs-target="#reviewStudentInfo" type="button" role="tab" aria-controls="reviewStudentInfo" aria-selected="false">Review Info</button>
+                            </li>
+                        </ul>
 
-                    <!-- Tab Content -->
-                    <div class="tab-content">
-                        <!-- Personal Information Tab -->
-                        <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-                            <form>
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Basic Info Tab -->
+                            <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                                 <h5>Personal Information</h5>
-                            
-                                <!-- Last Name -->
                                 <div class="mb-3">
                                     <label for="lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="lastname" name="lastname" required>
                                 </div>
-                            
-                                <!-- First Name -->
                                 <div class="mb-3">
                                     <label for="firstname" class="form-label">First Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="firstname" name="firstname" required>
                                 </div>
-                            
-                                <!-- Middle Name -->
                                 <div class="mb-3">
                                     <label for="middlename" class="form-label">Middle Name</label>
                                     <input type="text" class="form-control" id="middlename" name="middlename">
                                 </div>
-                            
-                                <!-- Gender -->
                                 <div class="mb-3">
                                     <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
                                     <select id="gender" name="gender" class="form-select" required>
@@ -89,86 +79,66 @@
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
-                            
-                                <!-- Date of Birth -->
                                 <div class="mb-3">
                                     <label for="dob" class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" id="dob" name="dob" required>
+                                    <input type="date" class="form-control" id="dob" name=" date_of_birth" required>
                                 </div>
-                            
-                                <!-- Place of Birth -->
                                 <div class="mb-3">
                                     <label for="placeOfBirth" class="form-label">Place of Birth <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="placeOfBirth" name="placeOfBirth" required>
+                                    <input type="text" class="form-control" id="placeOfBirth" name="place_of_birth" required>
                                 </div>
-                            
-                                <!-- Contact Mobile -->
                                 <div class="mb-3">
                                     <label for="contactMobile" class="form-label">Contact Mobile <span class="text-danger">*</span></label>
-                                    <input type="tel" class="form-control" id="contactMobile" name="contactMobile" required>
+                                    <input type="tel" class="form-control" id="contactMobile" name="contact_mobile" required>
                                 </div>
-                            
-                                <!-- Email Address -->
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
                                     <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
-                            
-                                <!-- Upload 2x2 Picture -->
                                 <div class="mb-3">
                                     <label for="profilePicture" class="form-label">Upload 2x2 Picture <span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control" id="profilePicture" name="profilePicture" required accept="image/*">
+                                    <input type="file" class="form-control" id="profilePicture" name="profile_picture_path" required accept="image/*">
                                     <small class="form-text text-muted">Please upload a 2x2 picture. (JPG, PNG, JPEG formats only)</small>
-                                    <div id="profilePicture-error" class="invalid-feedback">
-                                        Please upload a valid 2x2 picture.
-                                    </div>
                                 </div>
-                            
-                                <button type="button" class="btn btn-secondary" onclick="navigateTabs(-1)">Cancel</button>
-                                <button type="button" class="btn btn-success" onclick="navigateTabs(1)">Next</button>
-                            </form>                            
-                        </div>
 
-                        <!-- Residence Information Tab -->
-                        <div class="tab-pane fade" id="residence" role="tabpanel" aria-labelledby="residence-tab">
-                            <form>
+                                <!-- Buttons to navigate between tabs -->
+                                <button type="button" class="btn btn-secondary" onclick="navigateTabs(-1)">Previous</button>
+                                <button type="button" class="btn btn-success" onclick="navigateTabs(1)">Next</button>
+                            </div>
+
+                            <!-- Residence Tab -->
+                            <div class="tab-pane fade" id="residence" role="tabpanel" aria-labelledby="residence-tab">
                                 <h5>Residence Information</h5>
-                            
                                 <!-- Emergency Contact Name -->
                                 <div class="mb-3">
                                     <label for="fullname" class="form-label">Emergency Contact Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="fullname" name="fullname" required>
+                                    <input type="text" class="form-control" id="fullname" name="emergency_contact_name" required>
                                 </div>
                             
                                 <!-- Mobile -->
                                 <div class="mb-3">
                                     <label for="mobile" class="form-label">Mobile No. <span class="text-danger">*</span></label>
-                                    <input type="tel" class="form-control" id="mobile" name="mobile" required>
+                                    <input type="tel" class="form-control" id="mobile" name="emergency_contact_mobile" required>
                                 </div>
                             
                                 <!-- Province -->
                                 <div class="mb-3">
                                     <label for="province" class="form-label">Province <span class="text-danger">*</span></label>
-                                    <select id="province" name="province" class="form-select" required>
-                                        <option value="">Select Province</option>
-                                    </select>
+                                    <input type="text" id="province" name="province" class="form-control" placeholder="Enter Province" required>
                                 </div>
-                            
+
                                 <!-- City -->
                                 <div class="mb-3">
                                     <label for="city" class="form-label">City/Municipality <span class="text-danger">*</span></label>
-                                    <select id="city" name="city" class="form-select" required>
-                                        <option value="">Select City/Municipality</option>
-                                    </select>
+                                    <input type="text" id="city" name="city" class="form-control" placeholder="Enter City/Municipality" required>
                                 </div>
-                            
+
                                 <!-- Barangay -->
                                 <div class="mb-3">
                                     <label for="barangay" class="form-label">Barangay <span class="text-danger">*</span></label>
-                                    <select id="barangay" name="barangay" class="form-select" required>
-                                        <option value="">Select Barangay</option>
-                                    </select>
+                                    <input type="text" id="barangay" name="barangay" class="form-control" placeholder="Enter Barangay" required>
                                 </div>
+
                             
                                 <!-- Street Address -->
                                 <div class="mb-3">
@@ -179,18 +149,16 @@
                                 <!-- Zip Code -->
                                 <div class="col-md-6 mb-3">
                                     <label for="zipcode" class="form-label">Zip Code</label>
-                                    <input type="text" id="zipcode" name="zipcode" placeholder="Zip Code" class="form-control" readonly>
+                                    <input type="text" id="zipcode" name="zipcode" placeholder="Zip Code" class="form-control">
                                 </div>
-                            
+
                                 <!-- Buttons to navigate between tabs -->
                                 <button type="button" class="btn btn-secondary" onclick="navigateTabs(-1)">Previous</button>
                                 <button type="button" class="btn btn-success" onclick="navigateTabs(1)">Next</button>
-                            </form>                            
-                        </div>
+                            </div>
 
-                        <!-- Educational Information Tab -->
-                        <div class="tab-pane fade" id="educInfo" role="tabpanel" aria-labelledby="educInfo-tab">
-                            <form>
+                            <!-- Education Tab -->
+                            <div class="tab-pane fade" id="educInfo" role="tabpanel" aria-labelledby="educInfo-tab">
                                 <h5>Educational Information</h5>
                                 <!-- Elementary School -->
                                 <div class="mb-3">
@@ -204,50 +172,69 @@
                                 </div>
                                 <!-- Course -->
                                 <div class="mb-3">
-                                    <label for="course" class="form-label">Course <span class="text-danger">*</span></label>
+                                    <label for="course" class="form-label">Preferred Course <span class="text-danger">*</span></label>
                                     <select id="course" name="course" class="form-select" required>
                                         <option value="">Select Course</option>
+                                        {{#programs}}
+                                        <option value="{{id}}">{{title}}</option>
+                                        {{/programs}}
                                     </select>
                                 </div>
                             
                                 <!-- Grade 12 1st Quarter or Grade 11 Form 137 Upload -->
                                 <div class="mb-3">
                                     <label for="gradeFile" class="form-label">Upload Grade 12 1st Quarter Grade or Grade 11 Form 137 <span class="text-danger">*</span></label>
-                                    <input type="file" id="gradeFile" name="gradeFile" required class="form-control">
+                                    <input type="file" id="gradeFile" name=" grade_file_path" required class="form-control">
                                     <div id="gradeFile-error" class="invalid-feedback">
                                         Please upload your Grade 12 1st Quarter Grade or Grade 11 Form 137.
                                     </div>
                                 </div>
-                            
+
                                 <!-- Buttons to navigate between tabs -->
                                 <button type="button" class="btn btn-secondary" onclick="navigateTabs(-1)">Previous</button>
                                 <button type="button" class="btn btn-success" onclick="navigateTabs(1)">Next</button>
-                            </form>                            
-                        </div>
+                            </div>
 
-                        <!-- Review Info Tab -->
-                        <div class="tab-pane fade" id="reviewStudentInfo" role="tabpanel" aria-labelledby="reviewStudentInfo-tab">
-                            <h5>Review Student Information</h5>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <!-- Review Tab -->
+                            <div class="tab-pane fade" id="reviewStudentInfo" role="tabpanel" aria-labelledby="reviewStudentInfo-tab">
+                                <h5>Review Information</h5>
+
+
+                                <!-- Buttons to navigate between tabs -->
+                                <button type="button" class="btn btn-secondary" onclick="navigateTabs(-1)">Previous</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
     <script>
         function navigateTabs(direction) {
-            var tabs = document.querySelectorAll('#profileTabs .nav-link');
-            var activeTab = document.querySelector('#profileTabs .nav-link.active');
-            var currentIndex = Array.from(tabs).indexOf(activeTab);
-
-            if (currentIndex + direction >= 0 && currentIndex + direction < tabs.length) {
-                tabs[currentIndex + direction].click();
+            // Get all tab links and contents
+            var tabs = document.querySelectorAll('#profileTabs button');
+            var contents = document.querySelectorAll('.tab-pane');
+    
+            // Find the currently active tab
+            var activeIndex = Array.from(tabs).findIndex(tab => tab.classList.contains('active'));
+    
+            // Calculate the new index
+            var newIndex = activeIndex + direction;
+    
+            // Ensure the new index is within bounds
+            if (newIndex >= 0 && newIndex < tabs.length) {
+                // Remove 'active' and 'show' classes from current tab and content
+                tabs[activeIndex].classList.remove('active');
+                contents[activeIndex].classList.remove('active', 'show');
+    
+                // Add 'active' and 'show' classes to the new tab and content
+                tabs[newIndex].classList.add('active');
+                contents[newIndex].classList.add('active', 'show');
             }
         }
     </script>

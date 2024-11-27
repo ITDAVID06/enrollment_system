@@ -1,0 +1,180 @@
+1. JavaScript for the Edit Schedule Modal
+This script will handle opening the edit schedule modal and submitting the updated data.
+
+// Open Edit Schedule Modal
+const openEditScheduleModal = async (schedID) => {
+    const response = await fetch(`/schedule/${schedID}`);
+    const schedule = await response.json();
+
+    document.getElementById("courseId").value = schedule.course_id;
+    document.getElementById("programId").value = schedule.program_id;
+    document.getElementById("sectionId").value = schedule.section_id;
+
+    // Display non-editable IDs
+    document.getElementById("displayProgramId").innerText = schedule.program_id;
+    document.getElementById("displayCourseId").innerText = schedule.course_id;
+    document.getElementById("displaySectionId").innerText = schedule.section_id;
+
+    // Populate schedule times
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+    days.forEach(day => {
+        document.getElementById(`${day}_enabled`).checked = schedule.days.includes(day.charAt(0).toUpperCase() + day.slice(1));
+        document.getElementById(`${day}_start`).value = schedule[`${day}_start`] || '';
+        document.getElementById(`${day}_end`).value = schedule[`${day}_end`] || '';
+    });
+
+    document.getElementById("semester").value = schedule.sched_semester;
+    document.getElementById("schoolYear").value = schedule.sched_sy;
+    document.getElementById("room").value = schedule.sched_room;
+
+    document.getElementById("editScheduleModal").style.display = "block";
+};
+
+// Handle Edit Schedule Form submission
+document.getElementById("editScheduleForm").onsubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const schedID = formData.get("schedID");
+
+    const response = await fetch(`/schedule/update/${schedID}`, {
+        method: "POST",
+        body: formData,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert("Schedule updated successfully!");
+        document.getElementById("editScheduleModal").style.display = "none";
+        loadSchedules(); // Assumes there's a loadSchedules function to refresh the list
+    } else {
+        alert(result.message || "Failed to update schedule.");
+    }
+};
+
+
+
+
+
+2. HTML for the Edit Schedule Modal
+This modal is similar to the add schedule modal, but it opens when the "Update" button is clicked.
+
+<!-- Edit Schedule Modal -->
+<div id="editScheduleModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="document.getElementById('editScheduleModal').style.display='none'">&times;</span>
+        <h3>Edit Schedule</h3>
+        <form id="editScheduleForm">
+            <input type="hidden" id="courseId" name="course_id">
+            <input type="hidden" id="programId" name="program_id">
+            <input type="hidden" id="sectionId" name="section_id">
+            <input type="hidden" id="schedID" name="schedID">
+
+            <!-- Display non-editable foreign keys -->
+            <div>
+                <label>Program ID:</label>
+                <span id="displayProgramId"></span>
+            </div>
+            <div>
+                <label>Course ID:</label>
+                <span id="displayCourseId"></span>
+            </div>
+            <div>
+                <label>Section ID:</label>
+                <span id="displaySectionId"></span>
+            </div>
+
+            <!-- Editable fields -->
+            <!-- Same schedule time fields as in Add Schedule Modal -->
+            <div>
+                <h4>Schedule</h4>
+                <!-- Repeat days structure as in Add Schedule Modal -->
+                <!-- Example for Monday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Monday:</label>
+                    <input type="checkbox" id="monday_enabled" name="days[]" value="Monday">
+                    <input type="time" id="monday_start" name="monday_start">
+                    <input type="time" id="monday_end" name="monday_end">
+                </div>
+                <!-- Repeat for other days -->
+            </div>
+
+            <label for="semester">Semester:</label>
+            <select id="semester" name="sched_semester" required>
+                <option value="1st Sem">1st Sem</option>
+                <option value="2nd Sem">2nd Sem</option>
+            </select>
+
+            <label for="schoolYear">School Year:</label>
+            <input type="text" id="schoolYear" name="sched_sy" placeholder="2023-2024" required>
+
+            <label for="room">Room:</label>
+            <input type="text" id="room" name="sched_room" required>
+
+            <button type="submit">Update Schedule</button>
+        </form>
+    </div>
+</div>
+
+
+
+3. PHP Code: Model, Controller, and Route
+Model (Schedule.php)
+Add a method to retrieve a schedule by ID and update it.
+
+public function getScheduleById($schedID) {
+    $sql = "SELECT * FROM schedule WHERE schedID = :schedID";
+    $statement = $this->db->prepare($sql);
+    $statement->execute(['schedID' => $schedID]);
+    return $statement->fetch(PDO::FETCH_ASSOC);
+}
+
+public function updateSchedule($data) {
+    $sql = "UPDATE schedule SET TIME_FROM = :time_from, TIME_TO = :time_to, 
+            sched_day = :sched_day, sched_semester = :sched_semester, sched_sy = :sched_sy, 
+            sched_room = :sched_room WHERE schedID = :schedID";
+    $statement = $this->db->prepare($sql);
+    return $statement->execute([
+        'time_from' => $data['TIME_FROM'],
+        'time_to' => $data['TIME_TO'],
+        'sched_day' => $data['sched_day'],
+        'sched_semester' => $data['sched_semester'],
+        'sched_sy' => $data['sched_sy'],
+        'sched_room' => $data['sched_room'],
+        'schedID' => $data['schedID']
+    ]);
+}
+
+
+
+Controller (ScheduleController.php)
+Add a method to handle fetching and updating schedule details.
+
+public function getSchedule($schedID) {
+    $scheduleModel = new Schedule();
+    echo json_encode($scheduleModel->getScheduleById($schedID));
+}
+
+public function updateSchedule($schedID) {
+    $scheduleModel = new Schedule();
+    $data = [
+        'schedID' => $schedID,
+        'TIME_FROM' => $_POST['monday_start'], // Handle times dynamically based on day
+        'TIME_TO' => $_POST['monday_end'], // Modify as needed for each day
+        'sched_day' => implode(',', $_POST['days']),
+        'sched_semester' => $_POST['sched_semester'],
+        'sched_sy' => $_POST['sched_sy'],
+        'sched_room' => $_POST['sched_room'],
+    ];
+
+    $updated = $scheduleModel->updateSchedule($data);
+    echo json_encode(['success' => $updated]);
+}
+
+
+Routes
+Update your routes to include the new schedule edit endpoints.
+
+$router->get('/schedule/{schedID}', 'ScheduleController@getSchedule');
+$router->post('/schedule/update/{schedID}', 'ScheduleController@updateSchedule');
