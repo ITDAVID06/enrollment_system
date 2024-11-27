@@ -1,0 +1,228 @@
+/* General Table Styling */
+#programTable {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+#programTable th, #programTable td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+#programTable th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}
+
+#programTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#programTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Title Alignment */
+#programTitle {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 70px;
+}
+
+/* Header Row */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto 20px auto;
+    padding: 0;
+}
+
+/* Search Bar Styling */
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+#searchInput {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    height: 38px; 
+}
+
+#searchButton {
+    background-color: #b30000; 
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0; 
+    font-size: 14px;
+    height: 38px; 
+}
+
+#searchButton:hover {
+    background-color: #990000;
+}
+
+/* Add Program Button */
+#addProgramButton {
+    background-color: #b30000; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    height: 42px;
+}
+
+#addProgramButton:hover {
+    background-color: #990000;
+}
+
+/* Pagination Controls */
+#pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 90%;
+    margin: 20px auto;
+    gap: 10px;
+}
+
+#recordInfo {
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+#paginationButtons button {
+    background-color: #b30000;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#paginationButtons button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 40%;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+form input[type="text"],
+form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button[type="submit"] {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background-color: #b30000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button[type="submit"]:hover {
+    background-color: #990000;
+}
+
+
+.programbutton {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Adjust icon size */
+    line-height: 1; /* Ensure proper vertical alignment */
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    display: inline-block;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    color: #333; /* Default icon color */
+    cursor: pointer; /* Pointer cursor for clickable icons */
+    margin: 0 5px; /* Add some spacing between icons */
+}
+
+/* Hover effect for icons */
+.programbutton:hover {
+    color: #b30000; /* Red color on hover */
+    transform: scale(1.2); /* Slightly enlarge on hover */
+    transition: transform 0.2s ease, color 0.2s ease; /* Smooth hover animation */
+}
+
+/* Button styling to remove background and border */
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px; /* Add slight padding for better click area */
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background highlight on hover */
+    border-radius: 4px; /* Rounded corners */
+}
+

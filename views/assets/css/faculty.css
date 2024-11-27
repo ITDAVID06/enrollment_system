@@ -1,0 +1,250 @@
+/* General Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    padding-top: 50px; /* Space above the modal */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if content exceeds */
+    background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px 30px;
+    border-radius: 10px; /* Rounded corners */
+    width: 40%; /* Adjust modal width */
+    max-width: 600px; /* Limit max width */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* Modal Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+/* Form Fields */
+form label {
+    display: block; /* Each label on its own line */
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    width: 100%; /* Full width of the modal */
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+/* Submit Button */
+button[type="submit"] {
+    margin-top: 20px;
+    width: 100%; /* Full width for button */
+    padding: 10px;
+    background-color: #b30000; /* Red button */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button[type="submit"]:hover {
+    background-color: #990000; /* Darker red */
+}
+#facultyTable {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+#facultyTable th, #facultyTable td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+#facultyTable th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}
+
+#facultyTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#facultyTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between; /* Space between search and add buttons */
+    align-items: center; /* Align items vertically in the center */
+    width: 90%; /* Make it the same width as the table */
+    margin: 0 auto 20px auto; /* Center the row and add bottom margin */
+    padding: 0;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+#searchInput {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    height: 38px; 
+}
+
+#searchButton {
+    background-color: #b30000; 
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0; 
+    font-size: 14px;
+    height: 38px; 
+}
+
+#searchButton:hover {
+    background-color: #990000;
+}
+
+#addFacultyButton {
+    background-color: #b30000; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    height: 42px;/
+}
+
+#addFacultyButton:hover {
+    background-color: #990000;
+}
+
+#facultyTable {
+    width: 90%; /* Ensure table is aligned with buttons */
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+#facultyTable th, #facultyTable td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+#facultyTable th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}
+
+#facultyTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#facultyTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+#facultyTitle {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 70px;
+}
+
+#pagination {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    width: 90%;
+    margin: 20px auto;
+    gap: 10px;
+}
+
+#recordInfo {
+    font-size: 14px;
+    margin-right: 10px; /* Add spacing before the buttons */
+}
+
+#paginationButtons button {
+    background-color: #b30000;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#paginationButtons button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.facultybutton {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Adjust icon size */
+    line-height: 1; /* Ensure proper vertical alignment */
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    display: inline-block;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    color: #333; /* Default icon color */
+    cursor: pointer; /* Pointer cursor for clickable icons */
+    margin: 0 5px; /* Add some spacing between icons */
+}
+
+/* Hover effect for icons */
+.facultybutton:hover {
+    color: #b30000; /* Red color on hover */
+    transform: scale(1.2); /* Slightly enlarge on hover */
+    transition: transform 0.2s ease, color 0.2s ease; /* Smooth hover animation */
+}
+
+/* Button styling to remove background and border */
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px; /* Add slight padding for better click area */
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background highlight on hover */
+    border-radius: 4px; /* Rounded corners */
+}

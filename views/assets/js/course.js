@@ -1,27 +1,176 @@
-let currentProgramId = null;
-let currentYear = 1;
+const filterSemester = (semester) => {
+    console.log('Selected semester:', semester);
 
-const loadCoursesByProgramAndYear = async (programId, year) => {
+    // Remove 'active' class from all semester buttons
+    const buttons = document.querySelectorAll('.semesterButton');
+    buttons.forEach((button) => button.classList.remove('active'));
+
+    // Find the button that matches the semester and add the 'active' class
+    const activeButton = Array.from(buttons).find((button) => button.textContent.trim() === semester);
+    if (activeButton) {
+        activeButton.classList.add('active');
+        activeButton.blur(); // Remove focus from the button
+    }
+
+    // Load courses for the selected semester
+    loadCoursesByProgramAndYear(currentProgramId, currentYear, semester, 1);
+};
+
+
+
+
+let currentPage = 1;
+let recordsPerPage = 5; // Number of rows per page
+let totalRecords = 0; // To store total number of records
+
+const loadCoursesByProgramAndYear = async (programId, year, semester = null, page = 1) => {
+    // Update current state variables
     currentProgramId = programId;
     currentYear = year;
+    currentPage = page;
 
-    const response = await fetch(`/courses/${programId}/${year}`);
-    const courses = await response.json();
+    // Construct the URL based on parameters
+    let url = `/courses/${programId}/${year}`;
+    if (semester) {
+        url += `?semester=${encodeURIComponent(semester)}`; // Add semester as a query parameter
+    }
 
-    const tableBody = document.querySelector("#courseTable tbody");
-    tableBody.innerHTML = courses.map(course => `
-        <tr>
-            <td>${course.course_code}</td>
-            <td>${course.title}</td>
-            <td>${course.unit}</td>
-            <td>${course.semester}</td>
-            <td>
-                <button onclick="editCourse(${course.id})">Edit</button>
-                <button onclick="deleteCourse(${course.id})">Delete</button>
-            </td>
-        </tr>
-    `).join("");
+    console.log('Fetching courses from URL:', url); // Debugging: Log the constructed URL
+
+    try {
+        // Fetch data from the server
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch courses: ${response.statusText}`);
+        }
+
+        // Parse the JSON response
+        const courses = await response.json();
+        console.log('Fetched courses:', courses); // Debugging: Log the fetched courses
+
+        // Handle pagination logic (client-side slicing)
+        const paginatedCourses = courses.slice((page - 1) * recordsPerPage, page * recordsPerPage);
+        totalRecords = courses.length; // Update total record count for pagination
+
+        // Populate the table with the fetched courses
+        const tableBody = document.querySelector("#courseTable tbody");
+        tableBody.innerHTML = paginatedCourses
+            .map(
+                (course) => `
+                <tr>
+                    <td>${course.course_code}</td>
+                    <td>${course.title}</td>
+                    <td>${course.unit}</td>
+                    <td>${course.semester}</td>
+                    <td>
+                        <button onclick="editCourse(${course.id})">Edit</button>
+                        <button onclick="deleteCourse(${course.id})">Delete</button>
+                    </td>
+                </tr>`
+            )
+            .join("");
+
+        // Update pagination controls
+        updatePaginationControls();
+    } catch (error) {
+        console.error('Error loading courses:', error); // Debugging: Log any errors
+        document.querySelector("#courseTable tbody").innerHTML = `
+            <tr>
+                <td colspan="5">Failed to load courses. Please try again later.</td>
+            </tr>`;
+    }
 };
+
+
+const updatePaginationControls = () => {
+    const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+    document.getElementById("prevPageButton").disabled = currentPage === 1;
+    document.getElementById("nextPageButton").disabled = currentPage === totalPages;
+
+    document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+};
+
+// Pagination button handlers
+document.getElementById("prevPageButton").onclick = () => {
+    if (currentPage > 1) {
+        loadCoursesByProgramAndYear(currentProgramId, currentYear, null, currentPage - 1);
+    }
+};
+
+document.getElementById("nextPageButton").onclick = () => {
+    const totalPages = Math.ceil(totalRecords / recordsPerPage);
+    if (currentPage < totalPages) {
+        loadCoursesByProgramAndYear(currentProgramId, currentYear, null, currentPage + 1);
+    }
+};
+
+
+
+// Search Courses
+document.getElementById("searchButton").onclick = async () => {
+    const query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const programItems = document.querySelectorAll('.programItem');
+    programItems.forEach((item) => item.classList.remove('active'));
+    const sbuttons = document.querySelectorAll('.semesterButton');
+    sbuttons.forEach((button) => button.classList.remove('active'));
+    const ybuttons = document.querySelectorAll('.yearButton');
+    ybuttons.forEach((button) => button.classList.remove('active'));
+
+
+    if (!query) {
+        alert("Please enter a search term."); // Optional: Alert if search input is empty
+        return;
+    }
+
+    try {
+        // Make a fetch request to the search endpoint
+        const response = await fetch(`/courses/search?query=${encodeURIComponent(query)}`);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch search results.");
+        }
+
+        // Parse the JSON response
+        const courses = await response.json();
+        console.log('Search Results:', courses); // Debugging: Log search results
+
+        // Populate the table with the search results
+        const tableBody = document.querySelector("#courseTable tbody");
+        if (courses.length > 0) {
+            tableBody.innerHTML = courses
+                .map(
+                    (course) => `
+                    <tr>
+                        <td>${course.course_code}</td>
+                        <td>${course.title}</td>
+                        <td>${course.unit}</td>
+                        <td>${course.semester}</td>
+                        <td>
+                            <button onclick="editCourse(${course.id})">Edit</button>
+                            <button onclick="deleteCourse(${course.id})">Delete</button>
+                        </td>
+                    </tr>`
+                )
+                .join("");
+        } else {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5">No courses found for the search term "${query}".</td>
+                </tr>`;
+        }
+
+        // Reset pagination since search bypasses program and year filtering
+        totalRecords = courses.length;
+        currentPage = 1;
+        updatePaginationControls();
+    } catch (error) {
+        console.error('Error during search:', error); // Debugging: Log any errors
+        alert("An error occurred while searching for courses. Please try again later.");
+    }
+};
+
 
 const filterYear = (year) => {
     if (currentProgramId) {
@@ -34,8 +183,6 @@ const filterYear = (year) => {
     const activeButton = document.getElementById(`year${year}`);
     activeButton.classList.add('active');
 
-    // Call your logic to filter courses based on the selected year
-    loadCoursesByYear(year);
 };
 
 
@@ -150,8 +297,27 @@ const deleteCourse = async (id) => {
     }
 }; 
 
+document.addEventListener("DOMContentLoaded", () => {
+    // Select the first program item and year button by default
+    const firstProgramItem = document.querySelector(".programItem");
+    const firstYearButton = document.getElementById("year1");
 
+    if (firstProgramItem) {
+        firstProgramItem.classList.add("active");
+        const programId = firstProgramItem.id.replace("program", ""); // Extract program ID from ID attribute
+        currentProgramId = parseInt(programId, 10); // Set current program ID
+    }
 
-loadCoursesByProgramAndYear(1, 1); // Default load
+    if (firstYearButton) {
+        firstYearButton.classList.add("active");
+        currentYear = 1; // Set current year
+    }
+
+    // Load courses for the first program and first year
+    if (currentProgramId && currentYear) {
+        loadCoursesByProgramAndYear(currentProgramId, currentYear);
+    }
+});
+
 
 

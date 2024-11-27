@@ -39,7 +39,7 @@ try {
     $router->get('/course/{id}', '\App\Controllers\CourseController@getCourse');
     $router->post('/course/update/{id}', '\App\Controllers\CourseController@updateCourse');
     $router->delete('/course/delete/{id}', '\App\Controllers\CourseController@deleteCourse');
-    
+    $router->get('/courses/search', '\App\Controllers\CourseController@searchCourses');
 
     $router->get('/sections', '\App\Controllers\SectionController@showSections');
     $router->get('/api/sections', '\App\Controllers\SectionController@getAllSections');

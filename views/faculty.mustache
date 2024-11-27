@@ -1,12 +1,18 @@
 <div>
-    <h2>Faculty List</h2>
-    <button id="addFacultyButton">Add Faculty</button>
+    <h2 id="facultyTitle">Faculty List</h2>
+    <div class="header-row">
+        <div class="search-container">
+            <input type="text" placeholder="Search..." id="searchInput">
+            <button id="searchButton">Search</button>
+        </div>
+        <button id="addFacultyButton">Add Faculty</button>
+    </div>
 
     <!-- Table to display faculty -->
     <table border="1" id="facultyTable">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Faculty ID</th>
                 <th>Last Name</th>
                 <th>First Name</th>
                 <th>Contact</th>
@@ -16,10 +22,22 @@
             </tr>
         </thead>
         <tbody>
-            <!-- This will be dynamically filled via AJAX -->
+            <!-- Dynamically filled via AJAX -->
         </tbody>
     </table>
+
+    <!-- Pagination controls -->
+    <div id="pagination">
+        <div style="flex-grow: 1;"></div> <!-- Empty space to push content to the right -->
+        <div id="recordInfo"></div>
+        <div id="paginationButtons">
+            <button id="prevPageButton" disabled>←</button>
+            <button id="nextPageButton" disabled>→</button>
+        </div>
+    </div>
+    
 </div>
+
 
 <!-- Add Faculty Modal -->
 <div id="addFacultyModal" class="modal">
@@ -81,141 +99,9 @@
     </div>
 </div>
 
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 50%;
-    }
-
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
-
-<script>
-    const addModal = document.getElementById("addFacultyModal");
-    const editModal = document.getElementById("editFacultyModal");
-
-    document.getElementById("addFacultyButton").onclick = () => addModal.style.display = "block";
-
-    document.querySelectorAll(".close").forEach(btn => {
-        btn.onclick = () => {
-            addModal.style.display = "none";
-            editModal.style.display = "none";
-        };
-    });
-
-    window.onclick = (event) => {
-        if (event.target === addModal || event.target === editModal) {
-            addModal.style.display = "none";
-            editModal.style.display = "none";
-        }
-    };
-
-    // Fetch and display faculty list
-    const loadFaculty = async () => {
-        const response = await fetch("/faculty/list");
-        const faculty = await response.json();
-        const tableBody = document.querySelector("#facultyTable tbody");
-        tableBody.innerHTML = faculty.map(fac => `
-            <tr>
-                <td>${fac.id}</td>
-                <td>${fac.lastname}</td>
-                <td>${fac.firstname}</td>
-                <td>${fac.contact}</td>
-                <td>${fac.email}</td>
-                <td>${fac.username}</td>
-                <td>
-                    <button onclick="openEditModal(${fac.id})">Edit</button>
-                    <button onclick="deleteFaculty(${fac.id})">Delete</button>
-                </td>
-            </tr>
-        `).join("");
-    };
-
-    loadFaculty();
-
-    // Handle Add Faculty Form submission
-    document.getElementById("addFacultyForm").onsubmit = async (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        await fetch("/faculty", {
-            method: "POST",
-            body: formData
-        });
-        addModal.style.display = "none";
-        loadFaculty();
-    };
-
-    // Open Edit Modal
-    const openEditModal = async (id) => {
-        const response = await fetch(`/faculty/${id}`);
-        const faculty = await response.json();
-        document.getElementById("editId").value = faculty.id;
-        document.getElementById("editLastname").value = faculty.lastname;
-        document.getElementById("editFirstname").value = faculty.firstname;
-        document.getElementById("editContact").value = faculty.contact;
-        document.getElementById("editEmail").value = faculty.email;
-        document.getElementById("editUsername").value = faculty.username;
-        editModal.style.display = "block";
-    };
-
-    // Handle Edit Faculty Form submission
-    document.getElementById("editFacultyForm").onsubmit = async (event) => {
-        event.preventDefault();
-    
-        const formData = new FormData(event.target);
-        console.log("Form data being submitted:", Object.fromEntries(formData.entries())); // Debugging
-    
-        const response = await fetch(`/faculty/update/${formData.get("id")}`, {
-            method: "POST",
-            body: formData,
-        });
-    
-        const result = await response.json();
-    
-        if (response.ok) {
-            alert("Faculty updated successfully!");
-            editModal.style.display = "none";
-            loadFaculty();
-        } else {
-            alert(result.message || "Failed to update faculty.");
-        }
-    };
-    
-
-
-    // Delete Faculty
-    const deleteFaculty = async (id) => {
-        if (confirm("Are you sure you want to delete this faculty?")) {
-            await fetch(`/faculty/${id}`, { method: "DELETE" });
-            loadFaculty();
-        }
-    };
-</script>
+<link rel=stylesheet href='views\assets\css\faculty.css'>
+<script src='views\assets\js\faculty.js'></script>

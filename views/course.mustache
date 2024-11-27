@@ -7,20 +7,38 @@
             <li class="programItem" id="program{{id}}" onclick="selectProgram({{id}})">{{program_code}}</li>
             {{/programs}}
         </ul>
-    </div>
-
-    <!-- Right Panel -->
-    <div id="rightPanel" class="panel">
-        <h2>Bachelor of Science in Information Technology</h2>
+        <h3>Semester</h3>
+        <div class="semesterButtons">
+            <button onclick="filterSemester('1st Sem')" class="semesterButton" id="semester1">1st Sem</button>
+            <button onclick="filterSemester('2nd Sem')" class="semesterButton" id="semester2">2nd Sem</button>
+        </div>
+        <h3>Year Level</h3>
         <div class="yearSelection">
             <button onclick="filterYear(1)" class="yearButton" id="year1">1st Year</button>
             <button onclick="filterYear(2)" class="yearButton" id="year2">2nd Year</button>
             <button onclick="filterYear(3)" class="yearButton" id="year3">3rd Year</button>
             <button onclick="filterYear(4)" class="yearButton" id="year4">4th Year</button>
         </div>
-        
+    </div>
 
-        <button id="addCourseButton">Add Course</button>
+    <!-- Right Panel -->
+    <div id="rightPanel" class="panel">
+        <div class="header">
+            <h2 class="programTitle">Bachelor of Science in Information Technology</h2>
+            <div class="searchContainer">
+                <div class="searchWrapper">
+                    <input type="text" placeholder="Search courses..." id="searchInput">
+                    <button id="searchButton">
+                        <span class="material-symbols-rounded searchbutton">search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+
+            <button id="addCourseButton">Add Course</button>
+        </div>
 
         <table border="1" id="courseTable">
             <thead>
@@ -36,9 +54,15 @@
                 <!-- Populated dynamically -->
             </tbody>
         </table>
+        <div class="pagination">
+            <button id="prevPageButton" class="pagination-button" disabled>← Previous</button>
+            <span id="pageInfo">Page 1</span>
+            <button id="nextPageButton" class="pagination-button">Next →</button>
+        </div>
     </div>
 </div>
-    <div id="addCourseModal" class="modal">
+
+<div id="addCourseModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeAddCourseModal()">&times;</span>
         <h3>Add Course</h3>
@@ -47,22 +71,33 @@
             <input type="hidden" id="addProgramId" name="program_id">
             <input type="hidden" id="addYear" name="year">
 
-            <label for="courseCode">Course Code:</label>
-            <input type="text" id="courseCode" name="course_code" required>
+            <div class="form-group">
+                <label for="courseCode">Course Code*</label>
+                <input type="text" id="courseCode" name="course_code" required>
+            </div>
 
-            <label for="courseTitle">Title:</label>
-            <input type="text" id="courseTitle" name="title" required>
+            <div class="form-group">
+                <label for="courseTitle">Title*</label>
+                <input type="text" id="courseTitle" name="title" required>
+            </div>
 
-            <label for="courseUnit">Unit:</label>
-            <input type="number" id="courseUnit" name="unit" required>
+            <div class="form-group">
+                <label for="courseUnit">Unit*</label>
+                <input type="number" id="courseUnit" name="unit" required>
+            </div>
 
-            <label for="courseSemester">Semester:</label>
-            <select id="courseSemester" name="semester" required>
-                <option value="1st Sem">1st Sem</option>
-                <option value="2nd Sem">2nd Sem</option>
-            </select>
+            <div class="form-group">
+                <label for="courseSemester">Semester*</label>
+                <select id="courseSemester" name="semester" required>
+                    <option value="1st Sem">1st Semester</option>
+                    <option value="2nd Sem">2nd Semester</option>
+                </select>
+            </div>
 
-            <button type="submit">Add Course</button>
+            <div class="modal-buttons">
+                <button type="button" class="close-button" onclick="closeAddCourseModal()">Close</button>
+                <button type="submit" class="action-button">Add Course</button>
+            </div>
         </form>
     </div>
 </div>
@@ -75,24 +110,30 @@
             <!-- Hidden field for course ID -->
             <input type="hidden" id="editCourseId" name="id">
 
-            <label for="editCourseCode">Course Code:</label>
-            <input type="text" id="editCourseCode" name="course_code" required>
+            <div class="form-group">
+                <label for="editCourseCode">Course Code*</label>
+                <input type="text" id="editCourseCode" name="course_code" required>
+            </div>
 
+            <div class="form-group">
             <label for="editCourseTitle">Title:</label>
             <input type="text" id="editCourseTitle" name="title" required>
-
+            </div>
+            <div class="form-group">
             <label for="editCourseUnit">Unit:</label>
             <input type="number" id="editCourseUnit" name="unit" required>
-
+            </div>    
+            <div class="form-group">
             <label for="editCourseSemester">Semester:</label>
             <select id="editCourseSemester" name="semester" required>
                 <option value="1st Sem">1st Sem</option>
                 <option value="2nd Sem">2nd Sem</option>
             </select>
-
+            </div>
+            <div class="form-group">
             <label for="editCourseYear">Year:</label>
-            <input type="number" id="editCourseYear" name="year" required readonly>
-
+            <input type="number" id="editCourseYear" name="year" required>
+            </div>
             <button type="submit">Update Course</button>
         </form>
     </div>
@@ -100,6 +141,10 @@
 
 </div> 
 
-<link rel="stylesheet" href="views\assets\css\course.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 
+
+<link rel="stylesheet" href="views\assets\css\course.css">
 <script src="views\assets\js\course.js"></script>

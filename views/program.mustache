@@ -1,6 +1,12 @@
 <div>
-    <h2>Program List</h2>
-    <button id="addProgramButton">Add Program</button>
+    <h2 id="programTitle">Program List</h2>
+    <div class="header-row">
+        <div class="search-container">
+            <input type="text" placeholder="Search..." id="searchInput">
+            <button id="searchButton">Search</button>
+        </div>
+        <button id="addProgramButton">Add Program</button>
+    </div>
 
     <table border="1" id="programTable">
         <thead>
@@ -16,6 +22,16 @@
             <!-- Populated via JavaScript -->
         </tbody>
     </table>
+
+    <!-- Pagination Controls -->
+    <div id="pagination">
+        <div style="flex-grow: 1;"></div>
+        <div id="recordInfo"></div>
+        <div id="paginationButtons">
+            <button id="prevPageButton" disabled>←</button>
+            <button id="nextPageButton" disabled>→</button>
+        </div>
+    </div>
 </div>
 
 <!-- Add Program Modal -->
@@ -61,42 +77,10 @@
 </div>
 
 
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 50%;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
-
-
+<link rel=stylesheet href='views\assets\css\program.css'>
 <script src="views\assets\js\program.js"></script>

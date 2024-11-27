@@ -30,14 +30,48 @@ class Course extends BaseModel
         return ['row_count' => $statement->rowCount()];
     }
 
-    public function getCoursesByProgramAndYear($programId, $year)
+    public function getCoursesByProgramAndYear($programId, $year, $semester = null)
     {
+        // Base query
         $sql = "SELECT * FROM courses WHERE program_id = :program_id AND year = :year";
+    
+        // Add semester condition if provided
+        if ($semester) {
+            $sql .= " AND semester = :semester";
+        }
+    
         $statement = $this->db->prepare($sql);
-        $statement->execute(['program_id' => $programId, 'year' => $year]);
-
+    
+        // Bind parameters
+        $params = [
+            'program_id' => $programId,
+            'year' => $year,
+        ];
+    
+        if ($semester) {
+            $params['semester'] = $semester;
+        }
+    
+        $statement->execute($params);
+    
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function searchCourses($query)
+{
+    $sql = "SELECT * FROM courses 
+            WHERE course_code LIKE :query
+               OR title LIKE :query";
+
+    $statement = $this->db->prepare($sql);
+
+    // Bind the query parameter with wildcards
+    $statement->execute(['query' => '%' . $query . '%']);
+
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+    
 
     public function getCourseById($id)
     {

@@ -30,11 +30,30 @@ class CourseController extends BaseController
     public function listCoursesByProgramAndYear($programId, $year)
     {
         $courseModel = new Course();
-        $courses = $courseModel->getCoursesByProgramAndYear($programId, $year);
-
+    
+        // Check if a semester is provided
+        $semester = isset($_GET['semester']) ? $_GET['semester'] : null;
+    
+        // Fetch courses with or without a semester filter
+        $courses = $courseModel->getCoursesByProgramAndYear($programId, $year, $semester);
+    
         echo json_encode($courses);
     }
 
+    public function searchCourses()
+{
+    $courseModel = new Course();
+
+    // Get the search query from the request
+    $query = isset($_GET['query']) ? $_GET['query'] : '';
+
+    // Fetch courses matching the search query
+    $courses = $courseModel->searchCourses($query);
+
+    echo json_encode($courses);
+}
+
+    
     public function registerCourse()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
