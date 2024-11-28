@@ -8,6 +8,11 @@ global $conn;
 
 try {
 
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+
     // Create Router instance
     $router = new \Bramus\Router\Router();
 
@@ -88,7 +93,13 @@ try {
     $router->delete('/faculty/{id}', '\App\Controllers\FacultyController@delete'); // Delete a faculty member
 
 
-    // $router->get('/profile', '\App\Controllers\ProfileController@showProfile');
+    $router->get('/profile', '\App\Controllers\ProfileController@showProfile');
+    // Routes for Faculty
+    $router->post('/faculty/update-profile', '\App\Controllers\FacultyController@updateProfile');
+
+    // Routes for Students
+    $router->post('/student/update-profile', '\App\Controllers\StudentController@updateProfile');
+
 
     $router->get('/studentprofile', '\App\Controllers\StudentController@showStudentProfile');
 

@@ -24,7 +24,7 @@
     <!-- Right Panel -->
     <div id="rightPanel" class="panel">
         <div class="header">
-            <h2 class="programTitle">Bachelor of Science in Information Technology</h2>
+            <h2 id="selectedProgram" class="programTitle">BSIT - Bachelor of Science in Information Technology</h2>
             <div class="searchContainer">
                 <div class="searchWrapper">
                     <input type="text" placeholder="Search courses..." id="searchInput">
@@ -43,8 +43,8 @@
         <table border="1" id="courseTable">
             <thead>
                 <tr>
-                    <th>Course Code</th>
-                    <th>Title</th>
+                    <th>Code</th>
+                    <th>Course Title</th>
                     <th>Unit</th>
                     <th>Semester</th>
                     <th>Actions</th>
@@ -55,9 +55,9 @@
             </tbody>
         </table>
         <div class="pagination">
-            <button id="prevPageButton" class="pagination-button" disabled>← Previous</button>
+            <button id="prevPageButton" class="pagination-button" disabled>←</button>
             <span id="pageInfo">Page 1</span>
-            <button id="nextPageButton" class="pagination-button">Next →</button>
+            <button id="nextPageButton" class="pagination-button">→</button>
         </div>
     </div>
 </div>
@@ -134,7 +134,7 @@
             <label for="editCourseYear">Year:</label>
             <input type="number" id="editCourseYear" name="year" required>
             </div>
-            <button type="submit">Update Course</button>
+            <button class="modal-buttons action-button" type="submit">Update Course</button>
         </form>
     </div>
 </div>
@@ -148,3 +148,4 @@
 
 <link rel="stylesheet" href="views\assets\css\course.css">
 <script src="views\assets\js\course.js"></script>
+

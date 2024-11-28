@@ -46,6 +46,7 @@
 
 /* Modal Buttons */
 .modal-buttons {
+    margin-top: 1em;
     display: flex;
     justify-content: flex-end;
     gap: 15px;
@@ -67,7 +68,7 @@
 }
 
 .action-button {
-    background-color: #28a745;
+    background-color: #b30000;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -79,7 +80,7 @@
 }
 
 .action-button:hover {
-    background-color: #218838;
+    background-color: #990000;
 }
 
 /* Responsive Design */
@@ -338,4 +339,29 @@ button:hover {
 #pageInfo {
     font-size: 14px;
     font-weight: bold;
+}
+
+
+.coursebutton {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Adjust icon size */
+    line-height: 1; /* Ensure proper vertical alignment */
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    display: inline-block;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    color: #333; /* Default icon color */
+    cursor: pointer; /* Pointer cursor for clickable icons */
+    margin: 0 5px; /* Add some spacing between icons */
+}
+
+/* Hover effect for icons */
+.coursebutton:hover {
+    color: #b30000; /* Red color on hover */
+    transform: scale(1.2); /* Slightly enlarge on hover */
+    transition: transform 0.2s ease, color 0.2s ease; /* Smooth hover animation */
 }

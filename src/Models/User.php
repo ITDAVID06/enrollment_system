@@ -63,6 +63,22 @@ class User extends BaseModel
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function isEmailTaken($email, $excludeId = null) {
+        $sql = "SELECT COUNT(*) FROM faculty WHERE email = :email";
+        if ($excludeId) {
+            $sql .= " AND id != :id";
+        }
+    
+        $statement = $this->db->prepare($sql);
+        $params = ['email' => $email];
+        if ($excludeId) {
+            $params['id'] = $excludeId;
+        }
+    
+        $statement->execute($params);
+        return $statement->fetchColumn() > 0;
+    }
     
 
 }

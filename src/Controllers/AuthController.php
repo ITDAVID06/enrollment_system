@@ -50,75 +50,83 @@ class AuthController extends BaseController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
     
+            // Static credentials for superadmin
+            $superadminEmail = "superadmin@example.com";
+            $superadminPassword = "superadmin123";
+    
+            // Check if superadmin credentials match
+            if ($data['email'] === $superadminEmail && $data['password'] === $superadminPassword) {
+                $_SESSION['user_id'] = 0; // Special ID for superadmin
+                $_SESSION['complete_name'] = "Superadmin";
+                $_SESSION['role'] = 'superadmin';
+    
+                return $this->render('root', [
+                    'complete_name' => $_SESSION['complete_name'],
+                    'isDashboard' => true,
+                ]);
+            }
+    
             $user = new User();
-            
-            // Check if the user exists in the 'users' table (students)
             if ($user->verifyAccess($data['email'], $data['password'])) {
                 $sql = "SELECT id, complete_name, email FROM users WHERE email = :email";
-                $statement = $user->getDbConnection()->prepare($sql); 
+                $statement = $user->getDbConnection()->prepare($sql);
                 $statement->execute(['email' => $data['email']]);
                 $userData = $statement->fetch(PDO::FETCH_ASSOC);
     
-                // Ensure userData is valid before using it
-                if ($userData !== false) {
-                    // Set session variables for the student
+                if ($userData) {
                     $_SESSION['user_id'] = $userData['id'];
                     $_SESSION['complete_name'] = $userData['complete_name'];
                     $_SESSION['email'] = $userData['email'];
+                    $_SESSION['role'] = 'student';
     
-                    // Redirect to student root
-                    $templateData = [
-                        'complete_name' => $userData['complete_name'],
-                        'email' => $userData['email'],
+                    return $this->render('studentroot', [
+                        'complete_name' => $_SESSION['complete_name'],
                         'isProfile' => true,
-                    ];
-                    return $this->render('studentroot', $templateData);
+                    ]);
                 }
             }
     
-            $faculty = new Faculty();  
+            $faculty = new Faculty();
             if ($faculty->verifyAccess($data['email'], $data['password'])) {
                 $sql = "SELECT id, lastname, firstname, email FROM faculty WHERE email = :email";
-                $statement = $faculty->getDbConnection()->prepare($sql); 
+                $statement = $faculty->getDbConnection()->prepare($sql);
                 $statement->execute(['email' => $data['email']]);
                 $facultyData = $statement->fetch(PDO::FETCH_ASSOC);
     
-                if ($facultyData !== false) {
+                if ($facultyData) {
                     $_SESSION['user_id'] = $facultyData['id'];
                     $_SESSION['complete_name'] = $facultyData['firstname'] . ' ' . $facultyData['lastname'];
                     $_SESSION['email'] = $facultyData['email'];
-
-                    $templateData = [
-                        // 'complete_name' => $facultyData['complete_name'],
-                        // 'email' => $facultyData['email'],
-                        'isDashboard' => true,
-                    ];
+                    $_SESSION['role'] = 'faculty';
     
-                    // Redirect to faculty root
-                    return $this->render('root', $templateData); 
+                    return $this->render('root', [
+                        'complete_name' => $_SESSION['complete_name'],
+                        'isDashboard' => true,
+                    ]);
                 }
             }
     
-            // If neither table has a match, set an error message
+            // If no match, set error and re-render login
             $_SESSION['error'] = "Invalid email or password.";
-            
-            return $this->render('u-login'); 
+            return $this->render('u-login');
         }
     
-        return $this->render('u-login'); 
+        return $this->render('u-login');
     }
-    
-    public function logout()
-{
-    $this->initializeSession();
+    public function logout() {
+        $this->initializeSession();
 
-    $_SESSION = [];
+        $_SESSION = [];
+        session_destroy();
 
-    session_destroy();
+        // Prevent back button navigation
+        header("Cache-Control: no-cache, must-revalidate, max-age=0");
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // In the past
+        header("Pragma: no-cache");
 
-    return $this->render('u-login'); 
-    exit;
-}
+        header("Location: /login");
+        exit;
+    }
 
     
 }

@@ -64,8 +64,16 @@ const loadCoursesByProgramAndYear = async (programId, year, semester = null, pag
                     <td>${course.unit}</td>
                     <td>${course.semester}</td>
                     <td>
-                        <button onclick="editCourse(${course.id})">Edit</button>
-                        <button onclick="deleteCourse(${course.id})">Delete</button>
+                        <button onclick="editCourse(${course.id})">
+                <span class="material-symbols-rounded facultybutton">
+                edit
+                </span>
+                </button>
+                <button onclick="deleteCourse(${course.id})">
+                <span class="material-symbols-rounded facultybutton">
+                delete
+                </span>
+                </button>
                     </td>
                 </tr>`
             )
@@ -186,6 +194,39 @@ const filterYear = (year) => {
 };
 
 
+let programs = []; // Global variable to store program data
+
+const loadPrograms = async () => {
+    try {
+        const response = await fetch('/programs'); // Replace with your API endpoint
+        if (!response.ok) {
+            throw new Error('Failed to fetch programs');
+        }
+
+        programs = await response.json(); // Store fetched programs globally
+
+        // Render program buttons dynamically
+        const programList = document.getElementById('programList');
+        programList.innerHTML = programs
+            .map(
+                (program) => `
+                <li class="programItem" id="program${program.id}" onclick="selectProgram(${program.id})">
+                    ${program.program_code}
+                </li>
+                `
+            )
+            .join('');
+
+        // Set default program
+        const defaultProgram = programs.find((program) => program.program_code === 'BSIT');
+        if (defaultProgram) {
+            selectProgram(defaultProgram.id); // Set BSIT as default
+        }
+    } catch (error) {
+        console.error('Error fetching programs:', error);
+    }
+};
+
 const selectProgram = (programId) => {
     // Remove 'active' class from all program items
     const programItems = document.querySelectorAll('.programItem');
@@ -193,11 +234,27 @@ const selectProgram = (programId) => {
 
     // Add 'active' class to the selected program item
     const activeProgram = document.getElementById(`program${programId}`);
-    activeProgram.classList.add('active');
+    if (activeProgram) {
+        activeProgram.classList.add('active');
+    }
 
-    // Call your logic to load courses for the selected program
-    loadCoursesByProgramAndYear(programId, 1); // Replace with your actual function
-}
+    // Find the program by ID from the global programs list
+    const selectedProgram = programs.find((program) => program.id === programId);
+    if (selectedProgram) {
+        // Update the header with the full program title
+        // const programTitle = `${selectedProgram.program_code} - ${selectedProgram.title}`;
+        const programTitle = `${selectedProgram.title}`;
+        document.getElementById('selectedProgram').textContent = programTitle;
+    }
+
+    // Load courses for the selected program and default year
+    loadCoursesByProgramAndYear(programId, 1);
+};
+
+// Load programs on page load
+document.addEventListener('DOMContentLoaded', loadPrograms);
+
+
 
 const addCourseModal = document.getElementById("addCourseModal");
 

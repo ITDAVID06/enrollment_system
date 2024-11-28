@@ -16,6 +16,8 @@ class DashboardController extends BaseController
             'isProfile' => false,
             'isCourse' => false,
             'isProgram' => false,
+            'user_name' => $_SESSION['complete_name'] ?? 'User', // Add user name from session
+            'active_section' => 'Dashboard' // Set the active section
         ];
         return $this->render('root', $data);
     }
@@ -30,6 +32,8 @@ class DashboardController extends BaseController
             'isProfile' => false,
             'isCourse' => false,
             'isProgram' => false,
+            'user_name' => $_SESSION['complete_name'] ?? 'User', // Add user name from session
+            'active_section' => 'Dashboard' // Set the active section
         ];
 
         switch ($section) {

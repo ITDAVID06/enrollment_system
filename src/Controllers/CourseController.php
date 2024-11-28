@@ -10,6 +10,7 @@ class CourseController extends BaseController
 {
     public function showCourses()
     {
+        $this->initializeSession();
         $programModel = new Program();
         $programs = $programModel->getAllPrograms();
 
@@ -22,6 +23,8 @@ class CourseController extends BaseController
             'isCourse' => true,
             'isProgram' => false,
             'programs' => $programs,
+            'user_name' => $_SESSION['complete_name'] ?? 'User', // Add user name from session
+            'active_section' => 'Dashboard' // Set the active section
         ];
 
         return $this->render('root', $data);
