@@ -8,10 +8,6 @@ global $conn;
 
 try {
 
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    
 
     // Create Router instance
     $router = new \Bramus\Router\Router();
@@ -78,12 +74,6 @@ try {
     $router->post('/schedule/save/{course_id}', '\App\Controllers\SectionController@saveSchedule');
     $router->post('/save-schedule', '\App\Controllers\SectionController@saveSchedule');
 
-
-
-
-
-    // $router->get('/course', '\App\Controllers\CourseController@showCourse');
-    // $router->get('/section', '\App\Controllers\SectionController@showSection');
 
     $router->get('/faculty', '\App\Controllers\FacultyController@showFaculty'); // Show faculty page
     $router->post('/faculty', '\App\Controllers\FacultyController@register'); // Add new faculty

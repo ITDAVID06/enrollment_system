@@ -1,21 +1,20 @@
 <div class="profile-container">
-        <h2>Welcome, {{complete_name}}</h2>
-        <p>If you want to update your account details, you can do so below:</p>
-        
-        <form id="facultyUpdateForm">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="{{email}}" required>
-            </div>
-            <div class="form-group">
-                <label for="password">New Password (leave blank if unchanged):</label>
-                <input type="password" id="password" name="password">
-            </div>
-            <button type="submit" class="btn">Update Account</button>
-        </form>
+    <h2 class="account_name">Welcome, {{complete_name}}</h2>
+    <p class="instruction">If you want to update your account details, you can do so below:</p>
+    
+    <form id="facultyUpdateForm">
+        <div class="form-group">
+            <label class="label" for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{email}}" required>
+        </div>
+        <div class="form-group">
+            <label class="label" for="password">New Password (leave blank if unchanged):</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <button type="submit" class="btn">Update Account</button>
+    </form>
 
-        <div id="updateMessage"></div>
-    </div>
-    <script src="views/assets/js/profile.js"></script>
-
-    <link rel="stylesheet" href="views/assets/css/profile.css">
+    <div id="updateMessage"></div>
+</div>
+<script src="views/assets/js/profile.js"></script>
+<link rel="stylesheet" href="views/assets/css/profile.css">

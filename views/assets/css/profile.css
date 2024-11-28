@@ -1,34 +1,35 @@
 .profile-container {
     max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: white; /* Consistent with the red and white theme */
+    border: 1px solid #b30000; /* Add a red border for theme */
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-    text-align: center;
+.account_info {
     margin-bottom: 20px;
-    color: #333;
+    color: #b30000; /* Red for headers */
+    font-weight: bold;
+    font-size: 22px;
 }
 
-p {
-    text-align: center;
+.instruction {
     margin-bottom: 20px;
     font-size: 14px;
-    color: #666;
+    color: #333; /* Neutral gray for instructions */
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-label {
+.label {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
+    margin-bottom: 8px;
+    color: #b30000; /* Red for labels */
 }
 
 input {
@@ -37,27 +38,35 @@ input {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
+    background-color: #f9f9f9; /* Light background for input fields */
+    color: #333;
+}
+
+input:focus {
+    border-color: #b30000; /* Highlight red on focus */
+    outline: none;
 }
 
 button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: #b30000;
     color: white;
     border: none;
     border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 button:hover {
     background-color: #990000;
+    transform: scale(1.02); /* Slight scale effect */
 }
 
 #updateMessage {
-    margin-top: 15px;
+    margin-top: 20px;
     text-align: center;
     font-size: 14px;
-    color: green;
+    color: #b30000; /* Match theme for error/success messages */
 }
