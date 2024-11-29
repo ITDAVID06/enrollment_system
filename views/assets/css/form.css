@@ -1,0 +1,193 @@
+body{
+    font-family: 'Open Sans', sans-serif;
+}
+#signUpForm {
+    max-width: 800px;
+    background-color: #ffffff;
+    margin: 40px auto;
+    padding: 40px;
+    box-shadow: 0px 6px 18px rgb(0 0 0 / 9%);
+    border-radius: 12px;
+}
+#signUpForm .form-header {
+    gap: 5px;
+    text-align: center;
+    font-size: .9em;
+}
+#signUpForm .form-header .stepIndicator {
+    position: relative;
+    flex: 1;
+    padding-bottom: 30px;
+}
+#signUpForm .form-header .stepIndicator.active {
+    font-weight: 600;
+}
+#signUpForm .form-header .stepIndicator.finish {
+    font-weight: 600;
+    color: #960000;
+}
+#signUpForm .form-header .stepIndicator::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    z-index: 9;
+    width: 20px;
+    height: 20px;
+    background-color: #efd5d5;
+    border-radius: 50%;
+    border: 3px solid #f5ecec;
+}
+#signUpForm .form-header .stepIndicator.active::before {
+    background-color: #eda7a7;
+    border: 3px solid #f9d5d5;
+}
+#signUpForm .form-header .stepIndicator.finish::before {
+    background-color: #960000;
+    border: 3px solid #e1b7b7;
+}
+#signUpForm .form-header .stepIndicator::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 100%;
+    height: 3px;
+    background-color: #f3f3f3;
+}
+#signUpForm .form-header .stepIndicator.active::after {
+    background-color: #eda7a7;
+}
+#signUpForm .form-header .stepIndicator.finish::after {
+    background-color: #960000;
+}
+#signUpForm .form-header .stepIndicator:last-child:after {
+    display: none;
+}
+#signUpForm input {
+    padding: 15px 20px;
+    width: 100%;
+    font-size: 1em;
+    border: 1px solid #e3e3e3;
+    border-radius: 5px;
+}
+#signUpForm input:focus {
+    border: 1px solid #960000;
+    outline: 0;
+}
+
+input.is-invalid, select.is-invalid {
+    border: 1px solid #ffaba5; 
+    background-color: #faf1f2; 
+}
+
+input.is-invalid::placeholder {
+    color: #721c24;
+}
+
+/* Optional: Highlight labels for invalid fields */
+label.is-invalid {
+    color: red;
+}
+#signUpForm .step {
+  display: none;
+}
+#signUpForm .form-footer{
+    overflow:auto;
+    gap: 20px;
+}
+#signUpForm .form-footer button{
+    background-color: #960000;
+    border: 1px solid #960000 !important;
+    color: #ffffff;
+    border: none;
+    padding: 13px 30px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    flex: 1;
+    margin-top: 5px;
+}
+#signUpForm .form-footer button:hover {
+  opacity: 0.8;
+}
+
+#signUpForm .form-footer #prevBtn {
+    background-color: #fff;
+    color: #960000;
+}
+
+/* Style for invalid input */
+input.is-invalid {
+    border-color: red;
+}
+
+/* Message shown below the input when it's invalid */
+.invalid-feedback {
+    display: none;
+    color: red;
+    font-size: 0.875em;
+}
+
+#gender.form-select, #firstGenStudent.form-select, #citizenship.form-select, #barangay.form-select, #city.form-select, #province.form-select,#shsTrack.form-select {
+    height: 62%;
+}
+
+
+.review-document {
+    background-color: #ffffff;
+    border: 2px solid #960000;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Open Sans', sans-serif;
+    color: #960000;
+}
+
+.document-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000000;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #000000;
+    padding-bottom: 5px;
+}
+
+.review-section {
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.review-section p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 10px;
+}
+
+.review-section p strong {
+    font-weight: 600;
+    color: #000000;
+}
+
+.review-section span {
+    color: #333;
+}
+
+

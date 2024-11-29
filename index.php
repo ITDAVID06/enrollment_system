@@ -93,6 +93,20 @@ try {
 
     $router->get('/studentprofile', '\App\Controllers\StudentController@showStudentProfile');
 
+    //link for registration
+    $router->get('/registration', '\App\Controllers\RegistrationController@showRegistration');
+    $router->post('/enrollment', '\App\Controllers\RegistrationController@submitEnrollment');
+    // $router->post('/check-email', '\App\Controllers\RegistrationController@checkEmail');
+    $router->get('/success', '\App\Controllers\RegistrationController@success');
+
+    //link for enrollees admin
+    $router->get('/enrollee', '\App\Controllers\EnrolleesController@showEnrollees');
+
+    $router->get('/enrollees/list', '\App\Controllers\EnrolleesController@listEnrollees');
+    $router->get('/enrollees/{id}', '\App\Controllers\EnrolleesController@getEnrollees');
+    $router->post('/enrollees/update/{id}', '\App\Controllers\EnrolleesController@UpdateEnrollee');
+    $router->get('/programs/list', '\App\Controllers\EnrolleesController@listEnrollees');
+
     // Run it!
     $router->run();
 

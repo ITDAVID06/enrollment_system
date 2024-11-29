@@ -1,0 +1,15 @@
+table level constraint - gagamitin tuwing may composite key ka
+
+CCS05IT2A_Group4
+
+
+
+audit trail
+lalo na sa delete function need dapat na meron table na pupuntahan ung mga dinedelete.
+
+
+saka history kung kelan na update ung isang row or instance.
+
+
+
+

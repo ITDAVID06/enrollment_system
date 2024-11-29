@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollment Form</title>
+        <!-- bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+        <!-- google font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+        
+        <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+     <!-- Custom CSS -->
+  <link rel="stylesheet" href="views/assets/css/form.css">
+</head>
+<body>
+    
+<h1 class="text-center fs-4">CCS - Enrollment Form</h1>
+    <form id="signUpForm" action="/enrollment" method="POST" enctype="multipart/form-data">
+        <!-- start step indicators -->
+        <div class="form-header d-flex mb-4">
+            <span class="stepIndicator">Registration Type</span>
+            <span class="stepIndicator">Personal Data</span>
+            <span class="stepIndicator">Residence Data</span>
+            <span class="stepIndicator">Educational Background</span>
+            <span class="stepIndicator">Review Information</span>
+            
+        </div>
+        <!-- end step indicators -->
+    
+                <!-- step one -->
+        <div class="step">
+            <p class="text-center mb-4">Enrollment Information</p>
+            
+            <div class="mb-3">
+                <label for="status" class="form-label">Status of Enrollee <span class="text-danger">*</span></label>
+                <select id="status" class="form-select" name="status_of_enrollee" required>
+                    <option value="">Select Status</option>
+                    <option value="New Student">New Student</option>
+                    <option value="Old Student">Old Student</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="previousSchool" class="form-label">Previous School <span class="text-danger">*</span></label>
+                <select id="previousSchool" class="form-select" name="previous_school" required>
+                    <option value="">Select School</option>
+                    <option value="School A">School A</option>
+                    <option value="School B">School B</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="program" class="form-label">Program Applying For <span class="text-danger">*</span></label>
+                <select id="program" class="form-select" name="program_applying_for" required>
+                    <option value="">Select Program</option>
+                    {{#programs}}
+                    <option value="{{id}}">{{title}}</option>
+                    {{/programs}}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="yearLevel" class="form-label">Year Level <span class="text-danger">*</span></label>
+                <select id="yearLevel" class="form-select" name="year_level" required>
+                    <option value="">Select Year Level</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="term" class="form-label">Term <span class="text-danger">*</span></label>
+                <select id="term" class="form-select" name="term" required>
+                    <option value="">Select Term</option>
+                    <option value="1st Term">1st Term</option>
+                    <option value="2nd Term">2nd Term</option>
+                    <option value="3rd Term">3rd Term</option>
+                    <option value="Summer">Summer</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="schoolYear" class="form-label">School Year <span class="text-danger">*</span></label>
+                <select id="schoolYear" class="form-select" name="school_year" required>
+                    <option value="2025-2026" selected>2025-2026</option>
+                </select>
+            </div>
+        </div>
+
+                <!-- step two -->
+        <div class="step">
+            <p class="text-center mb-4">Personal Information</p>
+
+            <div class="row">
+                <!-- Left column -->
+                <div class="col-md-6 mb-3">
+                    <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                    <input type="text" id="lastName" placeholder="Last Name" oninput="this.className = ''" name="last_name" required class="form-control">
+                </div>
+                <!-- Right column -->
+                <div class="col-md-6 mb-3">
+                    <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                    <input type="text" id="firstName" placeholder="First Name" oninput="this.className = ''" name="first_name" required class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Left column -->
+                <div class="col-md-6 mb-3">
+                    <label for="middleName" class="form-label">Middle Name</label>
+                    <input type="text" id="middleName" placeholder="Middle Name (Optional)" oninput="this.className = ''" name="middle_name" class="form-control">
+                </div>
+                <!-- Right column -->
+                <div class="col-md-6 mb-3">
+                    <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
+                    <select id="gender" class="form-select" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Left column -->
+                <div class="col-md-6 mb-3">
+                    <label for="dob" class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                    <input type="date" id="dob" name="date_of_birth" oninput="this.className = ''" required class="form-control">
+                </div>
+                <!-- Right column -->
+                <div class="col-md-6 mb-3">
+                    <label for="placeOfBirth" class="form-label">Place of Birth <span class="text-danger">*</span></label>
+                    <input type="text" id="placeOfBirth" placeholder="Place of Birth" oninput="this.className = ''" name="place_of_birth" required class="form-control">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-6 mb-3">
+                    <label for="contactMobile" class="form-label">Contact Mobile <span class="text-danger">*</span></label>
+                    <input type="tel" id="contactMobile" placeholder="Contact Mobile" oninput="this.className = ''" name="contact_mobile" required pattern="\d*" inputmode="numeric" class="form-control">
+                    <div id="contactMobile-error" class="invalid-feedback">
+                        Please enter a valid contact number.
+                    </div>
+                </div>
+            
+                <!-- Right Column -->
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                    <input type="email" id="email" placeholder="Email Address" oninput="validateEmail()" name="email" required class="form-control">
+                    <div id="email-error" class="invalid-feedback">
+                        Please enter a valid email address.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- Left column -->
+                <div class="col-md-6 mb-3">
+                    <label for="citizenship" class="form-label">Citizenship <span class="text-danger">*</span></label>
+                    <select id="citizenship" class="form-select" name="citizenship" required>
+                        <option value="">Select Citizenship</option>
+                        <option value="Filipino" selected>Filipino</option>
+                        <option value="American">American</option>
+                        <option value="British">British</option>
+                        <option value="Canadian">Canadian</option>
+                        <option value="Australian">Australian</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                </div>
+                <!-- Right column -->
+                <div class="col-md-6 mb-3">
+                    <label for="firstGenStudent" class="form-label">Are you a first-generation student? <span class="text-danger">*</span>
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="A first-generation student is the first in his/her immediate family to pursue higher education (college) beyond high school.">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </label>
+                    <select id="firstGenStudent" class="form-select" name="first_gen_student" required>
+                        <option value="">Select Answer</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+
+    
+        <!-- Step Three: Residence Data -->
+        <div class="step">
+            <p class="text-center mb-4">Residence Information</p>
+
+            <!-- Full Name and Contact Mobile Fields -->
+            <div class="row">
+                <!-- Full Name -->
+                <div class="col-md-6 mb-3">
+                    <label for="fullname" class="form-label">Emergency Contact Name <span class="text-danger">*</span></label>
+                    <input type="text" id="fullname" placeholder="Full Name" oninput="this.className = ''" name="emergency_contact_name" required class="form-control">
+                </div>
+                
+                <!-- Mobile -->
+                <div class="col-md-6 mb-3">
+                    <label for="mobile" class="form-label">Mobile No. <span class="text-danger">*</span></label>
+                    <input type="tel" id="mobile" placeholder="Mobile No." oninput="this.className = ''" name="emergency_contact_mobile" required pattern="\d*" inputmode="numeric" class="form-control">
+                    <div id="mobile-error" class="invalid-feedback">
+                        Please enter a valid mobile number.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Province, City, Barangay, and Zip Code Fields -->
+            <div class="row">
+                <!-- Province -->
+                <div class="col-md-6 mb-3">
+                    <label for="province" class="form-label">Province <span class="text-danger">*</span></label>
+                    <select id="province" name="province" class="form-select" required onchange="populateCities()">
+                        <option value="">Select Province</option>
+                    </select>
+                </div>
+                
+                <!-- City -->
+                <div class="col-md-6 mb-3">
+                    <label for="city" class="form-label">City/Municipality <span class="text-danger">*</span></label>
+                    <select id="city" name="city_municipality" class="form-select" required onchange="populateBarangays()">
+                        <option value="">Select City/Municipality</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Barangay -->
+                <div class="col-md-6 mb-3">
+                    <label for="barangay" class="form-label">Barangay <span class="text-danger">*</span></label>
+                    <select id="barangay" name="barangay" class="form-select" required>
+                        <option value="">Select Barangay</option>
+                    </select>
+                </div>
+
+                <!-- Zip Code -->
+                <div class="col-md-6 mb-3">
+                    <label for="zipcode" class="form-label">Zip Code</label>
+                    <input type="text" id="zipcode" name="zip_code" placeholder="Zip Code" class="form-control">
+                </div>
+            </div>
+
+            <!-- Street Address Field -->
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="street_address" class="form-label">Street Address <span class="text-danger">*</span></label>
+                    <input type="text" id="street_address" placeholder="Street Address" oninput="this.className = ''" name="street_address" required class="form-control">
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Step Four: Educational Information -->
+        <div class="step">
+            <p class="text-center mb-4">Educational Information</p>
+
+            <!-- School Information Fields -->
+            <div class="row">
+                <!-- Elementary School -->
+                <div class="col-md-6 mb-3">
+                    <label for="elementarySchool" class="form-label">Elementary School <span class="text-danger">*</span></label>
+                    <input type="text" id="elementarySchool" placeholder="Elementary School" oninput="this.className = ''" name="elementary_school" required class="form-control">
+                </div>
+                
+                <!-- Junior High School -->
+                <div class="col-md-6 mb-3">
+                    <label for="juniorHighSchool" class="form-label">Junior High School <span class="text-danger">*</span></label>
+                    <input type="text" id="juniorHighSchool" placeholder="Junior High School" oninput="this.className = ''" name="junior_high_school" required class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Senior High School -->
+                <div class="col-md-6 mb-3">
+                    <label for="seniorHighSchool" class="form-label">Senior High School <span class="text-danger">*</span></label>
+                    <input type="text" id="seniorHighSchool" placeholder="Senior High School" oninput="this.className = ''" name="senior_high_school" required class="form-control">
+                </div>
+
+                <!-- SHS Track -->
+                <div class="col-md-6 mb-3">
+                    <label for="shsTrack" class="form-label">Senior High School Track <span class="text-danger">*</span></label>
+                    <select id="shsTrack" name="shs_track" class="form-select" required>
+                        <option value="">Select Track</option>
+                        <option value="ABM">Accountancy, Business, and Management (ABM)</option>
+                        <option value="STEM">Science, Technology, Engineering, and Mathematics (STEM)</option>
+                        <option value="HUMSS">Humanities and Social Sciences (HUMSS)</option>
+                        <option value="GAS">General Academic Strand (GAS)</option>
+                        <option value="TVL-AgriFishery">Technical-Vocational-Livelihood (TVL) Track - Agri-Fishery Arts</option>
+                        <option value="TVL-HomeEc">Technical-Vocational-Livelihood (TVL) Track - Home Economics</option>
+                        <option value="TVL-Industrial">Technical-Vocational-Livelihood (TVL) Track - Industrial Arts</option>
+                        <option value="TVL-ICT">Technical-Vocational-Livelihood (TVL) Track - Information and Communication Technology (ICT)</option>
+                        <option value="Sports">Sports Track</option>
+                        <option value="ArtsDesign">Arts and Design Track</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="row">
+                <!-- Grade 12 1st Quarter or Grade 11 Form 137 Upload -->
+                <div class="col-md-6 mb-3">
+                        <label for="gradeFile" class="form-label">Upload Grade 12 1st Quarter Grade or Grade 11 Form 137 <span class="text-danger">*</span></label>
+                        <input type="file" id="gradeFile" name="uploaded_grade_file" required class="form-control">
+                        <div id="gradeFile-error" class="invalid-feedback">
+                            Please upload your Grade 12 1st Quarter Grade or Grade 11 Form 137.
+                        </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="step" id="step5" style="display: none;">
+            <div class="review-document">
+                <h2 class="text-center mb-4 document-title">Review Your Information</h2>
+        
+                <!-- Enrollment Information -->
+                <h5 class="section-header">Enrollment Information</h5>
+                <div class="review-section">
+                    <p><strong>Status of Enrollee:</strong> <span id="reviewStatus"></span></p>
+                    <p><strong>Previous School:</strong> <span id="reviewSchool"></span></p>
+                    <p><strong>Program Applying For:</strong> <span id="reviewProgram"></span></p>
+                    <p><strong>Year Level:</strong> <span id="reviewYearLevel"></span></p>
+                    <p><strong>Term:</strong> <span id="reviewTerm"></span></p>
+                    <p><strong>School Year:</strong> <span id="reviewSchoolYear"></span></p>
+                </div>
+        
+                <!-- Personal Information -->
+                <h5 class="section-header">Personal Information</h5>
+                <div class="review-section">
+                    <p><strong>Full Name:</strong> <span id="reviewFullName"></span></p>
+                    <p><strong>Gender:</strong> <span id="reviewGender"></span></p>
+                    <p><strong>Date of Birth:</strong> <span id="reviewDOB"></span></p>
+                    <p><strong>Place of Birth:</strong> <span id="reviewPlaceOfBirth"></span></p>
+                    <p><strong>Contact Mobile:</strong> <span id="reviewContactMobile"></span></p>
+                    <p><strong>Email:</strong> <span id="reviewEmail"></span></p>
+                    <p><strong>Citizenship:</strong> <span id="reviewCitizenship"></span></p>
+                    <p><strong>First-Generation Student:</strong> <span id="reviewFirstGen"></span></p>
+                </div>
+        
+                <!-- Residence Information -->
+                <h5 class="section-header">Residence Information</h5>
+                <div class="review-section">
+                    <p><strong>Emergency Contact Name:</strong> <span id="reviewEmergencyName"></span></p>
+                    <p><strong>Emergency Contact Mobile:</strong> <span id="reviewEmergencyMobile"></span></p>
+                    <p><strong>Street Address:</strong> <span id="reviewStreet"></span></p>
+                    <p><strong>Province:</strong> <span id="reviewProvince"></span></p>
+                    <p><strong>City/Municipality:</strong> <span id="reviewCity"></span></p>
+                    <p><strong>Barangay:</strong> <span id="reviewBarangay"></span></p>
+                    <p><strong>Zip Code:</strong> <span id="reviewZip"></span></p>
+                </div>
+        
+                <!-- Educational Information -->
+                <h5 class="section-header">Educational Information</h5>
+                <div class="review-section">
+                    <p><strong>Elementary School:</strong> <span id="reviewElementary"></span></p>
+                    <p><strong>Junior High School:</strong> <span id="reviewJuniorHigh"></span></p>
+                    <p><strong>Senior High School:</strong> <span id="reviewSeniorHigh"></span></p>
+                    <p><strong>SHS Track:</strong> <span id="reviewSHSTrack"></span></p>
+                </div>
+        
+                <!-- File Upload Review -->
+                <h5 class="section-header">Uploaded Documents</h5>
+                <div class="review-section">
+                    <p><strong>Uploaded Grade File:</strong> <span id="reviewGradeFile"></span></p>
+                </div>
+            </div>
+        </div>
+        
+            <!-- start previous / next buttons -->
+            <div class="form-footer d-flex">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+            </div>
+            <!-- end previous / next buttons -->
+    </form>
+     <!-- Link to the external JavaScript file -->
+     <script src="views/assets/js/form.js"></script>
+     <script src="views/assets/js/location.js"></script>
+     <script>
+        document.getElementById('email').addEventListener('blur', function () {
+    const email = this.value;
+    const errorContainer = document.getElementById('email-error');
+
+    if (email) {
+        fetch('/check-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exists) {
+                errorContainer.textContent = 'This email is already registered. Please use a different email.';
+                errorContainer.style.display = 'block';
+            } else {
+                errorContainer.textContent = '';
+                errorContainer.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+     </script>
+</body>
+</html>

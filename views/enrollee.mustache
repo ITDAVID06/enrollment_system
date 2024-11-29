@@ -1,0 +1,155 @@
+<div>
+    <h2 id="enrolleeTitle">Enrollees List</h2>
+    <div class="header-row">
+        <div class="search-container">
+            <input type="text" placeholder="Search..." id="searchInput">
+            <button id="searchButton">Search</button>
+        </div>
+        <button id="addEnrolleeButton"></button>
+    </div>
+
+    <table border="1" id="enrolleeTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Program ID</th>
+                <th>Year Level</th>
+                <th>Student Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Populated via JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<div id="editEnrolleeModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Enrollee</h3>
+        <form id="editEnrolleeForm">
+            <input type="hidden" id="editEnrolleeId" name="id">
+
+            <label for="editStudentStatus">Student Status:</label>
+            <select id="editStudentStatus" name="student_status">
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+            </select>
+
+            <label for="editStudentId">Student ID:</label>
+            <input type="text" id="editStudentId" name="student_id">
+
+            <button type="submit">Update</button>
+        </form>
+    </div>
+</div>
+
+<div id="reviewInformationModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Review Your Information</h3>
+        <form id="reviewInformationForm">
+            <!-- Enrollment Information -->
+            <h5 class="section-header">Enrollment Information</h5>
+            <label for="reviewStatus">Status of Enrollee:</label>
+            <input type="text" id="reviewStatus" name="status" readonly>
+
+            <label for="reviewSchool">Previous School:</label>
+            <input type="text" id="reviewSchool" name="school" readonly>
+
+            <label for="reviewProgram">Program Applying For:</label>
+            <input type="text" id="reviewProgram" name="program" readonly>
+
+            <label for="reviewYearLevel">Year Level:</label>
+            <input type="text" id="reviewYearLevel" name="year_level" readonly>
+
+            <label for="reviewTerm">Term:</label>
+            <input type="text" id="reviewTerm" name="term" readonly>
+
+            <label for="reviewSchoolYear">School Year:</label>
+            <input type="text" id="reviewSchoolYear" name="school_year" readonly>
+
+            <!-- Personal Information -->
+            <h5 class="section-header">Personal Information</h5>
+            <label for="reviewFullName">Full Name:</label>
+            <input type="text" id="reviewFullName" name="full_name" readonly>
+
+            <label for="reviewGender">Gender:</label>
+            <input type="text" id="reviewGender" name="gender" readonly>
+
+            <label for="reviewDOB">Date of Birth:</label>
+            <input type="text" id="reviewDOB" name="dob" readonly>
+
+            <label for="reviewPlaceOfBirth">Place of Birth:</label>
+            <input type="text" id="reviewPlaceOfBirth" name="place_of_birth" readonly>
+
+            <label for="reviewContactMobile">Contact Mobile:</label>
+            <input type="text" id="reviewContactMobile" name="contact_mobile" readonly>
+
+            <label for="reviewEmail">Email:</label>
+            <input type="text" id="reviewEmail" name="email" readonly>
+
+            <label for="reviewCitizenship">Citizenship:</label>
+            <input type="text" id="reviewCitizenship" name="citizenship" readonly>
+
+            <label for="reviewFirstGen">First-Generation Student:</label>
+            <input type="text" id="reviewFirstGen" name="first_gen" readonly>
+
+            <!-- Residence Information -->
+            <h5 class="section-header">Residence Information</h5>
+            <label for="reviewEmergencyName">Emergency Contact Name:</label>
+            <input type="text" id="reviewEmergencyName" name="emergency_name" readonly>
+
+            <label for="reviewEmergencyMobile">Emergency Contact Mobile:</label>
+            <input type="text" id="reviewEmergencyMobile" name="emergency_mobile" readonly>
+
+            <label for="reviewStreet">Street Address:</label>
+            <input type="text" id="reviewStreet" name="street" readonly>
+
+            <label for="reviewProvince">Province:</label>
+            <input type="text" id="reviewProvince" name="province" readonly>
+
+            <label for="reviewCity">City/Municipality:</label>
+            <input type="text" id="reviewCity" name="city" readonly>
+
+            <label for="reviewBarangay">Barangay:</label>
+            <input type="text" id="reviewBarangay" name="barangay" readonly>
+
+            <label for="reviewZip">Zip Code:</label>
+            <input type="text" id="reviewZip" name="zip" readonly>
+
+            <!-- Educational Information -->
+            <h5 class="section-header">Educational Information</h5>
+            <label for="reviewElementary">Elementary School:</label>
+            <input type="text" id="reviewElementary" name="elementary" readonly>
+
+            <label for="reviewJuniorHigh">Junior High School:</label>
+            <input type="text" id="reviewJuniorHigh" name="junior_high" readonly>
+
+            <label for="reviewSeniorHigh">Senior High School:</label>
+            <input type="text" id="reviewSeniorHigh" name="senior_high" readonly>
+
+            <label for="reviewSHSTrack">SHS Track:</label>
+            <input type="text" id="reviewSHSTrack" name="shs_track" readonly>
+
+            <!-- File Upload Review -->
+            <h5 class="section-header">Uploaded Documents</h5>
+            <label for="reviewGradeFile">Uploaded Grade File:</label>
+            <input type="text" id="reviewGradeFile" name="grade_file" readonly>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel=stylesheet href='views\assets\css\program.css'>
+<script src="views\assets\js\enrollee.js"></script>
