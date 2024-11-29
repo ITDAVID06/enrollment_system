@@ -104,6 +104,10 @@ try {
 
 
     $router->get('/student-info-edit', '\App\Controllers\StudentInformationController@showStudentEditSheet');
+    
+    //Register Student
+    $router->get('/student-register', '\App\Controllers\StudentRegistrationController@showRegistrationForm');
+    $router->post('/enrollment', '\App\Controllers\StudentRegistrationController@submitEnrollment');
     // Run it!
     $router->run();
 
