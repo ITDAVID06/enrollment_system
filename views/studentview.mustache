@@ -1,0 +1,32 @@
+<div class="container mt-4">
+    <h2>Enrollment Submitted Successfully!</h2>
+    <h4>Student Information</h4>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/{{profile_picture_path}}" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 200px;">
+        </div>
+        <div class="col-md-8">
+            <p><strong>Name:</strong> {{firstname}} {{middlename}} {{lastname}}</p>
+            <p><strong>Gender:</strong> {{student.gender}}</p>
+            <p><strong>Date of Birth:</strong> {{student.date_of_birth}}</p>
+            <p><strong>Place of Birth:</strong> {{student.place_of_birth}}</p>
+            <p><strong>Contact Mobile:</strong> {{student.contact_mobile}}</p>
+            <p><strong>Email:</strong> {{student.email}}</p>
+            <p><strong>Emergency Contact Name:</strong> {{student.emergency_contact_name}}</p>
+            <p><strong>Emergency Contact Mobile:</strong> {{student.emergency_contact_mobile}}</p>
+            <p><strong>Address:</strong> {{student.street_address}}, {{student.barangay}}, {{student.city}}, {{student.province}}, {{student.zipcode}}</p>
+            <p><strong>Elementary School:</strong> {{student.elementary_school}}</p>
+            <p><strong>High School:</strong> {{student.high_school}}</p>
+            <p><strong>Preferred Course:</strong> {{student.course}}</p>
+            <p><strong>Student Status:</strong> {{student.student_status}}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h5>Uploaded Grade File:</h5>
+            <p><a href="/{{student.grade_file_path}}" target="_blank">View Grade File</a></p>
+        </div>
+    </div>
+</div>

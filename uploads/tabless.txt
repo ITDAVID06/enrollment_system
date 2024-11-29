@@ -1,0 +1,79 @@
+CREATE TABLE schedule (
+    schedID INT(11) NOT NULL AUTO_INCREMENT,
+    TIME_FROM VARCHAR(90) NOT NULL,
+    TIME_TO VARCHAR(90) NOT NULL,
+    sched_time VARCHAR(30) NOT NULL,
+    sched_day VARCHAR(30) NOT NULL,
+    sched_semester VARCHAR(30) NOT NULL,
+    sched_sy VARCHAR(30) NOT NULL,
+    sched_room VARCHAR(30) NOT NULL,
+    SECTION VARCHAR(30) NOT NULL,
+    PROGRAM_ID INT(11) NOT NULL,
+    COURSE_ID INT(11) NOT NULL,
+    PRIMARY KEY (schedID),
+    FOREIGN KEY (PROGRAM_ID) REFERENCES programs(id) ON DELETE CASCADE,
+    FOREIGN KEY (COURSE_ID) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+CREATE TABLE courses (
+id INT AUTO_INCREMENT PRIMARY KEY,
+program_id INT NOT NULL,
+course_code VARCHAR(50) NOT NULL,
+title VARCHAR(255) NOT NULL,
+unit FLOAT NOT NULL,
+semester VARCHAR(50) NOT NULL,
+year INT NOT NULL,
+FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
+);
+
+CREATE TABLE sections (
+id INT AUTO_INCREMENT PRIMARY KEY,
+program_id INT NOT NULL,
+name VARCHAR(50) NOT NULL,
+semester VARCHAR(50) NOT NULL,
+year_level INT NOT NULL,
+FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
+);
+
+CREATE TABLE users (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    complete_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE faculty (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    lastname VARCHAR(50) NOT NULL,
+    firstname VARCHAR(50) NOT NULL,
+    contact VARCHAR(15) DEFAULT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE programs (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    program_code VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    years INT(11) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO faculty (lastname, firstname, contact, email, username, password_hash)
+VALUES ('Carino', 'Marcus', '09918031331', 'marcus123@gmail.com', 'marcus', '$2y$10$pHN51NZL.JwixGeW5WaRyOZF7VAjk5SrBBazU87qZ74kwHvgWzTFa')
+
+INSERT INTO schedule (TIME_FROM, TIME_TO, sched_time, sched_day, sched_semester, sched_sy, sched_room, section_id, PROGRAM_ID, COURSE_ID)
+VALUES
+('10:00', '12:00', '10:00 AM - 12:00 PM', 'Wednesday', '1st Semester', '2024-2025', 'Room 101', 1, 1, 2);
+
+INSERT INTO schedule (TIME_FROM, TIME_TO, sched_time, sched_day, sched_semester, sched_sy, sched_room, section_id, PROGRAM_ID, COURSE_ID)
+VALUES
+('08:00', '10:00', '08:00 AM - 10:00 PM', 'Wednesday', '1st Semester', '2024-2025', 'Room 101', 2, 1, 2);
+

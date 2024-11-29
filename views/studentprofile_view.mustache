@@ -1,0 +1,36 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3 bg-light p-3 text-center">
+            <img src="{{ student.profile_picture_path }}" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 150px;">
+            <h5 class="mt-2">{{ student.firstname }} {{ student.lastname }}</h5>
+            <p class="text-muted">{{ student.email }}</p>
+            <hr>
+            <p><strong>Course:</strong> {{ student.course }}</p>
+            <p><strong>Status:</strong> {{ student.student_status }}</p>
+        </div>
+
+        <div class="col-md-9 p-3">
+            <h5>Personal Information</h5>
+            <p><strong>Last Name:</strong> {{ student.lastname }}</p>
+            <p><strong>First Name:</strong> {{ student.firstname }}</p>
+            <p><strong>Middle Name:</strong> {{ student.middlename }}</p>
+            <p><strong>Gender:</strong> {{ student.gender }}</p>
+            <p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
+            <p><strong>Place of Birth:</strong> {{ student.place_of_birth }}</p>
+            <p><strong>Contact Mobile:</strong> {{ student.contact_mobile }}</p>
+            <p><strong>Emergency Contact:</strong> {{ student.emergency_contact_name }} - {{ student.emergency_contact_mobile }}</p>
+            <hr>
+            <h5>Address</h5>
+            <p><strong>Province:</strong> {{ student.province }}</p>
+            <p><strong>City:</strong> {{ student.city }}</p>
+            <p><strong>Barangay:</strong> {{ student.barangay }}</p>
+            <p><strong>Street Address:</strong> {{ student.street_address }}</p>
+            <p><strong>Zipcode:</strong> {{ student.zipcode }}</p>
+            <hr>
+            <h5>Educational Background</h5>
+            <p><strong>Elementary School:</strong> {{ student.elementary_school }}</p>
+            <p><strong>High School:</strong> {{ student.high_school }}</p>
+            <p><strong>Grade File:</strong> <a href="{{ student.grade_file_path }}" target="_blank">View File</a></p>
+        </div>
+    </div>
+</div>

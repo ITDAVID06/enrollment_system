@@ -13,11 +13,20 @@
         {{> studentsidebar}}
 
         <div id="main-content" class="main-content">
-            <div id="navbar" class="navbar">{{> navigation}}</div>
+            <div id="navbar1" class="navbar1">{{> navigation}}</div>
             <div id="panel" class="panel">
                     {{#isProfile}}
                     {{> studentprofile}}
                     {{/isProfile}}
+
+                    {{#isViewSheet}}
+                    {{> studentview}}
+                    {{/isViewSheet}}
+
+                    {{#isEditSheet}}
+                    {{> studentedit}}
+                    {{/isEditSheet}}
+
                     {{#isRegistration}}
                     {{> studentregistration}}
                     {{/isRegistration}}

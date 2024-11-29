@@ -9,8 +9,10 @@ class StudentController extends BaseController
     // Default method for showing the dashboard
     public function showStudentProfile(){
         $data = [
-            'isProfile' => true,   // Default to dashboard
+            'isProfile' => false,   // Default to dashboard
             'isRegistration' => false,
+            'isViewSheet' => false,
+            'isEditSheet' => false,
             'isSchedule' => false,
             'isAccount' => false,
         ];

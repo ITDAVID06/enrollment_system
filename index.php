@@ -93,6 +93,17 @@ try {
 
     $router->get('/studentprofile', '\App\Controllers\StudentController@showStudentProfile');
 
+
+    $router->get('/student-info', '\App\Controllers\StudentInformationController@showStudentInfo');
+    $router->post('/submit-student-info', '\App\Controllers\StudentInformationController@submitStudentInformationForm');
+
+    $router->get('/student-info-view', '\App\Controllers\StudentInformationController@showStudentViewSheet');
+    
+    // Route to view student info by ID
+    $router->get('/student-info-view', '\App\Controllers\StudentInformationController@viewStudentInfo');
+
+
+    $router->get('/student-info-edit', '\App\Controllers\StudentInformationController@showStudentEditSheet');
     // Run it!
     $router->run();
 
