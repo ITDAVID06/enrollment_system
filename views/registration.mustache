@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +24,7 @@
   <header class="header bg-light py-3">
     <div class="container d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
-        <img src="views/assets/images/ccs-logo.jpg" alt="University Logo" width="50" height="50" class="me-3">
+        <a href="/"><img src="views/assets/images/ccs-logo.jpg" alt="University Logo" width="50" height="50" class="me-3"></a>
         <div>
           <h5 class="mb-0">College of Computer Studies</h5>
           <small class="text-muted">Angeles University Foundation</small>
@@ -44,11 +40,6 @@
   </header>
 
   <!-- Main Content -->
-  <?php if (isset($_SESSION['success'])): ?>
-  <div id="success-message" style="display: none;"><?php echo $_SESSION['success']; ?></div>
-  <?php unset($_SESSION['success']); ?>
-<?php endif; ?>
-
   <main class="container py-5">
     <h1 class="text-center mb-4">Student Enrollment Form</h1>
     <form action="/submit-enrollment" method="POST" enctype="multipart/form-data">
@@ -134,6 +125,5 @@
   <footer class="footer bg-light py-3 text-center">
     <p class="mb-0">&copy; 2024 Angeles University Foundation</p>
   </footer>
-  <script src="views/assets/js/alert.js"></script>
 </body>
 </html>

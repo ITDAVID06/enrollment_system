@@ -213,3 +213,28 @@ button:hover {
     margin-top: 1.2em;
     margin-left: 70px;
 }
+
+.modal-content .btn {
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.btn-copy {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-copy:hover {
+    color: #b30000;
+    transform: scale(1.2);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.material-symbols-rounded {
+    font-size: 18px;
+}

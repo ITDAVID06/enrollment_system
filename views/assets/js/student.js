@@ -44,7 +44,12 @@ const displayPage = () => {
                 <td>${student.section_name || "Unassigned"}</td>
                 <td>${student.program_code}</td>
                 <td>${student.year_level}</td>
-                <td>${student.mobile}</td>
+                 <td>
+                    ${student.email}
+                    <button class="btn btn-copy" onclick="copyToClipboard('${student.email}')">
+                        <span class="material-symbols-rounded">content_copy</span>
+                    </button>
+                </td>
                 <td>${student.address}</td>
                 <td>
                     <button class="btn btn-edit" onclick="editStudentSection(${student.id})">
@@ -94,6 +99,18 @@ window.deleteStudentSection = async (id) => {
             alert("Failed to remove student section.");
         }
     }
+};
+
+const copyToClipboard = (email) => {
+    navigator.clipboard
+        .writeText(email)
+        .then(() => {
+            alert(`Copied to clipboard: ${email}`);
+        })
+        .catch((error) => {
+            console.error("Failed to copy text: ", error);
+            alert("Failed to copy email. Please try again.");
+        });
 };
 
 
@@ -288,4 +305,58 @@ const populateSections = async (currentSectionId = null) => {
         alert("Failed to load sections.");
     }
 };
+
+document.getElementById("printScheduleButton").addEventListener("click", () => {
+    const modalContent = document.querySelector("#viewScheduleModal .modal-content").innerHTML;
+
+    // Open a new window and write the modal content to it
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Schedule</title>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+                th { background-color: #b30000; color: white; }
+            </style>
+        </head>
+        <body>
+            ${modalContent}
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+});
+
+document.getElementById("emailScheduleButton").addEventListener("click", async () => {
+    const email = prompt("Enter the recipient's email address:");
+    if (!email) return;
+
+    const modalContent = document.querySelector("#viewScheduleModal .modal-content").innerHTML;
+
+    try {
+        const response = await fetch("/send-schedule-email", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: email, scheduleHTML: modalContent }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            alert("Schedule sent successfully!");
+        } else {
+            alert(result.message || "Failed to send schedule.");
+        }
+    } catch (error) {
+        console.error("Error sending schedule:", error);
+        alert("Failed to send schedule.");
+    }
+});
+
 

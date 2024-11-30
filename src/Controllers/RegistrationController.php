@@ -57,7 +57,10 @@ class RegistrationController extends BaseController
              // Check if the insertion was successful
              if ($result['row_count'] > 0) {
                  $_SESSION['success'] = 'Registration submitted successfully!';
-                 header('Location: /');
+                 echo "<script>
+                    alert('Registration submitted successfully!');
+                    window.location.href = '/';
+                </script>";
                  exit;
              } else {
                  $_SESSION['error'] = 'Failed to submit enrollment. Please try again.';

@@ -133,6 +133,9 @@ try {
     $router->get('/students/chart-data', '\App\Controllers\StudentController@getChartData');
     $router->post('/student/remove-section/{id}', '\App\Controllers\StudentController@removeSection');
 
+    $router->post('/send-schedule-email', '\App\Controllers\StudentController@sendScheduleEmail');
+
+
 
 
     $router->get('/programs/list', '\App\Controllers\EnrolleeController@listEnrollees');

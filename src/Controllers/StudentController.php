@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\Student;
 use Fpdf\Fpdf;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 
 
 class StudentController extends BaseController
@@ -210,6 +213,43 @@ public function removeSection($id)
     }
 }
 
+public function sendScheduleEmail()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $email = $data['email'];
+        $scheduleHTML = $data['scheduleHTML'];
+
+        $mail = new PHPMailer(true);
+
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'donhenessydavid@gmail.com';
+            $mail->Password = 'cwgp insv mwbf issu'; // Use an App Password if 2FA is enabled
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+            
+
+            // Recipients
+            $mail->setFrom('your-email@example.com', 'College of Computer Studies');
+            $mail->addAddress($email); // Recipient's email address
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Schedule for Section';
+            $mail->Body = $scheduleHTML;
+
+            $mail->send();
+
+            echo json_encode(['success' => true, 'message' => 'Schedule sent successfully!']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Failed to send schedule: ' . $mail->ErrorInfo]);
+        }
+    }
+}
 
 
 
