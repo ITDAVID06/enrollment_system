@@ -4,7 +4,6 @@ body {
     margin: 0;
     padding: 0;
     position: relative;
-    background-image: url('./images/hero-bg.svg');
     background-repeat: no-repeat;
 }
 
@@ -124,4 +123,19 @@ body {
 .badge-red {
   background-color: rgba(255, 0, 0, 0.5); /* Darker red for contrast */
   color: #fff;
+}
+
+select {
+  color: black; /* Ensure text is visible */
+  background-color: white; /* Set a visible background */
+  border: 1px solid #ced4da; /* Bootstrap-like border */
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+}
+
+select option {
+  color: black; /* Ensure options are visible */
+  background-color: white; /* Background for dropdown options */
 }

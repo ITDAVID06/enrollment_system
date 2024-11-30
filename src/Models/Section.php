@@ -20,22 +20,34 @@ class Section extends BaseModel
             'year_level' => $data['year_level'],
         ]);
 
-        return ['row_count' => $statement->rowCount()];
+        $lastInsertId = $this->db->lastInsertId();
+
+        return [
+            'row_count' => $statement->rowCount(),
+            'last_insert_id' => $lastInsertId
+        ];
     }
 
     public function getAllSections()
 {
     $sql = "
-        SELECT 
-            sections.*, 
-            programs.program_code, 
-            COUNT(courses.id) AS course_count
-        FROM sections
-        LEFT JOIN programs ON sections.program_id = programs.id
-        LEFT JOIN courses ON sections.program_id = courses.program_id
-            AND sections.year_level = courses.year
-            AND sections.semester = courses.semester
-        GROUP BY sections.id
+       SELECT 
+    sections.id,
+    sections.name,
+    sections.year_level,
+    sections.semester,
+    sections.program_id,
+    programs.program_code,
+    COUNT(courses.id) AS course_count
+FROM sections
+LEFT JOIN programs 
+    ON sections.program_id = programs.id
+LEFT JOIN courses 
+    ON courses.program_id = sections.program_id
+    AND courses.year = sections.year_level
+    AND courses.semester = sections.semester
+GROUP BY sections.id, sections.name, sections.year_level, sections.semester, sections.program_id, programs.program_code;
+
     ";
     
     $statement = $this->db->prepare($sql);
@@ -43,6 +55,22 @@ class Section extends BaseModel
 
     return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
+
+public function getAll()
+{
+    $sql = "SELECT 
+                sections.id, 
+                CONCAT(programs.program_code, ' - ', sections.name) AS name,
+                sections.year_level AS year
+            FROM sections
+            INNER JOIN programs ON sections.program_id = programs.id";
+    
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+
 
 
     public function getSectionById($id)

@@ -1,0 +1,81 @@
+<div class="header-row">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search Students">
+        <button id="searchButton">Search</button>
+    </div>
+    <div class="print-all-container">
+        <button onclick="window.location.href='/generate-pdf'">Print All Students</button>
+    </div>
+</div>
+
+<table id="studentTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Section</th>
+            <th>Program</th>
+            <th>Year Level</th>
+            <th>Mobile</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Students will be dynamically populated -->
+    </tbody>
+</table>
+
+<div class="pagination-container">
+    <div id="recordInfo"></div>
+    <div id="paginationButtons">
+        <button id="prevPageButton">Previous</button>
+        <button id="nextPageButton">Next</button>
+    </div>
+</div>
+
+
+<!-- Edit Section Modal -->
+<div id="editSectionModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEditSectionModal">&times;</span>
+        <form id="editSectionForm">
+            <input type="hidden" name="id" id="editStudentId">
+            <label for="editSectionId">Section:</label>
+            <select id="editSectionId" name="section_id">
+                <!-- Sections will be dynamically populated -->
+            </select>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+<div id="viewScheduleModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeScheduleModal">&times;</span>
+        <h3 id="scheduleModalHeader">Schedule for Section: <span id="sectionName"></span></h3>
+        <table id="scheduleTable">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Course Title</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Room</th>
+                    <th>Semester</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Schedule will be dynamically populated -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="views/assets/css/student.css">
+<script src="views/assets/js/student.js"></script>

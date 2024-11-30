@@ -30,6 +30,22 @@ class SectionController extends BaseController
         return $this->render('root', $data);
     }
 
+    public function showSchedule()
+    {
+        $data = [
+            'isSchedule' => true,
+        ];
+
+        return $this->render('root', $data);
+    }
+
+    public function list()
+{
+    $model = new Section(); // Assuming a Section model exists
+    echo json_encode($model->getAll());
+}
+
+
     public function getCourse($id)
 {
     $courseModel = new Course();
@@ -50,23 +66,47 @@ class SectionController extends BaseController
     }
 
 
-    // Add a new section
+
+    // Register a new section and create schedule entries for associated courses
     public function registerSection()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
-
+    
             $sectionModel = new Section();
+            $courseModel = new Course(); // Ensure Course model is available
+            $scheduleModel = new Schedule(); // Ensure Schedule model is available
+    
             $result = $sectionModel->save($data);
-
+    
             if ($result['row_count'] > 0) {
-                echo json_encode(['success' => true, 'message' => 'Section added successfully!']);
+                // Use the Section model's database connection to get the last inserted ID
+                $sectionId = $result['last_insert_id'];
+                
+                echo "Section ID: $sectionId";
+                error_log($sectionId);
+                // Fetch courses associated with the program and year level
+                $courses = $courseModel->getCoursesByProgramAndYear($data['program_id'], $data['year_level'], $data['semester']);
+    
+                // Create schedules for each course in the section
+                foreach ($courses as $course) {
+                    $scheduleModel->save([
+                        'program_id' => $data['program_id'],
+                        'section_id' => $sectionId,
+                        'course_id' => $course['id'], // Assuming 'id' is the primary key in the courses table
+                        'sched_semester' => $data['semester'],
+                    ]);
+                }
+    
+                echo json_encode(['success' => true, 'message' => 'Section and schedules added successfully!']);
             } else {
                 http_response_code(500);
                 echo json_encode(['success' => false, 'message' => 'Failed to add section.']);
             }
         }
     }
+    
+
 
     // Get a specific section by ID
     public function getSection($id)
@@ -104,9 +144,11 @@ class SectionController extends BaseController
     public function getCoursesBySection($section_id)
     {
         try {
+
+            // $semester = isset($_GET['semester']) ? $_GET['semester'] : '1st Sem';
             // Load the model
             $courseModel = new Course(); // Assuming the model is named `Course`
-    
+            
             // Call the model method to get courses for the section
             $courses = $courseModel->getCourses($section_id);
             
@@ -232,8 +274,6 @@ class SectionController extends BaseController
     }
     
     
-    
-
     public function addSchedule()
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -312,6 +352,8 @@ public function saveSchedule()
                 $scheduleModel->saveSchedule($scheduleData);
             }
         }
+
+        $this->showSchedule();
 
     } catch (Exception $e) {
         error_log("Error saving schedule: " . $e->getMessage());

@@ -10,7 +10,6 @@ class CourseController extends BaseController
 {
     public function showCourses()
     {
-        $this->initializeSession();
         $programModel = new Program();
         $programs = $programModel->getAllPrograms();
 
@@ -23,8 +22,6 @@ class CourseController extends BaseController
             'isCourse' => true,
             'isProgram' => false,
             'programs' => $programs,
-            'user_name' => $_SESSION['complete_name'] ?? 'User', // Add user name from session
-            'active_section' => 'Dashboard' // Set the active section
         ];
 
         return $this->render('root', $data);
@@ -35,7 +32,7 @@ class CourseController extends BaseController
         $courseModel = new Course();
     
         // Check if a semester is provided
-        $semester = isset($_GET['semester']) ? $_GET['semester'] : null;
+        $semester = $_GET['semester'] ?? '1st Sem'; 
     
         // Fetch courses with or without a semester filter
         $courses = $courseModel->getCoursesByProgramAndYear($programId, $year, $semester);

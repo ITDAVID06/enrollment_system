@@ -1,0 +1,77 @@
+<div class="header-row">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search Enrollees">
+        <button id="searchButton">Search</button>
+    </div>
+    <div class="print-container">
+        <button onclick="window.location.href='/generate-enrollee-pdf'">Print All Enrollees</button>
+    </div>
+</div>
+
+<table id="enrolleeTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Table body will be dynamically updated -->
+    </tbody>
+</table>
+
+<div class="footer-row">
+    <div id="recordInfo">Showing 1-10 of 50 records</div>
+    <div id="paginationButtons">
+        <button id="prevPageButton">Previous</button>
+        <button id="nextPageButton">Next</button>
+    </div>
+</div>
+
+<!-- View/Edit Modal -->
+<div id="editEnrolleeModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEditModal">&times;</span>
+        <form id="editEnrolleeForm">
+            <input type="hidden" name="id" id="editId">
+            <label for="editLastName">Last Name:</label>
+            <input type="text" name="last_name" id="editLastName" required>
+            <label for="editFirstName">First Name:</label>
+            <input type="text" name="first_name" id="editFirstName" required>
+            <label for="editEmail">Email:</label>
+            <input type="email" name="email" id="editEmail" required>
+            <label for="editMobile">Mobile:</label>
+            <input type="text" name="contact_mobile" id="editMobile" required>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+<!-- Enroll Modal -->
+<div id="enrollModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEnrollModal">&times;</span>
+        <form id="enrollForm">
+            <input type="hidden" name="id" id="enrollId">
+            <label for="studentId">Student ID:</label>
+            <input type="text" id="studentId" name="student_id" required>
+            <label for="sectionId">Section:</label>
+            <select id="sectionId" name="section_id" required>
+                <!-- Sections will be dynamically populated -->
+            </select>
+            <button type="submit">Enroll</button>
+        </form>
+    </div>
+</div>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="views/assets/css/enrollee.css">
+<script src="views/assets/js/enrollee.js"></script>

@@ -1,11 +1,15 @@
 <div>
-    <h2>Section List</h2>
-    <button id="addSectionButton">Add Section</button>
+    
+    <div class="header-row">
+        <h2 id="sectionTitle">Section List</h2>
+        <button id="addSectionButton">Add Section</button>
+    </div>
 
+    <!-- Table to display sections -->
     <table border="1" id="sectionTable">
         <thead>
             <tr>
-                <th>Section</th>
+                <th>Section Name</th>
                 <th>Program</th>
                 <th>Semester</th>
                 <th>Year Level</th>
@@ -14,50 +18,23 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Dynamically populated with JavaScript -->
+            <!-- Dynamically filled via JavaScript -->
         </tbody>
     </table>
 </div>
-
-<div style="display: flex; flex-direction: column;">
-
-    <!-- Table for displaying courses -->
-    <table id="coursesTable" border="1" style="width: 100%; margin-top: 20px; display: none;">
-        <thead>
-            <tr>
-                <th>Course Code</th>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Rows will be dynamically inserted here -->
-        </tbody>
-    </table>
-</div>
-
-
-
-
-<tbody id="sectionTableBody">
-    <!-- Dynamically populated with JavaScript -->
-</tbody>
 
 <!-- Add Section Modal -->
 <div id="addSectionModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeAddSectionModal()">&times;</span>
+        <span class="close">&times;</span>
         <h3>Add Section</h3>
         <form id="addSectionForm">
+            <label for="sectionName">Section Name:</label>
+            <input type="text" id="sectionName" name="name" required>
+
             <label for="program">Program:</label>
             <select id="program" name="program_id" required>
-                {{#programs}}
-                <option value="{{id}}">{{program_code}}</option>
-                {{/programs}}
+                <!-- Populated dynamically -->
             </select>
 
             <label for="semester">Semester:</label>
@@ -74,214 +51,49 @@
                 <option value="4">4th Year</option>
             </select>
 
-            <label for="sectionName">Section Name:</label>
-            <input type="text" id="sectionName" name="name" required>
-
-            <button type="submit">Add Section</button>
+            <button type="submit">Submit</button>
         </form>
     </div>
 </div>
 
-<!-- Add Schedule Modal -->
-<div id="editScheduleModal" class="modal">
+<!-- Edit Section Modal -->
+<div id="editSectionModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeEditScheduleModal()">&times;</span>
-        <h3>Add Schedule</h3>
-        <form id="editScheduleForm" method="POST" action="/save-schedule">
-            <input type="hidden" id="courseId" name="course_id">
-            <input type="hidden" id="programId" name="program_id">
-            <input type="hidden" id="sectionId" name="section_id">
+        <span class="close">&times;</span>
+        <h3>Edit Section</h3>
+        <form id="editSectionForm">
+            <input type="hidden" id="editSectionId" name="id">
+        
+            <label for="editSectionName">Section Name:</label>
+            <input type="text" id="editSectionName" name="name" required>
 
-            <!-- Display non-editable foreign keys -->
-            <div>
-                <label>Program ID:</label>
-                <span id="displayProgramId"></span>
-            </div>
-            <div>
-                <label>Course ID:</label>
-                <span id="displayCourseId"></span>
-            </div>
-            <div>
-                <label>Section ID:</label>
-                <span id="displaySectionId"></span>
-            </div>
+            <label for="editProgram">Program:</label>
+            <select id="editProgram" name="program_id" required>
+                {{#programs}}
+                <option value="{{id}}">{{program_code}}</option>
+                {{/programs}}
+            </select>
 
-            <!-- Editable fields -->
-            <div>
-                <h4>Schedule</h4>
-                <!-- Monday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Monday:</label>
-                    <input type="checkbox" id="monday_enabled" name="days[]" value="Monday">
-                    <input type="time" id="monday_start" name="monday_start" disabled>
-                    <input type="time" id="monday_end" name="monday_end" disabled>
-                </div>
-                <!-- Tuesday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Tuesday:</label>
-                    <input type="checkbox" id="tuesday_enabled" name="days[]" value="Tuesday">
-                    <input type="time" id="tuesday_start" name="tuesday_start" disabled>
-                    <input type="time" id="tuesday_end" name="tuesday_end" disabled>
-                </div>
-                <!-- Wednesday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Wednesday:</label>
-                    <input type="checkbox" id="wednesday_enabled" name="days[]" value="Wednesday">
-                    <input type="time" id="wednesday_start" name="wednesday_start" disabled>
-                    <input type="time" id="wednesday_end" name="wednesday_end" disabled>
-                </div>
-                <!-- Thursday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Thursday:</label>
-                    <input type="checkbox" id="thursday_enabled" name="days[]" value="Thursday">
-                    <input type="time" id="thursday_start" name="thursday_start" disabled>
-                    <input type="time" id="thursday_end" name="thursday_end" disabled>
-                </div>
-                <!-- Friday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Friday:</label>
-                    <input type="checkbox" id="friday_enabled" name="days[]" value="Friday">
-                    <input type="time" id="friday_start" name="friday_start" disabled>
-                    <input type="time" id="friday_end" name="friday_end" disabled>
-                </div>
-            </div>
-
-            <label for="semester">Semester:</label>
-            <select id="semester" name="sched_semester" required>
+            <label for="editSemester">Semester:</label>
+            <select id="editSemester" name="semester" required>
                 <option value="1st Sem">1st Sem</option>
                 <option value="2nd Sem">2nd Sem</option>
             </select>
 
-            <label for="schoolYear">School Year:</label>
-            <input type="text" id="schoolYear" name="sched_sy" placeholder="2023-2024" required>
-
-            <label for="room">Room:</label>
-            <input type="text" id="room" name="sched_room" required>
-
-            <button type="submit">Save Schedule</button>
-        </form>
-    </div>
-</div>
-
-<!-- Update Schedule Modal -->
-<div id="updateScheduleModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeupdateScheduleModal()">&times;</span>
-        <h3>Update Schedule</h3>
-        <form id="updateScheduleForm" method="POST">
-            <input type="hidden" id="updatecourseId" name="course_id">
-            <input type="hidden" id="updateprogramId" name="program_id">
-            <input type="hidden" id="updatesectionId" name="section_id">
-
-            <!-- Display non-editable foreign keys -->
-            <div>
-                <label>Program ID:</label>
-                <span id="updatedisplayProgramId"></span>
-            </div>
-            <div>
-                <label>Course ID:</label>
-                <span id="updatedisplayCourseId"></span>
-            </div>
-            <div>
-                <label>Section ID:</label>
-                <span id="updatedisplaySectionId"></span>
-            </div>
-
-            <!-- Editable fields -->
-            <div>
-                <h4>Schedule</h4>
-                <!-- Monday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Monday:</label>
-                    <input type="checkbox" id="updatemonday_enabled" name="days[]" value="Monday">
-                    <input type="time" id="updatemonday_start" name="monday_start" disabled>
-                    <input type="time" id="updatemonday_end" name="monday_end" disabled>
-                </div>
-                <!-- Tuesday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Tuesday:</label>
-                    <input type="checkbox" id="updatetuesday_enabled" name="days[]" value="Tuesday">
-                    <input type="time" id="updatetuesday_start" name="tuesday_start" disabled>
-                    <input type="time" id="updatetuesday_end" name="tuesday_end" disabled>
-                </div>
-                <!-- Wednesday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Wednesday:</label>
-                    <input type="checkbox" id="updatewednesday_enabled" name="days[]" value="Wednesday">
-                    <input type="time" id="updatewednesday_start" name="wednesday_start" disabled>
-                    <input type="time" id="updatewednesday_end" name="wednesday_end" disabled>
-                </div>
-                <!-- Thursday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Thursday:</label>
-                    <input type="checkbox" id="updatethursday_enabled" name="days[]" value="Thursday">
-                    <input type="time" id="updatethursday_start" name="thursday_start" disabled>
-                    <input type="time" id="updatethursday_end" name="thursday_end" disabled>
-                </div>
-                <!-- Friday -->
-                <div style="margin-bottom: 10px;">
-                    <label>Friday:</label>
-                    <input type="checkbox" id="updatefriday_enabled" name="days[]" value="Friday">
-                    <input type="time" id="updatefriday_start" name="friday_start" disabled>
-                    <input type="time" id="updatefriday_end" name="friday_end" disabled>
-                </div>
-            </div>
-
-            <label for="semester">Semester:</label>
-            <select id="updatesemester" name="sched_semester" required>
-                <option value="1st Sem">1st Sem</option>
-                <option value="2nd Sem">2nd Sem</option>
+            <label for="editYearLevel">Year Level:</label>
+            <select id="editYearLevel" name="year_level" required>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
             </select>
 
-            <label for="schoolYear">School Year:</label>
-            <input type="text" id="updateschoolYear" name="sched_sy" placeholder="2023-2024" required>
-
-            <label for="room">Room:</label>
-            <input type="text" id="updateroom" name="sched_room" required>
-
-            <button type="submit">Update Schedule</button>
+            <button type="submit">Update</button>
         </form>
     </div>
 </div>
 
 
 
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 50%;
-    }
-
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
-
-
+<link rel="stylesheet" href="views\assets\css\section.css">
 <script src="views\assets\js\section.js"> </script>

@@ -1,0 +1,210 @@
+<div id="schedulePage" class="container">
+    <!-- Left Panel -->
+    <div id="leftPanel" class="panel">
+        <h3>Select Semester</h3>
+        <div id="semesterFilters" class="semester-buttons">
+            <button class="btn btn-primary" onclick="filterBySemester('1st Sem')">1st Sem</button>
+            <button class="btn btn-secondary" onclick="filterBySemester('2nd Sem')">2nd Sem</button>
+        </div>
+        <h3>Program Sections</h3>
+        <ul id="programSectionList">
+            {{#programSections}}
+            <li class="programSectionItem" id="programSection{{program_id}}-{{section_id}}" onclick="filterByProgramSection({{program_id}}, {{section_id}})">
+                {{program_code}}-{{section_name}}
+            </li>
+            {{/programSections}}
+        </ul>
+
+    </div>
+
+    
+    
+    <!-- Right Panel -->
+    <div id="rightPanel" class="panel">
+        <h2>Schedule</h2>
+
+        <table border="1" id="scheduleTable">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Course Title</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Actions</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+<!-- Dynamic JS  -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Schedule Modal -->
+<div id="editScheduleModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditScheduleModal()">&times;</span>
+        <h3>Add Schedule</h3>
+        <form id="editScheduleForm" method="POST" action="/save-schedule">
+            <input type="hidden" id="courseId" name="course_id">
+            <input type="hidden" id="programId" name="program_id">
+            <input type="hidden" id="sectionId" name="section_id">
+
+            <!-- Display non-editable foreign keys -->
+            <div>
+                <label>Program ID:</label>
+                <span id="displayProgramId"></span>
+            </div>
+            <div>
+                <label>Course ID:</label>
+                <span id="displayCourseId"></span>
+            </div>
+            <div>
+                <label>Section ID:</label>
+                <span id="displaySectionId"></span>
+            </div>
+
+            <!-- Editable fields -->
+            <div>
+                <h4>Schedule</h4>
+                <!-- Monday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Monday:</label>
+                    <input type="checkbox" id="monday_enabled" name="days[]" value="Monday">
+                    <input type="time" id="monday_start" name="monday_start" disabled>
+                    <input type="time" id="monday_end" name="monday_end" disabled>
+                </div>
+                <!-- Tuesday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Tuesday:</label>
+                    <input type="checkbox" id="tuesday_enabled" name="days[]" value="Tuesday">
+                    <input type="time" id="tuesday_start" name="tuesday_start" disabled>
+                    <input type="time" id="tuesday_end" name="tuesday_end" disabled>
+                </div>
+                <!-- Wednesday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Wednesday:</label>
+                    <input type="checkbox" id="wednesday_enabled" name="days[]" value="Wednesday">
+                    <input type="time" id="wednesday_start" name="wednesday_start" disabled>
+                    <input type="time" id="wednesday_end" name="wednesday_end" disabled>
+                </div>
+                <!-- Thursday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Thursday:</label>
+                    <input type="checkbox" id="thursday_enabled" name="days[]" value="Thursday">
+                    <input type="time" id="thursday_start" name="thursday_start" disabled>
+                    <input type="time" id="thursday_end" name="thursday_end" disabled>
+                </div>
+                <!-- Friday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Friday:</label>
+                    <input type="checkbox" id="friday_enabled" name="days[]" value="Friday">
+                    <input type="time" id="friday_start" name="friday_start" disabled>
+                    <input type="time" id="friday_end" name="friday_end" disabled>
+                </div>
+            </div>
+
+            <label for="semester">Semester:</label>
+            <select id="semester" name="sched_semester" required>
+                <option value="1st Sem">1st Sem</option>
+                <option value="2nd Sem">2nd Sem</option>
+            </select>
+
+            <label for="schoolYear">School Year:</label>
+            <input type="text" id="schoolYear" name="sched_sy" placeholder="2023-2024" required>
+
+            <label for="room">Room:</label>
+            <input type="text" id="room" name="sched_room" required>
+
+            <button type="submit">Save Schedule</button>
+        </form>
+    </div>
+</div>
+
+<!-- Update Schedule Modal -->
+<div id="updateScheduleModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeupdateScheduleModal()">&times;</span>
+        <h3>Update Schedule</h3>
+        <form id="updateScheduleForm" method="POST">
+            <input type="hidden" id="updatecourseId" name="course_id">
+            <input type="hidden" id="updateprogramId" name="program_id">
+            <input type="hidden" id="updatesectionId" name="section_id">
+
+            <!-- Display non-editable foreign keys -->
+            <div>
+                <label>Program ID:</label>
+                <span id="updatedisplayProgramId"></span>
+            </div>
+            <div>
+                <label>Course ID:</label>
+                <span id="updatedisplayCourseId"></span>
+            </div>
+            <div>
+                <label>Section ID:</label>
+                <span id="updatedisplaySectionId"></span>
+            </div>
+
+            <!-- Editable fields -->
+            <div>
+                <h4>Schedule</h4>
+                <!-- Monday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Monday:</label>
+                    <input type="checkbox" id="updatemonday_enabled" name="days[]" value="Monday">
+                    <input type="time" id="updatemonday_start" name="monday_start" disabled>
+                    <input type="time" id="updatemonday_end" name="monday_end" disabled>
+                </div>
+                <!-- Tuesday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Tuesday:</label>
+                    <input type="checkbox" id="updatetuesday_enabled" name="days[]" value="Tuesday">
+                    <input type="time" id="updatetuesday_start" name="tuesday_start" disabled>
+                    <input type="time" id="updatetuesday_end" name="tuesday_end" disabled>
+                </div>
+                <!-- Wednesday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Wednesday:</label>
+                    <input type="checkbox" id="updatewednesday_enabled" name="days[]" value="Wednesday">
+                    <input type="time" id="updatewednesday_start" name="wednesday_start" disabled>
+                    <input type="time" id="updatewednesday_end" name="wednesday_end" disabled>
+                </div>
+                <!-- Thursday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Thursday:</label>
+                    <input type="checkbox" id="updatethursday_enabled" name="days[]" value="Thursday">
+                    <input type="time" id="updatethursday_start" name="thursday_start" disabled>
+                    <input type="time" id="updatethursday_end" name="thursday_end" disabled>
+                </div>
+                <!-- Friday -->
+                <div style="margin-bottom: 10px;">
+                    <label>Friday:</label>
+                    <input type="checkbox" id="updatefriday_enabled" name="days[]" value="Friday">
+                    <input type="time" id="updatefriday_start" name="friday_start" disabled>
+                    <input type="time" id="updatefriday_end" name="friday_end" disabled>
+                </div>
+            </div>
+
+            <label for="semester">Semester:</label>
+            <select id="updatesemester" name="sched_semester" required>
+                <option value="1st Sem">1st Sem</option>
+                <option value="2nd Sem">2nd Sem</option>
+            </select>
+
+            <label for="schoolYear">School Year:</label>
+            <input type="text" id="updateschoolYear" name="sched_sy" placeholder="2023-2024" required>
+
+            <label for="room">Room:</label>
+            <input type="text" id="updateroom" name="sched_room" required>
+
+            <button type="submit">Update Schedule</button>
+        </form>
+    </div>
+</div>
+
+<script src="views\assets\js\schedule.js"></script>
+<link rel="stylesheet" href="views\assets\css\schedule.css">

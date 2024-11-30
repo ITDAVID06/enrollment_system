@@ -28,6 +28,23 @@ body {
     color: #ffffff;
 }
 
+a {
+    text-decoration: none;
+}
+
+.home-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.7rem; /* Slightly smaller font size */
+    color: #007bff; /* A distinct blue color */
+    text-decoration: none; /* Remove underline */
+}
+
+.home-link:hover {
+    color: #0056b3; /* Darker blue on hover */
+    text-decoration: underline; /* Add underline on hover for emphasis */
+}
+
 .auth-right .overlay-text {
     position: absolute;
     background: rgba(255, 0, 0, 0.4);

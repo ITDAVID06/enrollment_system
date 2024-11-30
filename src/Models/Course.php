@@ -32,31 +32,43 @@ class Course extends BaseModel
 
     public function getCoursesByProgramAndYear($programId, $year, $semester = null)
     {
-        // Base query
-        $sql = "SELECT * FROM courses WHERE program_id = :program_id AND year = :year";
-    
+        // Query with subquery to fetch the section_id
+        $sql = "
+            SELECT 
+                courses.*, 
+                (SELECT sections.id 
+                 FROM sections 
+                 WHERE sections.program_id = courses.program_id 
+                   AND sections.year_level = courses.year 
+                 LIMIT 1) AS section_id
+            FROM 
+                courses
+            WHERE 
+                courses.program_id = :program_id 
+                AND courses.year = :year";
+        
         // Add semester condition if provided
         if ($semester) {
-            $sql .= " AND semester = :semester";
+            $sql .= " AND courses.semester = :semester";
         }
-    
+        
         $statement = $this->db->prepare($sql);
-    
+        
         // Bind parameters
         $params = [
             'program_id' => $programId,
             'year' => $year,
         ];
-    
+        
         if ($semester) {
             $params['semester'] = $semester;
         }
-    
+        
         $statement->execute($params);
-    
+        
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    
     public function searchCourses($query)
 {
     $sql = "SELECT * FROM courses 
@@ -122,8 +134,8 @@ class Course extends BaseModel
             courses.program_id AS program_id, 
             courses.course_code,
             schedule.schedID, 
-            schedule.TIME_FROM, 
-            schedule.TIME_TO, 
+            DATE_FORMAT(schedule.TIME_FROM, '%h:%i %p') AS TIME_FROM, 
+            DATE_FORMAT(schedule.TIME_TO, '%h:%i %p') AS TIME_TO,  
             schedule.sched_day,
             schedule.sched_sy,
             schedule.sched_room,

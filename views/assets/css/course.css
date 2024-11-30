@@ -106,6 +106,7 @@
     display: flex;
     gap: 20px;
     padding: 20px;
+    min-height: 90vh;
     box-sizing: border-box;
 }
 

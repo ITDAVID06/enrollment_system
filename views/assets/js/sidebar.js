@@ -7,7 +7,7 @@ const mainContent = document.querySelector(".main-content");
 const collapsedSidebarWidth = "5.3125em";
 const fullSidebarWidth = "16.875em";
 
-console.log(document.querySelector(".sidebar")); 
+// console.log(document.querySelector(".sidebar")); 
 // Toggle sidebar collapse
 sidebarToggler.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");

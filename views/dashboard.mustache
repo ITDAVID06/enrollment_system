@@ -1,29 +1,77 @@
-<div class="dashboard">
-        <!-- Top Rectangles -->
-        <div class="box box1">
-            <h2>Box 1</h2>
-            <p>Content for Box 1</p>
-        </div>
-        <div class="box box2">
-            <h2>Box 2</h2>
-            <p>Content for Box 2</p>
-        </div>
-        <div class="box box3">
-            <h2>Box 3</h2>
-            <p>Content for Box 3</p>
-        </div>
-        <div class="box box4">
-            <h2>Box 4</h2>
-            <p>Content for Box 4</p>
-        </div>
+<div class="dashboard-container">
+    <h1>Welcome to College of Computer Studies</h1>
 
-        <!-- Bottom Rectangles -->
-        <div class="landscape">
-            <h2>Landscape Box</h2>
-            <p>Content for the Landscape Box</p>
+    <!-- Top Section: Three Smaller Charts -->
+    <div class="top-charts">
+        <div class="box" id="programDistribution">
+            <h3>Program Distribution</h3>
+            <canvas id="programChart"></canvas>
         </div>
-        <div class="portrait">
-            <h2>Portrait Box</h2>
-            <p>Content for the Portrait Box</p>
+        <div class="box" id="genderDistribution">
+            <h3>Gender Distribution</h3>
+            <canvas id="genderChart"></canvas>
+        </div>
+        <div class="box" id="yearLevel">
+            <h3>Year Level Breakdown</h3>
+            <canvas id="yearLevelChart"></canvas>
         </div>
     </div>
+
+    <!-- Bottom Section: Table -->
+    <div class="bottom-section">
+        <div class="table-container">
+            <h3>Recent Pending Enrollees</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Program</th>
+                        <th>Year Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#recentEnrollees}}
+                    <tr>
+                        <td>{{name}}</td>
+                        <td>{{program_code}}</td>
+                        <td>{{year_level}}</td>
+                    </tr>
+                    {{/recentEnrollees}}
+                    {{^recentEnrollees}}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">No current pending enrollees</td>
+                    </tr>
+                    {{/recentEnrollees}}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <h3>Total Students per Program</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Program Code</th>
+                        <th>Total Students</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#programTotals}}
+                    <tr>
+                        <td>{{program_code}}</td>
+                        <td>{{total_students}}</td>
+                    </tr>
+                    {{/programTotals}}
+                    {{^programTotals}}
+                    <tr>
+                        <td colspan="2" style="text-align: center;">No data available</td>
+                    </tr>
+                    {{/programTotals}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="views/assets/js/dashboard.js"></script>
+<link rel="stylesheet" href="views/assets/css/dashboard.css">
