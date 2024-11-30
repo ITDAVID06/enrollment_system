@@ -17,7 +17,10 @@ class Enrollee extends BaseModel
 
     public function getById($id)
     {
-        $sql = "SELECT * FROM enrollees WHERE id = :id";
+        $sql = " SELECT e.*, p.program_code AS program
+                FROM enrollees e
+                LEFT JOIN programs p ON p.id = e.program_applying_for
+                WHERE e.id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -54,8 +57,6 @@ public function setEnrollment($id, $studentId, $sectionId)
         'id' => $id
     ]);
 }
-
-
 
 
     public function update($id, $data)

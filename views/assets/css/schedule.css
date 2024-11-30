@@ -57,22 +57,204 @@
     display: none;
     position: fixed;
     z-index: 1;
-    padding-top: 100px;
+    padding-top: 50px; /* Reduced padding for better alignment */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5); /* Dim the background for better focus */
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #ffffff;
     margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%;
+    padding: 20px 30px;
+    border-radius: 10px; /* Rounded corners */
+    width: 40%;
+    max-width: 600px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    font-family: 'Poppins', sans-serif;
 }
+
+.close {
+    color: #333;
+    float: right;
+    font-size: 24px; /* Adjusted size */
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #b30000; /* Highlight color for close button */
+    text-decoration: none;
+}
+
+/* Modal Form Inputs */
+.modal-content form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.modal-content form input[type="text"],
+.modal-content form input[type="email"],
+.modal-content form input[type="time"],
+.modal-content form input[type="password"],
+.modal-content form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f9f9;
+}
+
+.modal-content form input:focus,
+.modal-content form select:focus {
+    border-color: #b30000; /* Focus highlight */
+    outline: none;
+}
+
+/* Modal Submit Button */
+.modal-content form button[type="submit"] {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background-color: #b30000; /* Primary red theme */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content form button[type="submit"]:hover {
+    background-color: #990000; /* Slightly darker red on hover */
+}
+
+/* Optional: Style Checkbox Inputs */
+.modal-content form input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+
+.modal-content .time-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-content .time-row label {
+    width: 15%; /* Adjust label width */
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 10px;
+    color: #333;
+}
+
+.modal-content .time-row input[type="time"] {
+    flex: 1; /* Make inputs take equal space */
+    margin: 0 5px; /* Add spacing between inputs */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+}
+
+.modal-content .time-row input[type="time"]:focus {
+    border-color: #b30000; /* Focus border color */
+    outline: none;
+}
+
+/* Center the Title */
+.modal-content h3 {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #b30000;
+}
+
+/* Row Styling for Program, Course, and Section IDs */
+.modal-content .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modal-content .info-row label {
+    width: 20%;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.modal-content .info-row span {
+    flex: 1;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: left;
+    font-size: 14px;
+}
+
+/* Row for Days with Checkboxes and Times */
+.modal-content .time-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-content .time-row label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 10px;
+    color: #333;
+}
+
+.modal-content .time-row input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.modal-content .time-row input[type="time"] {
+    flex: 1;
+    margin: 0 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+}
+
+.modal-content .time-row input[type="time"]:focus {
+    border-color: #b30000;
+    outline: none;
+}
+
+/* Add margin for "to" text between time inputs */
+.modal-content .time-row span {
+    margin: 0 5px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #666;
+}
+
 
 .close {
     color: #aaa;

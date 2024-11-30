@@ -55,52 +55,48 @@
             <input type="hidden" id="sectionId" name="section_id">
 
             <!-- Display non-editable foreign keys -->
-            <div>
+            <div class="info-row">
                 <label>Program ID:</label>
-                <span id="displayProgramId"></span>
-            </div>
-            <div>
+                <span id="displayProgramId">123</span>
                 <label>Course ID:</label>
-                <span id="displayCourseId"></span>
-            </div>
-            <div>
+                <span id="displayCourseId">456</span>
                 <label>Section ID:</label>
-                <span id="displaySectionId"></span>
+                <span id="displaySectionId">789</span>
             </div>
 
             <!-- Editable fields -->
             <div>
                 <h4>Schedule</h4>
                 <!-- Monday -->
-                <div style="margin-bottom: 10px;">
+                <div class="time-row" style="margin-bottom: 10px;">
                     <label>Monday:</label>
                     <input type="checkbox" id="monday_enabled" name="days[]" value="Monday">
                     <input type="time" id="monday_start" name="monday_start" disabled>
                     <input type="time" id="monday_end" name="monday_end" disabled>
                 </div>
                 <!-- Tuesday -->
-                <div style="margin-bottom: 10px;">
+                <div class="time-row" style="margin-bottom: 10px;">
                     <label>Tuesday:</label>
                     <input type="checkbox" id="tuesday_enabled" name="days[]" value="Tuesday">
                     <input type="time" id="tuesday_start" name="tuesday_start" disabled>
                     <input type="time" id="tuesday_end" name="tuesday_end" disabled>
                 </div>
                 <!-- Wednesday -->
-                <div style="margin-bottom: 10px;">
+                <div class="time-row" style="margin-bottom: 10px;">
                     <label>Wednesday:</label>
                     <input type="checkbox" id="wednesday_enabled" name="days[]" value="Wednesday">
                     <input type="time" id="wednesday_start" name="wednesday_start" disabled>
                     <input type="time" id="wednesday_end" name="wednesday_end" disabled>
                 </div>
                 <!-- Thursday -->
-                <div style="margin-bottom: 10px;">
+                <div class="time-row" style="margin-bottom: 10px;">
                     <label>Thursday:</label>
                     <input type="checkbox" id="thursday_enabled" name="days[]" value="Thursday">
                     <input type="time" id="thursday_start" name="thursday_start" disabled>
                     <input type="time" id="thursday_end" name="thursday_end" disabled>
                 </div>
                 <!-- Friday -->
-                <div style="margin-bottom: 10px;">
+                <div class="time-row" style="margin-bottom: 10px;">
                     <label>Friday:</label>
                     <input type="checkbox" id="friday_enabled" name="days[]" value="Friday">
                     <input type="time" id="friday_start" name="friday_start" disabled>

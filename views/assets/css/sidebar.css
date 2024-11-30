@@ -95,6 +95,7 @@ body {
 }
 
 
+
 .sidebar-nav .nav-link {
     display: flex;
     align-items: center;
@@ -108,6 +109,11 @@ body {
 }
 
 .sidebar-nav .nav-link:hover {
+    color: #400000;
+    background: #fff;
+}
+
+.nav-link.active {
     color: #400000;
     background: #fff;
 }

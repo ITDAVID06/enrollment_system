@@ -8,6 +8,30 @@ const collapsedSidebarWidth = "5.3125em";
 const fullSidebarWidth = "16.875em";
 
 // console.log(document.querySelector(".sidebar")); 
+
+const navLinks = document.querySelectorAll(".nav-link");
+
+    // Function to remove 'active' from all links
+    const removeActiveClass = () => {
+        navLinks.forEach(link => link.classList.remove("active"));
+    };
+
+    // Add click event listener to each nav link
+    navLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            removeActiveClass(); // Remove 'active' from all links
+            link.classList.add("active"); // Add 'active' to the clicked link
+        });
+    });
+
+    // Mark the current page's link as active
+    const currentPath = window.location.pathname;
+    navLinks.forEach(link => {
+        if (link.getAttribute("href") === currentPath) {
+            link.classList.add("active");
+        }
+    });
+
 // Toggle sidebar collapse
 sidebarToggler.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");

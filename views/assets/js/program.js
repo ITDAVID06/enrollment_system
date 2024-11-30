@@ -71,9 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         <button onclick="ProgramPage.openEditProgramModal(${prog.id})">
                             <span class="material-symbols-rounded programbutton">edit</span>
                         </button>
-                        <button onclick="ProgramPage.deleteProgram(${prog.id})">
-                            <span class="material-symbols-rounded programbutton">delete</span>
-                        </button>
                     </td>
                 </tr>
             `
@@ -163,18 +160,18 @@ document.addEventListener("DOMContentLoaded", () => {
         loadPrograms();
     };
 
-    // Delete Program
-    const deleteProgram = async (id) => {
-        if (confirm("Are you sure you want to delete this program?")) {
-            await fetch(`/program/${id}`, { method: "DELETE" });
-            loadPrograms();
-        }
-    };
+    // // Delete Program
+    // const deleteProgram = async (id) => {
+    //     if (confirm("Are you sure you want to delete this program?")) {
+    //         await fetch(`/program/${id}`, { method: "DELETE" });
+    //         loadPrograms();
+    //     }
+    // };
 
     // Expose Public Methods
     window.ProgramPage = {
         openEditProgramModal,
-        deleteProgram,
+        // deleteProgram,
     };
 
     // Initial Load

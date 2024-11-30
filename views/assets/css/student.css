@@ -136,8 +136,7 @@
     margin: auto;
     padding: 20px;
     border-radius: 10px;
-    width: 50%;
-    max-width: 600px;
+    width: 90%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -207,4 +206,10 @@ button {
 button:hover {
     background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background highlight on hover */
     border-radius: 4px; /* Rounded corners */
+}
+
+#sectionTitle {
+    margin-bottom: 1.2em;
+    margin-top: 1.2em;
+    margin-left: 70px;
 }

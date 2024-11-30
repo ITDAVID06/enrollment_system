@@ -1,3 +1,4 @@
+<h2 id="sectionTitle">Enrollee List</h2>
 <div class="header-row">
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search Enrollees">
@@ -12,7 +13,7 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>Last Name</th>
+            <th>Complete Name</th>
             <th>First Name</th>
             <th>Email</th>
             <th>Mobile</th>
@@ -38,14 +39,16 @@
         <span class="close" id="closeEditModal">&times;</span>
         <form id="editEnrolleeForm">
             <input type="hidden" name="id" id="editId">
-            <label for="editLastName">Last Name:</label>
+            <label for="editLastName">Complete Name:</label>
             <input type="text" name="last_name" id="editLastName" required>
-            <label for="editFirstName">First Name:</label>
-            <input type="text" name="first_name" id="editFirstName" required>
             <label for="editEmail">Email:</label>
             <input type="email" name="email" id="editEmail" required>
             <label for="editMobile">Mobile:</label>
             <input type="text" name="contact_mobile" id="editMobile" required>
+            <label for="editYear">Year Level:</label>
+            <input type="text" name="year_level" id="editYear" required>
+            <label for="editProgram">Program:</label>
+            <input type="text" name="program" id="editProgram" required>
             <button type="submit">Save</button>
         </form>
     </div>

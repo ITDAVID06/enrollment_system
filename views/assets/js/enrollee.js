@@ -104,10 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const enrollee = await response.json();
             document.getElementById("editId").value = enrollee.id;
-            document.getElementById("editLastName").value = enrollee.last_name;
-            document.getElementById("editFirstName").value = enrollee.first_name;
+            document.getElementById("editLastName").value = document.getElementById("editLastName").value = (enrollee.last_name || "") + ", " + (enrollee.first_name || ""); 
             document.getElementById("editEmail").value = enrollee.email;
             document.getElementById("editMobile").value = enrollee.contact_mobile;
+            document.getElementById("editYear").value = enrollee.year_level;
+            document.getElementById("editProgram").value = enrollee.program;
 
             document.getElementById("editEnrolleeModal").style.display = "block";
         } catch (error) {
@@ -154,24 +155,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Handle enroll form submission
     document.getElementById("enrollForm").onsubmit = async (event) => {
         event.preventDefault();
-
+    
         const formData = new FormData(event.target);
         const studentId = formData.get("student_id");
-        const sectionId = formData.get("section_id");
-
+    
         try {
             const response = await fetch(`/enrollee/enroll/${formData.get("id")}`, {
                 method: "POST",
                 body: formData,
             });
+    
+            if (!response.ok) {
+                console.error("Error Response:", await response.text());
+                throw new Error("Failed to enroll enrollee. Check server response.");
+            }
+    
             const result = await response.json();
-
-            if (response.ok && result.success) {
+            console.log("Result:", result);
+    
+            if (result.success) {
                 alert(result.message);
-                usedStudentIds.add(studentId); // Mark the student ID as used
                 enrollModal.style.display = "none";
                 loadEnrollees();
             } else {
@@ -182,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Failed to enroll enrollee.");
         }
     };
+    
 
     // Close modal
     document.getElementById("closeEnrollModal").onclick = () => {

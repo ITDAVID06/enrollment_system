@@ -227,3 +227,9 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background highlight on hover */
     border-radius: 4px; /* Rounded corners */
 }
+
+#sectionTitle {
+    margin-bottom: 1.2em;
+    margin-top: 1.2em;
+    margin-left: 70px;
+}
