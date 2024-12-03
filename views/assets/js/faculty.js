@@ -59,6 +59,7 @@ const displayPage = () => {
             <td>${fac.contact}</td>
             <td>${fac.email}</td>
             <td>${fac.username}</td>
+            <td>${fac.program_code}</td>
             <td>
                 <button onclick="openEditModal(${fac.id})">
                 <span class="material-symbols-rounded facultybutton">
@@ -135,18 +136,51 @@ document.getElementById("addFacultyForm").onsubmit = async (event) => {
     loadFaculty();
 };
 
+const programDropdown = document.getElementById("editProgramId");
+
+// Load programs into the dropdown
+const loadProgramsForDropdown = async (faculty = null) => {
+    try {
+        const response = await fetch("/program/list");
+        const programs = await response.json();
+
+        programDropdown.innerHTML = programs
+            .map(program => `
+                <option value="${program.id}" ${faculty?.program_id === program.id ? "selected" : ""}>
+                    ${program.program_code}
+                </option>
+            `)
+            .join("");
+    } catch (error) {
+        console.error("Error loading programs:", error);
+        alert("Failed to load programs.");
+    }
+};
+
 // Open Edit Modal
 const openEditModal = async (id) => {
-    const response = await fetch(`/faculty/${id}`);
-    const faculty = await response.json();
-    document.getElementById("editId").value = faculty.id;
-    document.getElementById("editLastname").value = faculty.lastname;
-    document.getElementById("editFirstname").value = faculty.firstname;
-    document.getElementById("editContact").value = faculty.contact;
-    document.getElementById("editEmail").value = faculty.email;
-    document.getElementById("editUsername").value = faculty.username;
-    editModal.style.display = "block";
+    try {
+        const response = await fetch(`/faculty/${id}`);
+        const faculty = await response.json();
+
+        document.getElementById("editId").value = faculty.id;
+        document.getElementById("editLastname").value = faculty.lastname;
+        document.getElementById("editFirstname").value = faculty.firstname;
+        document.getElementById("editContact").value = faculty.contact;
+        document.getElementById("editEmail").value = faculty.email;
+        document.getElementById("editUsername").value = faculty.username;
+
+        // Load programs and set selected value
+        await loadProgramsForDropdown(faculty);
+
+        editModal.style.display = "block";
+    } catch (error) {
+        console.error("Error opening edit modal:", error);
+        alert("Failed to open edit modal.");
+    }
 };
+
+
 
 // Handle Edit Faculty Form submission
 document.getElementById("editFacultyForm").onsubmit = async (event) => {

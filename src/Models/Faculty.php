@@ -15,12 +15,13 @@ class Faculty extends BaseModel
     public function save($data) {
         $sql = "INSERT INTO faculty 
                 SET
-                    firstname=:firstname,
-                    lastname=:lastname,
-                    contact=:contact,
-                    email=:email,
-                    username=:username,
-                    password_hash=:password_hash";        
+                    firstname = :firstname,
+                    lastname = :lastname,
+                    contact = :contact,
+                    email = :email,
+                    username = :username,
+                    password_hash = :password_hash,
+                    program_id = :program_id"; // Include program_id
         $statement = $this->db->prepare($sql);
         $password_hash = $this->hashPassword($data['password']);
         $statement->execute([
@@ -29,16 +30,18 @@ class Faculty extends BaseModel
             'contact' => $data['contact'],
             'email' => $data['email'],
             'username' => $data['username'],
-            'password_hash' => $password_hash
+            'password_hash' => $password_hash,
+            'program_id' => $data['program_id'] // Add program_id
         ]);
-
+    
         $lastInsertId = $this->db->lastInsertId();
-
+    
         return [
             'row_count' => $statement->rowCount(),
             'last_insert_id' => $lastInsertId
         ];
     }
+    
 
     public function hashPassword($password)
     {
@@ -62,11 +65,22 @@ class Faculty extends BaseModel
 
     public function getAllFaculty()
     {
-        $sql = "SELECT * FROM faculty";
-        $statement = $this->db->prepare($sql);
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $sql = "
+        SELECT 
+            faculty.*, 
+            programs.program_code 
+        FROM 
+            faculty
+        LEFT JOIN 
+            programs 
+        ON 
+            faculty.program_id = programs.id
+    ";
+    
+    $statement = $this->db->prepare($sql);
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
     }
 
     public function getFacultyById($id)
@@ -77,40 +91,35 @@ class Faculty extends BaseModel
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
 
-public function update($id, $data)
-{
-       // Base SQL query
-       $sql = "UPDATE faculty 
-       SET lastname = :lastname,
-           firstname = :firstname,
-           contact = :contact,
-           email = :email,
-           username = :username";
+public function update($id, $data) {
+    $sql = "UPDATE faculty 
+            SET 
+                lastname = :lastname,
+                firstname = :firstname,
+                contact = :contact,
+                email = :email,
+                username = :username,
+                program_id = :program_id"; // Include program_id
+    if (isset($data['password_hash'])) {
+        $sql .= ", password_hash = :password_hash";
+    }
+    $sql .= " WHERE id = :id";
 
-// Include password only if provided
-if (isset($data['password_hash'])) {
-   $sql .= ", password_hash = :password_hash";
-}
+    $params = [
+        'id' => $id,
+        'lastname' => $data['lastname'],
+        'firstname' => $data['firstname'],
+        'contact' => $data['contact'],
+        'email' => $data['email'],
+        'username' => $data['username'],
+        'program_id' => $data['program_id'], // Add program_id
+    ];
+    if (isset($data['password_hash'])) {
+        $params['password_hash'] = $data['password_hash'];
+    }
 
-$sql .= " WHERE id = :id";
-
-// Prepare parameters
-$params = [
-   'id' => $id,
-   'lastname' => $data['lastname'] ?? null,
-   'firstname' => $data['firstname'] ?? null,
-   'contact' => $data['contact'] ?? null,
-   'email' => $data['email'] ?? null,
-   'username' => $data['username'] ?? null,
-];
-
-// Add password_hash if provided
-if (isset($data['password_hash'])) {
-   $params['password_hash'] = $data['password_hash'];
-}
-
-$statement = $this->db->prepare($sql);
-return $statement->execute($params);
+    $statement = $this->db->prepare($sql);
+    return $statement->execute($params);
 }
 
 

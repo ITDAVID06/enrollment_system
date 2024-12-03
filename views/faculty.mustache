@@ -18,6 +18,7 @@
                 <th>Contact</th>
                 <th>Email</th>
                 <th>Username</th>
+                <th>Program Name</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -60,6 +61,13 @@
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
 
+            <label for="program_id">Program:</label>
+            <select id="program_id" name="program_id" required>
+                {{#programs}}
+                <option value="{{id}}">{{program_code}}</option>
+                {{/programs}}
+            </select>
+
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
 
@@ -90,7 +98,14 @@
         
             <label for="editUsername">Username:</label>
             <input type="text" id="editUsername" name="username" required>
-        
+
+            <label for="editProgramId">Program:</label>
+            <select id="editProgramId" name="program_id" required>
+                {{#programs}}
+                <option value="{{id}}" {{#isSelected}}selected{{/isSelected}}>{{program_code}}</option>
+                {{/programs}}
+            </select>
+
             <label for="editPassword">New Password (optional):</label>
             <input type="password" id="editPassword" name="password">
         

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Program;
 use App\Models\Faculty;
 use App\Controllers\BaseController;
 
@@ -10,14 +11,12 @@ class FacultyController extends BaseController
     // Display the form to add a new faculty
     public function showFaculty()
     {
+
+        $programModel = new Program();
+        $programs = $programModel->getAllPrograms();
         $data = [
-            'isDashboard' => false, 
-            'isStudent' => false,
             'isFaculty' => true,
-            'isSection' => false,
-            'isProfile' => false,
-            'isCourse' => false,
-            'isProgram' => false,
+            'programs' => $programs, // Pass programs to the template
             'complete_name' => $_SESSION['complete_name'] ?? '',
             'email' => $_SESSION['email'] ?? '',
         ];
