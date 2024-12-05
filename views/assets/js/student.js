@@ -120,6 +120,68 @@ window.deleteStudentSection = async (id) => {
     }
 };
 
+const customConfirmModal = document.getElementById("customConfirmModal");
+const confirmButton = document.getElementById("confirmDeleteButton");
+const cancelButton = document.getElementById("cancelDeleteButton");
+const confirmModalTitle = document.getElementById("confirmModalTitle");
+const confirmModalMessage = document.getElementById("confirmModalMessage");
+
+let studentToDelete = null; // Store the student ID temporarily
+
+window.deleteStudentSection = async (id) => {
+    // Set the modal's title and message
+    confirmModalTitle.textContent = "Confirm Deletion";
+    confirmModalMessage.textContent = "Are you sure you want to remove this student from the section?";
+    
+    // Show the modal and store the student ID
+    studentToDelete = id;
+    customConfirmModal.style.display = "flex";
+};
+
+// Handle confirm button click
+confirmButton.onclick = async () => {
+    if (studentToDelete !== null) {
+        try {
+            const response = await fetch(`/student/remove-section/${studentToDelete}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ section_id: null, student_id: null }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                alert(result.message || "Section removed successfully!");
+                loadStudents(); // Refresh the student list
+            } else {
+                alert(result.message || "Failed to remove section.");
+            }
+        } catch (error) {
+            console.error("Error removing student section:", error);
+            alert("Failed to remove student section.");
+        } finally {
+            studentToDelete = null;
+            customConfirmModal.style.display = "none";
+        }
+    }
+};
+
+// Handle cancel button click
+cancelButton.onclick = () => {
+    studentToDelete = null;
+    customConfirmModal.style.display = "none";
+};
+
+// Close modal when clicking outside it
+window.onclick = (event) => {
+    if (event.target === customConfirmModal) {
+        studentToDelete = null;
+        customConfirmModal.style.display = "none";
+    }
+};
+
 const copyToClipboard = (email) => {
     navigator.clipboard
         .writeText(email)

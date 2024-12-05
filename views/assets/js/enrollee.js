@@ -116,26 +116,70 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    let students = []; // Global array to store student data
 
-    // Open enroll modal
+    // Function to check if an ID is already used
+    function isIdUsed(id) {
+        const existingIds = students.map(student => parseInt(student.student_id, 10)); // Map student objects to their IDs
+        return existingIds.includes(id);
+    }
+    
+    // Fetch existing students to ensure unique IDs
+    const loadStudents = async () => {
+        try {
+            const response = await fetch("/student/list");
+            if (!response.ok) throw new Error("Failed to fetch students.");
+            students = await response.json(); // Store the fetched students
+        } catch (error) {
+            console.error("Error loading students:", error);
+        }
+    };
+    
+    // Function to generate a unique student ID
+    const generateStudentId = () => {
+        if (students.length === 0) {
+            alert("Unable to generate ID. No student data available.");
+            return;
+        }
+    
+        // Start with the highest ID + 1
+        let newId = Math.max(...students.map(student => parseInt(student.student_id, 10))) + 1;
+    
+        // Ensure the ID is unique
+        while (isIdUsed(newId)) {
+            newId++;
+        }
+    
+        // Set the new unique ID in the input field
+        document.getElementById("studentId").value = newId;
+    };
+    
+    // Example usage when opening the enrollment modal
     window.enrollEnrollee = async (id) => {
         try {
             const response = await fetch(`/enrollee/${id}`);
             if (!response.ok) throw new Error("Failed to fetch enrollee details.");
-
+    
             const enrollee = await response.json();
-
-            // Populate modal fields
             document.getElementById("enrollId").value = enrollee.id;
+    
+            // Ensure students are loaded before generating an ID
+            await loadStudents();
+    
+            // Generate a unique student ID
+            generateStudentId();
+    
+            // Populate sections dropdown
             await populateSections();
-
-            // Show modal
-            enrollModal.style.display = "block";
+    
+            // Show the modal
+            document.getElementById("enrollModal").style.display = "block";
         } catch (error) {
-            console.error("Error opening enroll modal:", error);
+            console.error("Error opening enrollment modal:", error);
             alert("Failed to open enrollment modal.");
         }
     };
+    
 
     // Populate sections in the dropdown
     const populateSections = async () => {
@@ -194,20 +238,51 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Delete enrollee
+    const customConfirmModal = document.getElementById("customConfirmModal");
+    const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+    const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+    
+    let enrolleeToDelete = null; // Store the enrollee ID temporarily
+    
     window.deleteEnrollee = async (id) => {
-        if (confirm("Are you sure you want to delete this enrollee?")) {
+        // Show the custom modal
+        enrolleeToDelete = id;
+        customConfirmModal.style.display = "flex";
+    };
+    
+    // Handle the delete confirmation
+    confirmDeleteButton.onclick = async () => {
+        if (enrolleeToDelete !== null) {
             try {
-                const response = await fetch(`/enrollee/delete/${id}`, { method: "DELETE" });
+                const response = await fetch(`/enrollee/delete/${enrolleeToDelete}`, { method: "DELETE" });
                 if (!response.ok) throw new Error("Failed to delete enrollee.");
-
+    
                 alert("Enrollee successfully deleted!");
                 loadEnrollees();
             } catch (error) {
                 console.error("Error deleting enrollee:", error);
                 alert("Failed to delete enrollee.");
+            } finally {
+                enrolleeToDelete = null;
+                customConfirmModal.style.display = "none";
             }
         }
     };
+    
+    // Handle cancellation
+    cancelDeleteButton.onclick = () => {
+        enrolleeToDelete = null;
+        customConfirmModal.style.display = "none";
+    };
+    
+    // Close modal on outside click
+    window.onclick = (event) => {
+        if (event.target === customConfirmModal) {
+            enrolleeToDelete = null;
+            customConfirmModal.style.display = "none";
+        }
+    };
+    
 
     // Handle edit form submission
     document.getElementById("editEnrolleeForm").onsubmit = async (event) => {

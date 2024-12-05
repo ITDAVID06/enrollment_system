@@ -188,10 +188,35 @@ document.getElementById("editFacultyForm").onsubmit = async (event) => {
     }
 };
 
-// Delete Faculty
 const deleteFaculty = async (id) => {
-    if (confirm("Are you sure you want to delete this faculty?")) {
-        await fetch(`/faculty/${id}`, { method: "DELETE" });
-        loadFaculty();
-    }
+    // Open the custom confirm modal
+    const customConfirmModal = document.getElementById("customConfirmModal");
+    const confirmModalTitle = document.getElementById("confirmModalTitle");
+    const confirmModalMessage = document.getElementById("confirmModalMessage");
+    const confirmButton = document.getElementById("confirmDeleteButton");
+    const cancelButton = document.getElementById("cancelDeleteButton");
+
+    // Set modal content
+    confirmModalTitle.textContent = "Delete Faculty";
+    confirmModalMessage.textContent = "Are you sure you want to delete this faculty?";
+    customConfirmModal.style.display = "block";
+
+    // Add event listeners for the buttons
+    confirmButton.onclick = async () => {
+        try {
+            await fetch(`/faculty/${id}`, { method: "DELETE" });
+            alert("Faculty deleted successfully!");
+            customConfirmModal.style.display = "none";
+
+            // Reload the faculty list
+            loadFaculty();
+        } catch (error) {
+            console.error("Error deleting faculty:", error);
+            alert("Failed to delete faculty. Please try again.");
+        }
+    };
+
+    cancelButton.onclick = () => {
+        customConfirmModal.style.display = "none";
+    };
 };

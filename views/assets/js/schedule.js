@@ -142,30 +142,49 @@ const groupSchedulesByCourse = (schedules) => {
 };
 
 async function deleteSchedule(courseId, sectionId) {
-    try {
-        // Confirm the action
-        const confirmation = confirm("Are you sure you want to delete all schedules for this course?");
-        if (!confirmation) return;
+    // Open the custom confirm modal
+    const customConfirmModal = document.getElementById("customConfirmModal");
+    const confirmModalTitle = document.getElementById("confirmModalTitle");
+    const confirmModalMessage = document.getElementById("confirmModalMessage");
+    const confirmButton = document.getElementById("confirmDeleteButton");
+    const cancelButton = document.getElementById("cancelDeleteButton");
 
-        // Send DELETE request to the server
-        const response = await fetch(`/schedule/${courseId}/${sectionId}`, {
-            method: 'DELETE',
-        });
+    // Set modal content
+    confirmModalTitle.textContent = "Delete Schedule";
+    confirmModalMessage.textContent = "Are you sure you want to delete all schedules for this course?";
+    customConfirmModal.style.display = "block";
 
-        if (!response.ok) {
-            throw new Error('Failed to delete schedules');
+    // Add event listeners for the buttons
+    confirmButton.onclick = async () => {
+        try {
+            // Send DELETE request to the server
+            const response = await fetch(`/schedule/${courseId}/${sectionId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete schedules');
+            }
+
+            const result = await response.json();
+            alert(result.message || 'Schedules deleted successfully!');
+
+            // Refresh the table after deletion
+            filterByProgramSection(null, sectionId);
+        } catch (error) {
+            console.error('Error deleting schedules:', error);
+            alert('An error occurred while deleting schedules.');
+        } finally {
+            // Close the modal
+            customConfirmModal.style.display = "none";
         }
+    };
 
-        const result = await response.json();
-        alert(result.message || 'Schedules deleted successfully!');
-
-        // Refresh the table after deletion
-        filterByProgramSection(null, sectionId);
-    } catch (error) {
-        console.error('Error deleting schedules:', error);
-        alert('An error occurred while deleting schedules.');
-    }
+    cancelButton.onclick = () => {
+        customConfirmModal.style.display = "none";
+    };
 }
+
 
 // Fetch and render the program-section list
 async function loadProgramSections() {

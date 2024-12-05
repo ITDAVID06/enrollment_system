@@ -14,6 +14,7 @@ class Student extends BaseModel
                     CONCAT(enrollees.last_name, ', ', enrollees.first_name) AS name,
                     enrollees.gender,
                     enrollees.section_id,
+                    enrollees.student_id AS student_id,
                     enrollees.email,
                     enrollees.year_level,
                     enrollees.program_applying_for AS program_id,

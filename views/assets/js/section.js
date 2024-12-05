@@ -100,12 +100,37 @@ document.getElementById("editSectionForm").onsubmit = async (event) => {
     loadSections();
 };
 
-// Delete Section
 const deleteSection = async (id) => {
-    if (confirm("Are you sure you want to delete this section?")) {
-        await fetch(`/section/${id}`, { method: "DELETE" });
-        loadSections();
-    }
+    // Open the custom confirm modal
+    const customConfirmModal = document.getElementById("customConfirmModal");
+    const confirmModalTitle = document.getElementById("confirmModalTitle");
+    const confirmModalMessage = document.getElementById("confirmModalMessage");
+    const confirmButton = document.getElementById("confirmDeleteButton");
+    const cancelButton = document.getElementById("cancelDeleteButton");
+
+    // Set modal content
+    confirmModalTitle.textContent = "Delete Section";
+    confirmModalMessage.textContent = "Are you sure you want to delete this section?";
+    customConfirmModal.style.display = "block";
+
+    // Add event listeners for the buttons
+    confirmButton.onclick = async () => {
+        try {
+            await fetch(`/section/${id}`, { method: "DELETE" });
+            alert("Section deleted successfully!");
+            customConfirmModal.style.display = "none";
+
+            // Reload the sections list
+            loadSections();
+        } catch (error) {
+            console.error("Error deleting section:", error);
+            alert("Failed to delete section. Please try again.");
+        }
+    };
+
+    cancelButton.onclick = () => {
+        customConfirmModal.style.display = "none";
+    };
 };
 
 // Initial Load

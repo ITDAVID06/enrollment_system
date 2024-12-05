@@ -348,11 +348,37 @@ loadCoursesByProgramAndYear(currentProgramId, currentYear);
 
 
 const deleteCourse = async (id) => {
-    if (confirm("Are you sure you want to delete this course?")) {
-        await fetch(`/course/delete/${id}`, { method: "DELETE" });
-        loadCoursesByProgramAndYear(currentProgramId, currentYear);
-    }
-}; 
+    // Open the custom confirm modal
+    const customConfirmModal = document.getElementById("customConfirmModal");
+    const confirmModalTitle = document.getElementById("confirmModalTitle");
+    const confirmModalMessage = document.getElementById("confirmModalMessage");
+    const confirmButton = document.getElementById("confirmDeleteButton");
+    const cancelButton = document.getElementById("cancelDeleteButton");
+
+    // Set modal content
+    confirmModalTitle.textContent = "Delete Course";
+    confirmModalMessage.textContent = "Are you sure you want to delete this course?";
+    customConfirmModal.style.display = "block";
+
+    // Add event listeners for the buttons
+    confirmButton.onclick = async () => {
+        try {
+            await fetch(`/course/delete/${id}`, { method: "DELETE" });
+            alert("Course deleted successfully!");
+            customConfirmModal.style.display = "none";
+
+            // Reload the courses list
+            loadCoursesByProgramAndYear(currentProgramId, currentYear);
+        } catch (error) {
+            console.error("Error deleting course:", error);
+            alert("Failed to delete course. Please try again.");
+        }
+    };
+
+    cancelButton.onclick = () => {
+        customConfirmModal.style.display = "none";
+    };
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     // Select the first program item and year button by default
