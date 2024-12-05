@@ -7,7 +7,7 @@ use \PDO;
 
 class Program extends BaseModel
 {
-    public function save($data)
+    public function saveProgram($data)
     {
         $sql = "INSERT INTO programs
                 SET program_code = :program_code,

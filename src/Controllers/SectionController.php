@@ -33,7 +33,7 @@ class SectionController extends BaseController
     public function listSections()
     {
         $model = new Section(); // Assuming a Section model exists
-        echo json_encode($model->getAll());
+        echo json_encode($model->getSections());
     }
 
     public function getAllSections()

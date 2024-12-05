@@ -11,7 +11,7 @@ class Registration extends BaseModel
         return $this->fetchAll($sql);
     }
 
-    public function save($data)
+    public function saveEnrollee($data)
     {
         $sql = "INSERT INTO enrollees 
                 SET

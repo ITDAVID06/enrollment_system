@@ -56,7 +56,7 @@ class Section extends BaseModel
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAll()
+    public function getSections()
     {
         $sql = "SELECT 
                     sections.id, 

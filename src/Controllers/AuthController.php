@@ -44,10 +44,20 @@ class AuthController extends BaseController
                     $_SESSION['complete_name'] = $facultyData['firstname'] . ' ' . $facultyData['lastname'];
                     $_SESSION['email'] = $facultyData['email'];
                     $_SESSION['role'] = 'faculty';
+
+                    $enrolleeModel = new Student();
+
+                    // Fetch recent enrollees
+                    $recentEnrollees = $enrolleeModel->getRecentPendingEnrollees();
+                
+                    // Fetch total students per program
+                    $programTotals = $enrolleeModel->getTotalStudentsByProgram();
     
                     return $this->render('root', [
                         'complete_name' => $_SESSION['complete_name'],
                         'isDashboard' => true,
+                        'recentEnrollees' => $recentEnrollees ?? [],
+                        'programTotals' => $programTotals ?? []
                     ]);
                 }
             }

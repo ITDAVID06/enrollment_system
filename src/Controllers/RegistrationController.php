@@ -52,7 +52,7 @@ class RegistrationController extends BaseController
  
              // Save enrollment data
              $registration = new Registration();
-             $result = $registration->save($data);
+             $result = $registration->saveEnrollee($data);
  
              // Check if the insertion was successful
              if ($result['row_count'] > 0) {

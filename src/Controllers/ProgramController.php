@@ -23,7 +23,7 @@ class ProgramController extends BaseController
 
             $program = new Program();
 
-            $result = $program->save($data);
+            $result = $program->saveProgram($data);
 
             if ($result['row_count'] > 0) {
                 $_SESSION['success'] = 'Program registered successfully!';

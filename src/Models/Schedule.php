@@ -7,20 +7,6 @@ use PDO;
 
 class Schedule extends BaseModel
 {
-    public function save($data)
-    {
-        $sql = "INSERT INTO schedules (program_id, section_id, course_id, sched_semester)
-                VALUES (:program_id, :section_id, :course_id, :sched_semester)";
-        $statement = $this->db->prepare($sql);
-
-        return $statement->execute([
-            'program_id' => $data['program_id'],
-            'section_id' => $data['section_id'],
-            'course_id' => $data['course_id'],
-            'sched_semester' => $data['sched_semester'],
-        ]);
-    }
-
     public function getCoursesByProgramSectionAndSemester($programId, $sectionId, $semester) 
     {
         $sql ="
