@@ -5,14 +5,13 @@
     font-family: "Poppins", sans-serif;
 }
 
-/* CSS */
 .main-content {
     margin-left: 16.875em;
-    transition: margin-left 0.4s ease;  /* Smooth transition */
+    transition: margin-left 0.4s ease; 
 }
 
 .main-content.collapsed-sidebar {
-    margin-left: 5em;  /* Margin when sidebar is collapsed */
+    margin-left: 5em;  
 }
 .dashboard-container {
     max-height: 100vh;
@@ -53,7 +52,7 @@ h1 {
 /* Bottom Section: Table and Pie Charts */
 .bottom-section {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Table takes more space */
+    grid-template-columns: 2fr 1fr; 
     gap: 20px;
 }
 
@@ -96,7 +95,7 @@ table tr:nth-child(even) {
 /* Canvas (Chart.js) */
 canvas {
     width: 100%;
-    height: 150px; /* Adjusted height for smaller charts */
+    height: 150px; 
 }
 
 .dashboard-container {

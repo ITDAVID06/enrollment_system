@@ -198,7 +198,7 @@ let programs = []; // Global variable to store program data
 
 const loadPrograms = async () => {
     try {
-        const response = await fetch('/programs'); // Replace with your API endpoint
+        const response = await fetch('/program/list'); // Replace with your API endpoint
         if (!response.ok) {
             throw new Error('Failed to fetch programs');
         }

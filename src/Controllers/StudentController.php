@@ -13,7 +13,7 @@ use PHPMailer\PHPMailer\Exception;
 class StudentController extends BaseController
 {
 
-    public function showStudent(){
+public function showStudent(){
         $data = [
             'isStudent' => true,
         ];
@@ -21,7 +21,7 @@ class StudentController extends BaseController
     }
 
   // Fetch all students with section_id and student_id
-  public function list()
+  public function listStudents()
   {
       $model = new Student();
       $students = $model->getEnrolledStudents();
@@ -31,10 +31,10 @@ class StudentController extends BaseController
   }
 
   // Fetch details of a single student by ID
-  public function get($id)
+  public function getStudentById($id)
   {
       $model = new Student();
-      $student = $model->getById($id);
+      $student = $model->getStudentById($id);
 
       if ($student) {
           header('Content-Type: application/json');
@@ -46,7 +46,7 @@ class StudentController extends BaseController
   }
 
   // Update the section_id of a student
-  public function update($id)
+  public function updateStudentSection($id)
   {
       $model = new Student();
       $sectionId = $_POST['section_id'] ?? null;
@@ -66,24 +66,6 @@ class StudentController extends BaseController
           echo json_encode(['success' => false, 'message' => 'Failed to update section.']);
       }
   }
-
-  public function getCourses($sectionId) {
-    $semester = $_GET['semester'] ?? '1st Sem';
-
-    $model = new Student(); // Assuming you have a Course model
-    $courses = $model->getCoursesBySectionAndSemester($sectionId, $semester);
-
-    header('Content-Type: application/json');
-    echo json_encode($courses);
-}
-
-public function getSchedulesBySection($sectionId) {
-    $model = new Student();
-    $schedules = $model->getSchedulesBySection($sectionId);
-
-    header('Content-Type: application/json');
-    echo json_encode($schedules);
-}
 
 public function generateSamplePDF()
 {
@@ -153,31 +135,6 @@ public function generateSamplePDF()
     }
 }
 
-
-public function getChartData()
-{
-    try {
-        $model = new Student();
-
-        $genderData = $model->getGenderDistribution();
-        $programData = $model->getProgramDistribution();
-        $yearLevelData = $model->getYearLevelBreakdown();
-
-        $data = [
-            'gender' => $genderData,
-            'program' => $programData,
-            'yearLevel' => $yearLevelData,
-        ];
-
-        header('Content-Type: application/json');
-        echo json_encode($data);
-    } catch (\Exception $e) {
-        error_log('Error in getChartData: ' . $e->getMessage());
-        http_response_code(500);
-        echo json_encode(['error' => 'Failed to fetch chart data.']);
-    }
-}
-
 public function recentPendingEnrollees()
 {
     try {
@@ -192,13 +149,13 @@ public function recentPendingEnrollees()
     }
 }
 
-public function removeSection($id)
+public function removeSectionStudent($id)
 {
     try {
         $studentModel = new Student();
 
         // Update the database to set section_id and student_id to NULL
-        $result = $studentModel->updateStudentSection($id, ['section_id' => null, 'student_id' => null]);
+        $result = $studentModel->removeStudentSection($id, ['section_id' => null, 'student_id' => null]);
 
         if ($result) {
             echo json_encode(['success' => true, 'message' => 'Student and section successfully removed.']);
@@ -250,9 +207,5 @@ public function sendScheduleEmail()
         }
     }
 }
-
-
-
-
 
 }

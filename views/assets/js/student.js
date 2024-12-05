@@ -75,6 +75,25 @@ const displayPage = () => {
     document.getElementById("nextPageButton").disabled = end >= students.length;
 };
 
+window.editStudentSection = async (id) => {
+    try {
+        const response = await fetch(`/student/${id}`);
+        if (!response.ok) throw new Error("Failed to fetch student details.");
+
+        const student = await response.json();
+        document.getElementById("editStudentId").value = student.id;
+
+        // Populate dropdown and pre-select the current section
+        await populateSections(student.section_id);
+
+        // Display the modal
+        document.getElementById("editSectionModal").style.display = "block";
+    } catch (error) {
+        console.error("Error fetching student details:", error);
+        alert("Failed to fetch student details.");
+    }
+};
+
 window.deleteStudentSection = async (id) => {
     if (confirm("Are you sure you want to remove this student from the section?")) {
         try {
@@ -113,9 +132,6 @@ const copyToClipboard = (email) => {
         });
 };
 
-
-
-
 // Pagination
 document.getElementById("prevPageButton").onclick = () => {
     if (currentPage > 1) {
@@ -130,28 +146,6 @@ document.getElementById("nextPageButton").onclick = () => {
         displayPage();
     }
 };
-
-
-window.editStudentSection = async (id) => {
-    try {
-        const response = await fetch(`/student/${id}`);
-        if (!response.ok) throw new Error("Failed to fetch student details.");
-
-        const student = await response.json();
-        document.getElementById("editStudentId").value = student.id;
-
-        // Populate dropdown and pre-select the current section
-        await populateSections(student.section_id);
-
-        // Display the modal
-        document.getElementById("editSectionModal").style.display = "block";
-    } catch (error) {
-        console.error("Error fetching student details:", error);
-        alert("Failed to fetch student details.");
-    }
-};
-
-
 
 // Submit the updated section
 document.getElementById("editSectionForm").onsubmit = async (event) => {
@@ -277,11 +271,17 @@ document.getElementById("closeScheduleModal").onclick = () => {
 loadStudents();
 
 // Search functionality
+document.getElementById("searchInput").addEventListener("input", (event) => {
+    const searchQuery = event.target.value.trim();
+    currentPage = 1; // Reset to the first page
+    loadStudents(searchQuery);
+});
+
 document.getElementById("searchButton").onclick = () => {
-    const searchQuery = document.getElementById("searchInput").value;
+    const searchQuery = document.getElementById("searchInput").value.trim();
+    currentPage = 1;
     loadStudents(searchQuery);
 };
-
 
 // Populate sections dropdown
 const populateSections = async (currentSectionId = null) => {
@@ -305,6 +305,7 @@ const populateSections = async (currentSectionId = null) => {
         alert("Failed to load sections.");
     }
 };
+
 
 document.getElementById("printScheduleButton").addEventListener("click", () => {
     const modalContent = document.querySelector("#viewScheduleModal .modal-content").innerHTML;

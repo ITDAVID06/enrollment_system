@@ -298,3 +298,42 @@
 .semester-buttons .btn:hover {
     opacity: 0.9;
 }
+
+
+
+.facultybutton {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Adjust icon size */
+    line-height: 1; /* Ensure proper vertical alignment */
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    display: inline-block;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    color: #333; /* Default icon color */
+    cursor: pointer; /* Pointer cursor for clickable icons */
+    margin: 0 5px; /* Add some spacing between icons */
+}
+
+/* Hover effect for icons */
+.facultybutton:hover {
+    color: #b30000; /* Red color on hover */
+    transform: scale(1.2); /* Slightly enlarge on hover */
+    transition: transform 0.2s ease, color 0.2s ease; /* Smooth hover animation */
+}
+
+/* Button styling to remove background and border */
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px; /* Add slight padding for better click area */
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background highlight on hover */
+    border-radius: 4px; /* Rounded corners */
+}

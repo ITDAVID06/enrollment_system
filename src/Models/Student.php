@@ -35,10 +35,8 @@ class Student extends BaseModel
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
     
-    
-
     // Fetch details of a single student by ID
-    public function getById($id)
+    public function getStudentById($id)
     {
         $sql = "SELECT * FROM enrollees WHERE id = :id";
         $stmt = $this->db->prepare($sql);
@@ -53,29 +51,6 @@ class Student extends BaseModel
         $stmt = $this->db->prepare($sql);
         return $stmt->execute(['section_id' => $sectionId, 'id' => $id]);
     }
-
-    public function getCoursesBySectionAndSemester($sectionId, $semester) {
-        $sql = "
-            SELECT id, course_code, title 
-            FROM courses 
-            WHERE section_id = :section_id AND semester = :semester
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['section_id' => $sectionId, 'semester' => $semester]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
-    public function getSchedulesBySection($sectionId) {
-        $sql = "
-            SELECT sched_day, TIME_FROM, TIME_TO, sched_room, course_id
-            FROM schedule
-            WHERE section_id = :section_id
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['section_id' => $sectionId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     
     public function getGenderDistribution()
     {
@@ -103,7 +78,6 @@ class Student extends BaseModel
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
     
-
     // Year Level Breakdown
     public function getYearLevelBreakdown()
     {
@@ -133,34 +107,29 @@ class Student extends BaseModel
     }
 
     public function getTotalStudentsByProgram()
-{
-    $sql = "SELECT 
-                programs.program_code, 
-                COUNT(*) as total_students 
-            FROM enrollees
-            INNER JOIN sections ON enrollees.section_id = sections.id
-            INNER JOIN programs ON sections.program_id = programs.id
-            WHERE enrollees.student_id IS NOT NULL AND enrollees.section_id IS NOT NULL
-            GROUP BY programs.program_code";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute();
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-}
+    {
+        $sql = "SELECT 
+                    programs.program_code, 
+                    COUNT(*) as total_students 
+                FROM enrollees
+                INNER JOIN sections ON enrollees.section_id = sections.id
+                INNER JOIN programs ON sections.program_id = programs.id
+                WHERE enrollees.student_id IS NOT NULL AND enrollees.section_id IS NOT NULL
+                GROUP BY programs.program_code";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
-public function updateStudentSection($studentId, $data)
-{
-    $sql = "UPDATE enrollees SET section_id = :section_id, student_id = :student_id WHERE id = :id";
-    $statement = $this->db->prepare($sql);
-    return $statement->execute([
-        ':section_id' => $data['section_id'],
-        ':student_id' => $data['student_id'],
-        ':id' => $studentId,
-    ]);
-}
+    public function removeStudentSection($studentId, $data)
+    {
+        $sql = "UPDATE enrollees SET section_id = :section_id, student_id = :student_id WHERE id = :id";
+        $statement = $this->db->prepare($sql);
+        return $statement->execute([
+            ':section_id' => $data['section_id'],
+            ':student_id' => $data['student_id'],
+            ':id' => $studentId,
+        ]);
+    }
 
-
-    
-
-
-    
 }

@@ -73,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("nextPageButton").disabled = end >= enrollees.length;
     };
     
-
     // Pagination handlers
     document.getElementById("prevPageButton").onclick = () => {
         if (currentPage > 1) {
@@ -89,12 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Search functionality
-    document.getElementById("searchButton").onclick = () => {
-        const searchQuery = document.getElementById("searchInput").value;
-        currentPage = 1;
+    document.getElementById("searchInput").addEventListener("input", (event) => {
+        const searchQuery = event.target.value.trim();
+        currentPage = 1; // Reset to the first page
         loadEnrollees(searchQuery);
-    };
+    });
+    
 
     // View enrollee details
     window.viewEnrollee = async (id) => {

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('/students/chart-data'); // Update with your route
+        const response = await fetch('/students/chart-data'); 
         if (!response.ok) throw new Error('Failed to fetch chart data.');
 
         const data = await response.json();
@@ -51,31 +51,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching chart data:', error);
         alert('Failed to load chart data.');
     }
-
-    const fetchRecentPendingEnrollees = async () => {
-        try {
-            const response = await fetch('/enrollees/recent'); // Update the route as per your setup
-            if (!response.ok) throw new Error('Failed to fetch recent enrollees');
-    
-            const enrollees = await response.json();
-            console.log('Recent Pending Enrollees:', enrollees);
-    
-            const tableBody = document.querySelector('.table-container tbody');
-            tableBody.innerHTML = ''; // Clear existing rows
-    
-            enrollees.forEach((enrollee) => {
-                const row = `
-                    <tr>
-                        <td>${enrollee.name}</td>
-                        <td>${enrollee.program_code}</td>
-                        <td>${enrollee.status}</td>
-                    </tr>
-                `;
-                tableBody.innerHTML += row;
-            });
-        } catch (error) {
-            console.error('Error fetching recent pending enrollees:', error);
-        }
-    };
     
 });

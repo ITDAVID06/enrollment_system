@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="views/assets/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
 
-   <!-- Custom CSS -->
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="views/assets/css/style.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,6 @@
 </head>
 <body>
 
-    
   <!-- Header Section -->
   <header class="header bg-light py-3">
     <div class="container d-flex align-items-center justify-content-between">
@@ -40,90 +39,87 @@
   </header>
 
   <!-- Main Content -->
-  <main class="container py-5">
-    <h1 class="text-center mb-4">Student Enrollment Form</h1>
-    <form action="/submit-enrollment" method="POST" enctype="multipart/form-data">
-      
-      <!-- Full Name -->
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <input type="text" name="last_name" placeholder="Last Name" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <input type="text" name="first_name" placeholder="First Name" class="form-control" required>
-        </div>
+<main class="container py-3 d-flex flex-column">
+  <h1 class="text-center mb-4">Student Enrollment Form</h1>
+  <form action="/submit-enrollment" method="POST" enctype="multipart/form-data" class="flex-grow-1 d-flex flex-column justify-content-start">
+    
+    <!-- Full Name -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="text" name="last_name" placeholder="Last Name" class="form-control form-control-lg" required>
       </div>
-      <div class="mb-3">
-        <input type="text" name="middle_name" placeholder="Middle Name" class="form-control">
+      <div class="col-md-6">
+        <input type="text" name="first_name" placeholder="First Name" class="form-control form-control-lg" required>
       </div>
+    </div>
+    <div class="mb-3">
+      <input type="text" name="middle_name" placeholder="Middle Name" class="form-control form-control-lg">
+    </div>
 
-      <!-- Gender -->
-      <div class="mb-3">
-        <select name="gender" class="form-control" required>
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
+    <!-- Gender -->
+    <div class="mb-3">
+      <select name="gender" class="form-control form-control-lg" required>
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <!-- Email and Mobile -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="email" name="email" placeholder="Email" class="form-control form-control-lg" required>
       </div>
-
-      <!-- Email and Mobile -->
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <input type="email" name="email" placeholder="Email" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <input type="text" name="contact_mobile" placeholder="Mobile Number" class="form-control" required>
-        </div>
+      <div class="col-md-6">
+        <input type="text" name="contact_mobile" placeholder="Mobile Number" class="form-control form-control-lg" required>
       </div>
+    </div>
 
-      <!-- Address -->
-      <div class="mb-3">
-        <textarea name="street_address" placeholder="Street Address" class="form-control" required></textarea>
-      </div>
+    <!-- Address -->
+    <div class="mb-3">
+      <textarea name="street_address" placeholder="Street Address" class="form-control form-control-lg" rows="3" required></textarea>
+    </div>
 
-      <!-- Program Applying For -->
-      <div class="mb-3">
-        <label for="program">Program Applying For:</label>
-        <select name="program_applying_for" id="program" class="form-control" required>
-          {{#programs}}
-          <option value="{{id}}">{{title}}</option>
-          {{/programs}}
-        </select>
-      </div>
+    <!-- Program Applying For -->
+    <div class="mb-3">
+      <label for="program" class="form-label">Program Applying For:</label>
+      <select name="program_applying_for" id="program" class="form-control form-control-lg" required>
+        {{#programs}}
+        <option value="{{id}}">{{title}}</option>
+        {{/programs}}
+      </select>
+    </div>
 
-      <!-- Year Level -->
-      <div class="mb-3">
-        <label for="year_level">Year Level:</label>
-        <select name="year_level" id="year_level" class="form-control" required>
-          <option value="1">1st Year</option>
-          <option value="2">2nd Year</option>
-          <option value="3">3rd Year</option>
-          <option value="4">4th Year</option>
-        </select>
-      </div>
+    <!-- Year Level -->
+    <div class="mb-3">
+      <label for="year_level" class="form-label">Year Level:</label>
+      <select name="year_level" id="year_level" class="form-control form-control-lg" required>
+        <option value="1">1st Year</option>
+        <option value="2">2nd Year</option>
+        <option value="3">3rd Year</option>
+        <option value="4">4th Year</option>
+      </select>
+    </div>
 
-      <!-- Semester -->
-      <div class="mb-3">
-        <label for="term">Semester:</label>
-        <select name="term" id="term" class="form-control" required>
-          <option value="1st Sem">1st Semester</option>
-          <option value="2nd Sem">2nd Semester</option>
-        </select>
-      </div>
+    <!-- Semester -->
+    <div class="mb-3">
+      <label for="term" class="form-label">Semester:</label>
+      <select name="term" id="term" class="form-control form-control-lg" required>
+        <option value="1st Sem">1st Semester</option>
+        <option value="2nd Sem">2nd Semester</option>
+      </select>
+    </div>
 
-      <!-- Upload Grades -->
-      <div class="mb-3">
-        <input type="file" name="uploaded_grade_file" class="form-control" required>
-      </div>
+    <!-- Upload Grades -->
+    <div class="mb-3">
+      <input type="file" name="uploaded_grade_file" class="form-control form-control-lg" required>
+    </div>
 
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </main>
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary btn-lg w-100 mt-3 mb-0">Submit</button>
+  </form>
+</main>
 
-  <!-- Footer Section -->
-  <footer class="footer bg-light py-3 text-center">
-    <p class="mb-0">&copy; 2024 Angeles University Foundation</p>
-  </footer>
 </body>
 </html>

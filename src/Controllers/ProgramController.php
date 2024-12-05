@@ -10,19 +10,13 @@ class ProgramController extends BaseController
     public function showProgram()
     {
         $data = [
-            'isDashboard' => false,
-            'isStudent' => false,
-            'isFaculty' => false,
-            'isSection' => false,
-            'isProfile' => false,
-            'isCourse' => false,
             'isProgram' => true,
         ];
 
         return $this->render('root', $data);
     }
 
-    public function register()
+    public function addProgram()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
@@ -49,26 +43,26 @@ class ProgramController extends BaseController
         }
     }
 
-    public function list()
+    public function listPrograms()
     {
         $programModel = new Program();
         echo json_encode($programModel->getAllPrograms());
     }
 
-    public function get($id)
+    public function getPrograms($id)
     {
         $programModel = new Program();
         echo json_encode($programModel->getProgramById($id));
     }
 
 
-    public function update($id)
+    public function updateProgram($id)
     {
         try {
             $data = $_POST;
 
             $programModel = new Program();
-            $result = $programModel->update($id, $data);
+            $result = $programModel->updateProgram($id, $data);
 
             if ($result) {
                 echo json_encode(['success' => true, 'message' => 'Program updated successfully!']);
@@ -82,9 +76,4 @@ class ProgramController extends BaseController
         }
     }
 
-    public function delete($id)
-    {
-        $programModel = new Program();
-        $programModel->delete($id);
-    }
 }

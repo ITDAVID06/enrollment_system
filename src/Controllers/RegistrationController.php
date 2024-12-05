@@ -70,18 +70,4 @@ class RegistrationController extends BaseController
          }
      }
  
-     // List all enrollees (for admin view)
-     public function list()
-     {
-         $registrationModel = new Registration();
-         echo json_encode($registrationModel->getAll());
-     }
- 
-     // Get details of a specific enrollee
-     public function get($id)
-     {
-         $registrationMode = new Registration();
-         echo json_encode($registrationMode->getById($id));
-     }
-
 }

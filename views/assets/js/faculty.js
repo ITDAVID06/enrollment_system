@@ -106,23 +106,6 @@ document.getElementById("searchButton").onclick = () => {
     loadFaculty(searchQuery);
 };
 
-// Pagination buttons
-document.getElementById("prevPageButton").onclick = () => {
-    if (currentPage > 1) {
-        currentPage--;
-        displayPage();
-    }
-};
-
-document.getElementById("nextPageButton").onclick = () => {
-    if (currentPage * recordsPerPage < facultyData.length) {
-        currentPage++;
-        displayPage();
-    }
-};
-
-// Initial load
-loadFaculty();
 
 // Handle Add Faculty Form submission
 document.getElementById("addFacultyForm").onsubmit = async (event) => {

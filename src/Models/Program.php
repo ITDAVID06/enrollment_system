@@ -45,7 +45,7 @@ class Program extends BaseModel
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function update($id, $data)
+    public function updateProgram($id, $data)
     {
         $sql = "UPDATE programs 
                 SET program_code = :program_code,
@@ -64,10 +64,4 @@ class Program extends BaseModel
         return $statement->execute($params);
     }
 
-    public function delete($id)
-    {
-        $sql = "DELETE FROM programs WHERE id = :id";
-        $statement = $this->db->prepare($sql);
-        return $statement->execute(['id' => $id]);
-    }
 }

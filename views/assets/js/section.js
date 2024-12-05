@@ -22,7 +22,7 @@ window.onclick = (event) => {
 
 // Load program options
 const loadPrograms = async () => {
-    const response = await fetch('/programs');
+    const response = await fetch('/program/list');
     const programs = await response.json();
 
     const programDropdown = document.getElementById('program');

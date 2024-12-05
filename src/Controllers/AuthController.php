@@ -24,13 +24,13 @@ class AuthController extends BaseController
         return $this->render('u-registration');
     }
 
-    public function login() {
+    public function login()
+    {
         $this->initializeSession();
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
     
-
             // Verify faculty credentials
             $faculty = new Faculty();
             if ($faculty->verifyAccess($data['email'], $data['password'])) {
@@ -44,31 +44,23 @@ class AuthController extends BaseController
                     $_SESSION['complete_name'] = $facultyData['firstname'] . ' ' . $facultyData['lastname'];
                     $_SESSION['email'] = $facultyData['email'];
                     $_SESSION['role'] = 'faculty';
-
-                    $enrolleeModel = new Student();
-
-                    // Fetch recent enrollees
-                    $recentEnrollees = $enrolleeModel->getRecentPendingEnrollees();
-                
-                    // Fetch total students per program
-                    $programTotals = $enrolleeModel->getTotalStudentsByProgram();
     
                     return $this->render('root', [
                         'complete_name' => $_SESSION['complete_name'],
                         'isDashboard' => true,
-                        'recentEnrollees' => $recentEnrollees ?? [],
-                        'programTotals' => $programTotals ?? []
                     ]);
                 }
             }
     
-            // If no match, set error and re-render login
-            $_SESSION['error'] = "Invalid email or password.";
-            return $this->render('u-login');
+            // Pass error to the Mustache template
+            return $this->render('u-login', [
+                'error' => 'Invalid email or password.'
+            ]);
         }
     
         return $this->render('u-login');
     }
+    
 
     public function logout() {
         $this->initializeSession();

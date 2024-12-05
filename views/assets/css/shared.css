@@ -182,3 +182,12 @@ a {
     font-size: 0.8em;
     opacity: 50%;
 }
+
+.error-message {
+    color: #b30000;
+    background-color: #fdd;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #b30000;
+    border-radius: 5px;
+}

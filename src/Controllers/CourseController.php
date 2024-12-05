@@ -14,13 +14,7 @@ class CourseController extends BaseController
         $programs = $programModel->getAllPrograms();
 
         $data = [
-            'isDashboard' => false,
-            'isStudent' => false,
-            'isFaculty' => false,
-            'isSection' => false,
-            'isProfile' => false,
             'isCourse' => true,
-            'isProgram' => false,
             'programs' => $programs,
         ];
 
@@ -41,26 +35,25 @@ class CourseController extends BaseController
     }
 
     public function searchCourses()
-{
-    $courseModel = new Course();
+    {
+        $courseModel = new Course();
 
-    // Get the search query from the request
-    $query = isset($_GET['query']) ? $_GET['query'] : '';
+        // Get the search query from the request
+        $query = isset($_GET['query']) ? $_GET['query'] : '';
 
-    // Fetch courses matching the search query
-    $courses = $courseModel->searchCourses($query);
+        // Fetch courses matching the search query
+        $courses = $courseModel->searchCourses($query);
 
-    echo json_encode($courses);
-}
-
-    
-    public function registerCourse()
+        echo json_encode($courses);
+    }
+ 
+    public function addCourse()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
 
             $courseModel = new Course();
-            $result = $courseModel->save($data);
+            $result = $courseModel->saveCourse($data);
 
             if ($result['row_count'] > 0) {
                 echo json_encode(['success' => true, 'message' => 'Course added successfully!']);
@@ -71,7 +64,7 @@ class CourseController extends BaseController
         }
     }
 
-    public function getCourse($id)
+    public function getCourseById($id)
     {
         $courseModel = new Course();
         $course = $courseModel->getCourseById($id);
@@ -90,7 +83,7 @@ class CourseController extends BaseController
             $data = $_POST;
 
             $courseModel = new Course();
-            $result = $courseModel->update($id, $data);
+            $result = $courseModel->updateCourse($id, $data);
 
             if ($result) {
                 echo json_encode(['success' => true, 'message' => 'Course updated successfully!']);
@@ -107,6 +100,6 @@ class CourseController extends BaseController
     public function deleteCourse($id)
     {
         $courseModel = new Course();
-        $courseModel->delete($id);
+        $courseModel->deleteCourse($id);
     }
 }

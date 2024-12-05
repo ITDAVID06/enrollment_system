@@ -12,7 +12,7 @@ class Faculty extends BaseModel
         return $this->db;
     }
     
-    public function save($data) {
+    public function saveFaculty($data) {
         $sql = "INSERT INTO faculty 
                 SET
                     firstname = :firstname,
@@ -42,7 +42,6 @@ class Faculty extends BaseModel
         ];
     }
     
-
     public function hashPassword($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);
@@ -84,14 +83,15 @@ class Faculty extends BaseModel
     }
 
     public function getFacultyById($id)
-{
-    $sql = "SELECT * FROM faculty WHERE id = :id";
-    $statement = $this->db->prepare($sql);
-    $statement->execute(['id' => $id]);
-    return $statement->fetch(PDO::FETCH_ASSOC);
-}
+    {
+        $sql = "SELECT * FROM faculty WHERE id = :id";
+        $statement = $this->db->prepare($sql);
+        $statement->execute(['id' => $id]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
 
-public function update($id, $data) {
+    public function updateFaculty($id, $data) 
+    {
     $sql = "UPDATE faculty 
             SET 
                 lastname = :lastname,
@@ -120,31 +120,54 @@ public function update($id, $data) {
 
     $statement = $this->db->prepare($sql);
     return $statement->execute($params);
-}
-
-
-public function delete($id)
-{
-    $sql = "DELETE FROM faculty WHERE id = :id";
-    $statement = $this->db->prepare($sql);
-    return $statement->execute(['id' => $id]);
-}
-
-public function isEmailTaken($email, $excludeId = null) {
-    $sql = "SELECT COUNT(*) FROM faculty WHERE email = :email";
-    if ($excludeId) {
-        $sql .= " AND id != :id";
     }
 
-    $statement = $this->db->prepare($sql);
-    $params = ['email' => $email];
-    if ($excludeId) {
-        $params['id'] = $excludeId;
+
+    public function deleteFaculty($id)
+    {
+        $sql = "DELETE FROM faculty WHERE id = :id";
+        $statement = $this->db->prepare($sql);
+        return $statement->execute(['id' => $id]);
     }
 
-    $statement->execute($params);
-    return $statement->fetchColumn() > 0;
-}
+    public function isEmailTaken($email, $excludeId = null) {
+        $sql = "SELECT COUNT(*) FROM faculty WHERE email = :email";
+        if ($excludeId) {
+            $sql .= " AND id != :id";
+        }
+
+        $statement = $this->db->prepare($sql);
+        $params = ['email' => $email];
+        if ($excludeId) {
+            $params['id'] = $excludeId;
+        }
+
+        $statement->execute($params);
+        return $statement->fetchColumn() > 0;
+    }
+
+    public function updateEmailAndPassword($id, $email, $password = null)
+    {
+        $sql = "UPDATE faculty 
+                SET email = :email";
+        
+        $params = [
+            'id' => $id,
+            'email' => $email
+        ];
+
+        // Include password update if provided
+        if (!empty($password)) {
+            $sql .= ", password_hash = :password_hash";
+            $params['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        $sql .= " WHERE id = :id";
+
+        $statement = $this->db->prepare($sql);
+        return $statement->execute($params);
+    }
+
 
 
 }

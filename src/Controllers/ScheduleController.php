@@ -23,20 +23,9 @@ class ScheduleController extends BaseController
     {
         $this->courseModel = new Course(); // Ensure the model is initialized
     }
-    
-    public function getCoursesByProgramAndSection($programId, $sectionId) {
-
-            $semester = isset($_GET['semester']) ? $_GET['semester'] : '1st Sem';
-            $scheduleModel = new Schedule();
-            $semester = '1st Sem';
-            $courses = $this->scheduleModel->getCoursesByProgramSectionAndSemester($programId, $sectionId, $semester);
-          
-            echo json_encode($courses);
-      
-    }
-    
-
-    public function getProgramSections(){
+     
+    public function getProgramSections()
+    {
         try {
             $courseModel = new Schedule();
             $courses = $courseModel->getProgramSections();
@@ -79,6 +68,79 @@ class ScheduleController extends BaseController
             echo json_encode(['error' => 'An error occurred while deleting schedules: ' . $e->getMessage()]);
         }
     }
+
+    public function getScheduleBySection($section_id)
+    {
+        try {
+
+            $courseModel = new Course(); // Assuming the model is named `Course`
+            
+            // Call the model method to get courses for the section
+            $courses = $courseModel->getCourseSchedule($section_id);
+            
+            // Check if the query returned results
+            if ($courses === false) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to fetch courses']);
+                return;
+            }
+    
+            // Return the courses as JSON
+            header('Content-Type: application/json');
+            echo json_encode($courses);
+        } catch (Exception $e) {
+            // Handle unexpected errors
+            error_log("Exception: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['error' => 'An unexpected error occurred']);
+        }
+    }
+
+    public function saveSchedule()
+{
+    try {
+        
+        $courseId = $_POST['course_id'];
+        $programId = $_POST['program_id'];
+        $sectionId = $_POST['section_id'];
+        $semester = $_POST['sched_semester'];
+        $schoolYear = $_POST['sched_sy'];
+        $room = $_POST['sched_room'];
+        
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        $scheduleModel = new Schedule();
+
+        foreach ($days as $day) {
+            $isEnabled = isset($_POST['days']) && in_array($day, $_POST['days']);
+
+            if ($isEnabled) {
+                $scheduleData = [
+                    'course_id' => $courseId,
+                    'program_id' => $programId,
+                    'section_id' => $sectionId,
+                    'sched_day' => $day,
+                    'TIME_FROM' => $_POST[strtolower($day) . '_start'] ?? null,
+                    'TIME_TO' => $_POST[strtolower($day) . '_end'] ?? null,
+                    'sched_semester' => $semester,
+                    'sched_sy' => $schoolYear,
+                    'sched_room' => $room
+                ];
+
+                $scheduleModel->saveSchedule($scheduleData);
+            }
+        }
+
+        $this->showSchedule();
+
+    } catch (Exception $e) {
+        error_log("Error saving schedule: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to save schedule.']);
+    }
+}
+
+    
     
 
 }

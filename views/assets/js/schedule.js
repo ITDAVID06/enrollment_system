@@ -23,7 +23,7 @@ async function filterByProgramSection(programId, sectionId, yearLevel) {
     try {
         console.log(`Filtering by Program ID: ${programId}, Section ID: ${sectionId}, Year Level: ${yearLevel}, Semester: ${selectedSemester}`);
 
-        // Fetch all courses for the selected Program, Section, and Year Level
+        // Fetch all courses for the selected Program, Year Level, and Semester
         const coursesResponse = await fetch(`/courses/${programId}/${yearLevel}?&semester=${encodeURIComponent(selectedSemester)}`);
         if (!coursesResponse.ok) {
             throw new Error('Failed to fetch courses');
@@ -87,8 +87,12 @@ async function filterByProgramSection(programId, sectionId, yearLevel) {
                     <td>
                         ${
                             course.schedules.length > 0
-                                ? `<button onclick="deleteSchedule(${course.id}, ${sectionId})">Delete</button>`
-                                : `<button onclick="openAddScheduleModal(${course.program_id}, ${sectionId}, ${course.id})">Add</button>`
+                                ? `<button onclick="deleteSchedule(${course.id}, ${sectionId})"><span class="material-symbols-rounded facultybutton">
+                                    delete
+                                    </span></button>`
+                                : `<button onclick="openAddScheduleModal(${course.program_id}, ${sectionId}, ${course.id})"><span class="material-symbols-rounded facultybutton">
+                                    calendar_add_on
+                                    </span></button>`
                         }
                     </td>
                 </tr>`;
@@ -100,9 +104,6 @@ async function filterByProgramSection(programId, sectionId, yearLevel) {
         alert('An error occurred while fetching courses or schedules.');
     }
 }
-
-
-
 
 
 const groupSchedulesByCourse = (schedules) => {
@@ -166,11 +167,10 @@ async function deleteSchedule(courseId, sectionId) {
     }
 }
 
-
 // Fetch and render the program-section list
 async function loadProgramSections() {
     try {
-        const response = await fetch('/program-sections');
+        const response = await fetch('/schedule/program-sections');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -198,7 +198,6 @@ async function loadProgramSections() {
     }
 }
 
-
 function selectProgramSection(programId, sectionId, yearLevel) {
     console.log(`Selected Program ID: ${programId}, Section ID: ${sectionId}, Year Level: ${yearLevel}`);
 
@@ -216,14 +215,12 @@ function selectProgramSection(programId, sectionId, yearLevel) {
     filterByProgramSection(programId, sectionId, yearLevel);
 }
 
-
-
 // Initialize the page
 document.addEventListener('DOMContentLoaded', loadProgramSections);
 
 function openAddScheduleModal(programId, sectionId, courseId) {
 
-    console.log('editSchedule called with courseId:', courseId, 'programId:', programId, 'sectionId', sectionId);
+    console.log('AddSchedule called with courseId:', courseId, 'programId:', programId, 'sectionId', sectionId);
     // Populate hidden fields with programId and sectionId
     document.getElementById('programId').value = programId;
     document.getElementById('courseId').value = courseId;

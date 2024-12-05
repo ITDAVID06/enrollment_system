@@ -25,7 +25,7 @@ class FacultyController extends BaseController
     }
 
     // Handle the form submission
-    public function register()
+    public function addFaculty()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Collect the data from the form
@@ -35,7 +35,7 @@ class FacultyController extends BaseController
             $faculty = new Faculty();
 
             // Save the faculty data
-            $result = $faculty->save($data);
+            $result = $faculty->saveFaculty($data);
 
             // Check if the insertion was successful
             if ($result['row_count'] > 0) {
@@ -56,80 +56,80 @@ class FacultyController extends BaseController
         }
     }
 
-    public function list()
-{
-    $facultyModel = new Faculty();
-    echo json_encode($facultyModel->getAllFaculty());
-}
+    public function listFaculty()
+    {
+        $facultyModel = new Faculty();
+        echo json_encode($facultyModel->getAllFaculty());
+    }
 
-public function get($id)
-{
-    $facultyModel = new Faculty();
-    echo json_encode($facultyModel->getFacultyById($id));
-}
+    public function getFaculty($id)
+    {
+        $facultyModel = new Faculty();
+        echo json_encode($facultyModel->getFacultyById($id));
+    }
 
-public function update($id)
-{
-    try {
-        $data = $_POST;
+    public function updateFaculty($id)
+    {
+        try {
+            $data = $_POST;
 
-        // Hash password if provided
-        if (!empty($data['password'])) {
-            $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            // Hash password if provided
+            if (!empty($data['password'])) {
+                $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+
+            $facultyModel = new Faculty();
+            $result = $facultyModel->updateFaculty($id, $data);
+
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Faculty updated successfully!']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to update faculty.']);
+            }
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
+    }
+
+
+    public function deleteFaculty($id)
+    {
+        $facultyModel = new Faculty();
+        $facultyModel->deleteFaculty($id);
+    }
+
+    public function updateProfile() {
+        $this->initializeSession();
+
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        $email = $data['email'];
+        $password = $data['password'];
+        $facultyId = $_SESSION['user_id'];
 
         $facultyModel = new Faculty();
-        $result = $facultyModel->update($id, $data);
 
-        if ($result) {
-            echo json_encode(['success' => true, 'message' => 'Faculty updated successfully!']);
+        if ($facultyModel->isEmailTaken($email, $facultyId)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Email is already taken.']);
+            return;
+        }
+
+        $updateData = ['email' => $email];
+        if (!empty($password)) {
+            $updateData['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        if ($facultyModel->updateFaculty($facultyId, $updateData)) {
+            http_response_code(200);
+            echo json_encode(['message' => 'Profile updated successfully.']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Failed to update faculty.']);
+            echo json_encode(['message' => 'Failed to update profile.']);
         }
-    } catch (Exception $e) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
-}
-
-
-public function delete($id)
-{
-    $facultyModel = new Faculty();
-    $facultyModel->delete($id);
-}
-
-public function updateProfile() {
-    $this->initializeSession();
-
-    $data = json_decode(file_get_contents("php://input"), true);
-
-    $email = $data['email'];
-    $password = $data['password'];
-    $facultyId = $_SESSION['user_id'];
-
-    $facultyModel = new Faculty();
-
-    if ($facultyModel->isEmailTaken($email, $facultyId)) {
-        http_response_code(400);
-        echo json_encode(['message' => 'Email is already taken.']);
-        return;
-    }
-
-    $updateData = ['email' => $email];
-    if (!empty($password)) {
-        $updateData['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
-    }
-
-    if ($facultyModel->update($facultyId, $updateData)) {
-        http_response_code(200);
-        echo json_encode(['message' => 'Profile updated successfully.']);
-    } else {
-        http_response_code(500);
-        echo json_encode(['message' => 'Failed to update profile.']);
-    }
-}
 
 
 }

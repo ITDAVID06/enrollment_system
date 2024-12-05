@@ -27,12 +27,6 @@ class DashboardController extends BaseController
 
         $data = [
             'isDashboard' => true, 
-            'isStudent' => false,
-            'isFaculty' => false,
-            'isSection' => false,
-            'isProfile' => false,
-            'isCourse' => false,
-            'isProgram' => false,
             'complete_name' => $_SESSION['complete_name'] ?? '',
             'email' => $_SESSION['email'] ?? '',
             'recentEnrollees' => $recentEnrollees ?? [],
@@ -41,47 +35,28 @@ class DashboardController extends BaseController
         return $this->render('root', $data);
     }
 
+    public function getChartData()
+{
+    try {
+        $model = new Student();
 
-    public function showSection($section = 'dashboard'){
+        $genderData = $model->getGenderDistribution();
+        $programData = $model->getProgramDistribution();
+        $yearLevelData = $model->getYearLevelBreakdown();
+
         $data = [
-            'isDashboard' => false,
-            'isStudent' => false,
-            'isFaculty' => false,
-            'isSection' => false,
-            'isProfile' => false,
-            'isCourse' => false,
-            'isProgram' => false,
-            'complete_name' => $_SESSION['complete_name'] ?? '',
-            'email' => $_SESSION['email'] ?? '',
+            'gender' => $genderData,
+            'program' => $programData,
+            'yearLevel' => $yearLevelData,
         ];
 
-        switch ($section) {
-            case 'dashboard':
-                $data['isDashboard'] = true;
-                break;
-            case 'student':
-                $data['isStudent'] = true;
-                break;
-            case 'faculty':
-                $data['isFaculty'] = true;
-                break;
-            case 'section':
-                $data['isSection'] = true;
-                break;
-            case 'profile':
-                $data['isProfile'] = true;
-                break;
-            case 'course':
-                $data['isCourse'] = true;
-                break;
-            case 'program':
-                $data['isProgram'] = true;
-                break;
-            default:
-                $data['isDashboard'] = true; 
-                break;
-        }
-
-        return $this->render('root', $data);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    } catch (\Exception $e) {
+        error_log('Error in getChartData: ' . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to fetch chart data.']);
     }
+}
+
 }
