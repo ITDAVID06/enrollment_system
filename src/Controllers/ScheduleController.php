@@ -12,6 +12,7 @@ class ScheduleController extends BaseController
 {
     public function showSchedule()
     {
+        $this->checkAuthentication();
         $data = [
             'isSchedule' => true,
         ];

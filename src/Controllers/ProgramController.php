@@ -9,6 +9,7 @@ class ProgramController extends BaseController
 {
     public function showProgram()
     {
+        $this->checkAuthentication();
         $data = [
             'isProgram' => true,
         ];

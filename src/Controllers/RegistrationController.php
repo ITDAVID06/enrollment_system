@@ -10,6 +10,7 @@ class RegistrationController extends BaseController
     // Default method for showing the dashboard
     public function showRegistration(){
 
+        $this->checkAuthentication();
         $registration = new Registration();
         $data = [
             'programs' => $registration->getPrograms(),

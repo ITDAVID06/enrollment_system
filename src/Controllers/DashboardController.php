@@ -11,6 +11,8 @@ class DashboardController extends BaseController
     // Default method for showing the dashboard
     public function showDashboard(){
 
+        $this->checkAuthentication();
+
         $this->initializeSession();
 
         $enrolleeModel = new Student();

@@ -9,6 +9,7 @@ class ProfileController extends BaseController
 {
     // Default method for showing the dashboard
     public function showProfile(){
+        $this->checkAuthentication();
         $data = [
             'isProfile' => true,
         ];

@@ -9,6 +9,7 @@ class EnrolleeController extends BaseController
 {
 
     public function showEnrollees(){
+        $this->checkAuthentication();
         $data = [
             'isEnrollees' => true,
         ];

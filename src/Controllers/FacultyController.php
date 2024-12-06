@@ -11,7 +11,7 @@ class FacultyController extends BaseController
     // Display the form to add a new faculty
     public function showFaculty()
     {
-
+        $this->checkAuthentication();
         $programModel = new Program();
         $programs = $programModel->getAllPrograms();
         $data = [

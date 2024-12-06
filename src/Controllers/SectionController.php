@@ -14,6 +14,7 @@ class SectionController extends BaseController
 
     public function showSections()
     {
+        $this->checkAuthentication();
         $sectionModel = new Section();
         $programModel = new Program();
 

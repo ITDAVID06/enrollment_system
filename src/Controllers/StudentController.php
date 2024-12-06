@@ -14,6 +14,7 @@ class StudentController extends BaseController
 {
 
 public function showStudent(){
+    $this->checkAuthentication();
         $data = [
             'isStudent' => true,
         ];

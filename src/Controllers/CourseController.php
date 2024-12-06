@@ -10,6 +10,7 @@ class CourseController extends BaseController
 {
     public function showCourses()
     {
+        $this->checkAuthentication();
         $programModel = new Program();
         $programs = $programModel->getAllPrograms();
 
